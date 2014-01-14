@@ -37,16 +37,16 @@ import java.util.List;
  */
 public class HttpHandler {
 
-    static String response = null;
-    public final static int GET = 1;
-    public final static int POST = 2;
+    private static String response = null;
+    public static final int GET = 1;
+    public static final int POST = 2;
 
     public HttpHandler() {
 
     }
 
     /**
-     * Sending a http request and return the result
+     * Sending a http request and return the result.
      *
      * @url - url to send the request
      * @method - http request method
@@ -56,13 +56,13 @@ public class HttpHandler {
     }
 
     /**
-     * Sending a http request and return the result
+     * Sending a http request and return the result.
      *
      * @url - url to send the request
      * @method - http request method
      * @params - http request params
      */
-    public String sendRequest(String url, int method, List<NameValuePair> params) {
+    String sendRequest(String url, int method, List<NameValuePair> params) {
         try {
             // http client
             DefaultHttpClient httpClient = new DefaultHttpClient();

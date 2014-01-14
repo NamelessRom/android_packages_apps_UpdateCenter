@@ -25,7 +25,7 @@ public class UpdateListItem {
     private final String mUpdateChannel;
     private final String mUpdateChannelShort;
     private final String mUpdateName;
-    private final String mUpdateInfo;
+    private final String mUpdateMd5;
     private final String mUpdateUrl;
     private final String mUpdateTimeStamp;
     private final String mUpdateChangeLog;
@@ -34,25 +34,25 @@ public class UpdateListItem {
         this(updateChannel, updateName, "-", "-", "-", "-");
     }
 
-    public UpdateListItem(String updateChannel, String updateName, String updateInfo) {
-        this(updateChannel, updateName, updateInfo, "-", "-", "-");
+    public UpdateListItem(String updateChannel, String updateName, String updateMd5) {
+        this(updateChannel, updateName, updateMd5, "-", "-", "-");
     }
 
-    public UpdateListItem(String updateChannel, String updateName, String updateInfo,
+    public UpdateListItem(String updateChannel, String updateName, String updateMd5,
                           String updateUrl) {
-        this(updateChannel, updateName, updateInfo, updateUrl, "-", "-");
+        this(updateChannel, updateName, updateMd5, updateUrl, "-", "-");
     }
 
-    public UpdateListItem(String updateChannel, String updateName, String updateInfo,
+    public UpdateListItem(String updateChannel, String updateName, String updateMd5,
                           String updateUrl, String updateTimeStamp) {
-        this(updateChannel, updateName, updateInfo, updateUrl, updateTimeStamp, "-");
+        this(updateChannel, updateName, updateMd5, updateUrl, updateTimeStamp, "-");
     }
 
-    public UpdateListItem(String updateChannel, String updateName, String updateInfo,
+    public UpdateListItem(String updateChannel, String updateName, String updateMd5,
                           String updateUrl, String updateTimeStamp, String updateChangeLog) {
         mUpdateChannel = updateChannel;
         mUpdateName = updateName;
-        mUpdateInfo = updateInfo;
+        mUpdateMd5 = updateMd5;
         mUpdateUrl = updateUrl;
         mUpdateTimeStamp = updateTimeStamp;
         mUpdateChangeLog = updateChangeLog;
@@ -84,8 +84,8 @@ public class UpdateListItem {
         return mUpdateName;
     }
 
-    public String getUpdateInfo() {
-        return mUpdateInfo;
+    public String getUpdateMd5() {
+        return mUpdateMd5;
     }
 
     public String getUpdateUrl() {

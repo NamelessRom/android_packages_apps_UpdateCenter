@@ -23,11 +23,14 @@
     <string name="action_settings">Settings</string>
     <string name="action_updates">Updates</string>
 
+    <string name="dialog_download">Download</string>
+
     <string name="update_title">Update Information</string>
     <string name="update_name">Name: %s</string>
     <string name="update_channel">Channel: %s</string>
     <string name="update_timestamp">Timestamp: %s</string>
     <string name="update_info">Information: %s</string>
+    <string name="update_md5sum">MD5Sum: %s</string>
     <string name="update_changelog">Changelog: %s</string>
 
     <string name="general_no_updates_available">No updates available</string>
