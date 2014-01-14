@@ -41,6 +41,8 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
     //
     private static final int ANIMATION_FIRST_STEP = 0;
     private static final int ANIMATION_SECOND_STEP = 1;
+    private static final int ANIMATION_DURATION_SHORT = 200;
+    private static final int ANIMATION_DURATION_LONG = 500;
 
     //
     private int mCurrentId = 0;
@@ -54,27 +56,27 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
 
     //
     private View rootView;
-    private FrameLayout updateView, addonView, dummyView1, dummyView2;
-    private static List<View> viewList = new ArrayList<View>();
+    //private FrameLayout addonView, dummyView1, dummyView2;
+    private static final List<View> viewList = new ArrayList<View>();
 
     //
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_center_main, container, false);
 
-        updateView = (FrameLayout) rootView.findViewById(R.id.frameLayout0);
+        final FrameLayout updateView = (FrameLayout) rootView.findViewById(R.id.frameLayout0);
         updateView.setOnClickListener(this);
 
-        addonView = (FrameLayout) rootView.findViewById(R.id.frameLayout1);
-        addonView.setOnClickListener(this);
+        //addonView = (FrameLayout) rootView.findViewById(R.id.frameLayout1);
+        //addonView.setOnClickListener(this);
 
-        dummyView1 = (FrameLayout) rootView.findViewById(R.id.frameLayout2);
-        dummyView1.setOnClickListener(this);
+        //dummyView1 = (FrameLayout) rootView.findViewById(R.id.frameLayout2);
+        //dummyView1.setOnClickListener(this);
 
-        dummyView2 = (FrameLayout) rootView.findViewById(R.id.frameLayout3);
-        dummyView2.setOnClickListener(this);
+        //dummyView2 = (FrameLayout) rootView.findViewById(R.id.frameLayout3);
+        //dummyView2.setOnClickListener(this);
 
         getChildFragmentManager()
                 .beginTransaction()
@@ -82,15 +84,15 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
                 .commit();
 
         viewList.add(updateView);
-        viewList.add(addonView);
-        viewList.add(dummyView1);
-        viewList.add(dummyView2);
+        //viewList.add(addonView);
+        //viewList.add(dummyView1);
+        //viewList.add(dummyView2);
 
         return rootView;
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(final View view) {
         mCurrentView = view;
         mCurrentId = view.getId();
         switch (mCurrentId) {
@@ -99,9 +101,8 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
                 mCurrentFragment = new UpdateFragment();
                 break;
 
-            case R.id.frameLayout1:
-                mCurrentFragment = new AddonsFragment();
-                break;
+            default:
+                return;
 
         }
 
@@ -111,7 +112,7 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
 
     //
 
-    public void flipCard() {
+    void flipCard() {
 
         if (!mShowingBack) {
             mInitialWidth = mCurrentView.getWidth();
@@ -124,7 +125,7 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
         }
 
         ScaleAnimation animation = new ScaleAnimation(1, 0, 1, 0);
-        animation.setDuration(200);
+        animation.setDuration(ANIMATION_DURATION_SHORT);
         animation.setAnimationListener(this);
         mCurrentView.startAnimation(animation);
 
@@ -144,7 +145,7 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
                 mCurrentView.requestLayout();
 
                 animation = new ScaleAnimation(0, 1, 0, 1);
-                animation.setDuration(500);
+                animation.setDuration(ANIMATION_DURATION_LONG);
                 animation.setAnimationListener(this);
                 mCurrentView.startAnimation(animation);
                 break;
@@ -179,13 +180,13 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void onAnimationRepeat(Animation animation) {
-
+    public void onAnimationRepeat(final Animation animation) {
+        // Intentionally left blank
     }
 
     @Override
-    public void onAnimationStart(Animation animation) {
-
+    public void onAnimationStart(final Animation animation) {
+        // Intentionally left blank
     }
 
     @Override

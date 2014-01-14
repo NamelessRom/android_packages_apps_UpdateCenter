@@ -17,11 +17,16 @@
 
 package org.namelessrom.updatecenter.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.app.ListFragment;
-import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,9 +49,6 @@ import org.namelessrom.updatecenter.utils.items.UpdateListItem;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by alex on 05.01.14.
- */
 public class UpdateFragment extends ListFragment {
 
     //
@@ -59,17 +61,20 @@ public class UpdateFragment extends ListFragment {
     private static final String TAG_TIMESTAMP = "timestamp";
     // private static final String TAG_CODENAME = "codename";
     private static final String TAG_CHANGELOG = "changelog";
-    private static final String TAG_URL = "url";
-    //private static final String TAG_ID = "_id";
+    private static final String TAG_URL = "downloadurl";
     //
-    JSONArray mUpdateArray = null;
+    private long mEnqueue;
+    private DownloadManager mDownloadManager;
 
     //
-    List<UpdateListItem> mTitles = new ArrayList<UpdateListItem>();
-    List<UpdateListItem> mTmpTitles = new ArrayList<UpdateListItem>();
+    private List<UpdateListItem> mTitles = new ArrayList<UpdateListItem>();
+    private List<UpdateListItem> mTmpTitles = new ArrayList<UpdateListItem>();
 
     @Override
-    public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
+    public View onCreateView(final LayoutInflater layoutInflater, final ViewGroup viewGroup,
+                             final Bundle bundle) {
+        mDownloadManager = (DownloadManager)
+                getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
         return super.onCreateView(layoutInflater, viewGroup, bundle);
     }
 
@@ -89,7 +94,26 @@ public class UpdateFragment extends ListFragment {
         }
     }
 
-    private void showUpdateDialog(UpdateListItem updateListItem) {
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            if (getActivity() != null && receiver != null) {
+                getActivity().unregisterReceiver(receiver);
+            }
+        } catch (Exception exc) {
+            // Not registered, nothing to do
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        activity.registerReceiver(receiver,
+                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+
+    private void showUpdateDialog(final UpdateListItem updateListItem) {
         if (updateListItem == null) return;
 
         final Dialog dialog = new Dialog(getActivity());
@@ -100,7 +124,7 @@ public class UpdateFragment extends ListFragment {
         String tmp = getString(R.string.update_name, updateListItem.getUpdateName()) + "\n";
         tmp += getString(R.string.update_channel, updateListItem.getUpdateChannel()) + "\n";
         tmp += getString(R.string.update_timestamp, updateListItem.getUpdateTimeStamp()) + "\n";
-        tmp += getString(R.string.update_info, updateListItem.getUpdateInfo()) + "\n";
+        tmp += getString(R.string.update_md5sum, updateListItem.getUpdateMd5()) + "\n";
         tmp += getString(R.string.update_changelog, updateListItem.getUpdateChangeLog()) + "\n";
         text.setText(tmp);
 
@@ -112,12 +136,32 @@ public class UpdateFragment extends ListFragment {
             }
         });
 
+        Button updateButton = (Button) dialog.findViewById(R.id.dialogButtonDownload);
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Helper.createDirectories();
+                DownloadManager.Request request = new DownloadManager.Request(
+                        Uri.parse(updateListItem.getUpdateUrl()));
+                request.setDestinationInExternalPublicDir("/UpdateCenter",
+                        updateListItem.getUpdateName());
+                mEnqueue = mDownloadManager.enqueue(request);
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
     }
 
 //
 
     private void getTitles() {
+        if (mTitles != null) {
+            mTitles.clear();
+        } else {
+            mTitles = new ArrayList<UpdateListItem>();
+        }
+
         UpdateListItem item = new UpdateListItem(
                 "---", getString(R.string.general_press_to_update), ""
         );
@@ -135,35 +179,37 @@ public class UpdateFragment extends ListFragment {
 
     //
 
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                final long downloadId = intent.getLongExtra(
+                        DownloadManager.EXTRA_DOWNLOAD_ID, 0);
+                DownloadManager.Query query = new DownloadManager.Query();
+                query.setFilterById(mEnqueue);
+                final Cursor c = mDownloadManager.query(query);
+                if (c != null && c.moveToFirst()) {
+                    final int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                    if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+                        if (downloadId == mEnqueue) {
+                            String uriString = c.getString(
+                                    c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+                            Uri.parse(uriString);
+                        }
+                    }
+                }
+            }
+        }
+    };
+
     class CheckUpdateTask extends AsyncTask<Void, Void, Void> {
 
         final Context mContext = getActivity();
-        ProgressDialog mDialog = new ProgressDialog(mContext);
-
-        @Override
-        protected void onPreExecute() {
-            // Show dialog
-            mDialog.setTitle("Checking for updates");
-            mDialog.setMessage("Searching for Updates on Channel \"" + CHANNEL_NIGHTLY + "\"");
-            mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            mDialog.setCancelable(true);
-            mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    CheckUpdateTask.this.cancel(true);
-                }
-            });
-            mDialog.show();
-        }
 
         @Override
         protected Void doInBackground(Void... voids) {
 
-            if (mTitles != null) {
-                mTitles.clear();
-            } else {
-                mTitles = new ArrayList<UpdateListItem>();
-            }
             if (mTmpTitles != null) {
                 mTmpTitles.clear();
             } else {
@@ -180,7 +226,7 @@ public class UpdateFragment extends ListFragment {
             if (jsonStr != null) {
                 try {
                     // Getting JSON Array node
-                    mUpdateArray = new JSONArray(jsonStr);
+                    JSONArray mUpdateArray = new JSONArray(jsonStr);
 
                     if (mUpdateArray.length() == 0) {
                         CheckUpdateTask.this.cancel(true);
@@ -217,18 +263,20 @@ public class UpdateFragment extends ListFragment {
 
         @Override
         protected void onCancelled() {
-            mDialog.hide();
-            mTmpTitles.clear();
-            mTmpTitles.add(
-                    new UpdateListItem("-", getString(R.string.general_no_updates_available), "")
-            );
-            getTitles();
+            if (isAdded()) {
+                mTmpTitles.clear();
+                mTmpTitles.add(
+                        new UpdateListItem("-", getString(R.string.general_no_updates_available), "")
+                );
+                getTitles();
+            }
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            mDialog.hide();
-            getTitles();
+            if (isAdded()) {
+                getTitles();
+            }
         }
 
     }

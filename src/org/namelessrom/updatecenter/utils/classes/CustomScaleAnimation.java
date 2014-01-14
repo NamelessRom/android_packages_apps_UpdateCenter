@@ -22,13 +22,13 @@ import android.view.animation.ScaleAnimation;
 /**
  * Created by alex on 06.01.14.
  */
-public class CustomScaleAnimation extends ScaleAnimation {
-    public CustomScaleAnimation(float v, float v2, float v3, float v4) {
+class CustomScaleAnimation extends ScaleAnimation {
+    public CustomScaleAnimation(final float v, final float v2, final float v3, final float v4) {
         super(v, v2, v3, v4);
     }
 
     @Override
-    public void setAnimationListener(AnimationListener animationListener) {
+    public void setAnimationListener(final AnimationListener animationListener) {
         super.setAnimationListener(animationListener);
     }
 }
