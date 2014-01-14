@@ -28,7 +28,7 @@ import org.namelessrom.updatecenter.R;
 /**
  * Created by alex on 05.01.14.
  */
-public class UpdateStaticFragment extends Fragment {
+class UpdateStaticFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
