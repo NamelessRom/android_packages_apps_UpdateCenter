@@ -18,10 +18,16 @@
 package org.namelessrom.updatecenter.fragments;
 
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.app.ListFragment;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,17 +65,22 @@ public class UpdateFragment extends ListFragment {
     private static final String TAG_TIMESTAMP = "timestamp";
     // private static final String TAG_CODENAME = "codename";
     private static final String TAG_CHANGELOG = "changelog";
-    private static final String TAG_URL = "url";
+    private static final String TAG_URL = "downloadurl";
     //private static final String TAG_ID = "_id";
     //
-    JSONArray mUpdateArray = null;
+    private JSONArray mUpdateArray = null;
+    //
+    private long mEnqueue;
+    private DownloadManager mDownloadManager;
 
     //
-    List<UpdateListItem> mTitles = new ArrayList<UpdateListItem>();
-    List<UpdateListItem> mTmpTitles = new ArrayList<UpdateListItem>();
+    private List<UpdateListItem> mTitles = new ArrayList<UpdateListItem>();
+    private List<UpdateListItem> mTmpTitles = new ArrayList<UpdateListItem>();
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
+        mDownloadManager = (DownloadManager)
+                getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
         return super.onCreateView(layoutInflater, viewGroup, bundle);
     }
 
@@ -77,6 +88,37 @@ public class UpdateFragment extends ListFragment {
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         new CheckUpdateTask().execute();
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                    long downloadId = intent.getLongExtra(
+                            DownloadManager.EXTRA_DOWNLOAD_ID, 0);
+                    DownloadManager.Query query = new DownloadManager.Query();
+                    query.setFilterById(mEnqueue);
+                    Cursor c = mDownloadManager.query(query);
+                    if (c.moveToFirst()) {
+                        int columnIndex = c
+                                .getColumnIndex(DownloadManager.COLUMN_STATUS);
+                        if (DownloadManager.STATUS_SUCCESSFUL == c
+                                .getInt(columnIndex)) {
+                            if (downloadId == mEnqueue) {
+                                String uriString = c
+                                        .getString(c
+                                                .getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+                                Uri.parse(uriString);
+                                Log.e("DOWNLOAD", "uriString: " + uriString);
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        getActivity().registerReceiver(receiver,
+                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     @Override
@@ -89,7 +131,7 @@ public class UpdateFragment extends ListFragment {
         }
     }
 
-    private void showUpdateDialog(UpdateListItem updateListItem) {
+    private void showUpdateDialog(final UpdateListItem updateListItem) {
         if (updateListItem == null) return;
 
         final Dialog dialog = new Dialog(getActivity());
@@ -100,7 +142,7 @@ public class UpdateFragment extends ListFragment {
         String tmp = getString(R.string.update_name, updateListItem.getUpdateName()) + "\n";
         tmp += getString(R.string.update_channel, updateListItem.getUpdateChannel()) + "\n";
         tmp += getString(R.string.update_timestamp, updateListItem.getUpdateTimeStamp()) + "\n";
-        tmp += getString(R.string.update_info, updateListItem.getUpdateInfo()) + "\n";
+        tmp += getString(R.string.update_md5sum, updateListItem.getUpdateMd5()) + "\n";
         tmp += getString(R.string.update_changelog, updateListItem.getUpdateChangeLog()) + "\n";
         text.setText(tmp);
 
@@ -108,6 +150,20 @@ public class UpdateFragment extends ListFragment {
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        Button updateButton = (Button) dialog.findViewById(R.id.dialogButtonDownload);
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Helper.createDirectories();
+                DownloadManager.Request request = new DownloadManager.Request(
+                        Uri.parse(updateListItem.getUpdateUrl()));
+                request.setDestinationInExternalPublicDir("/UpdateCenter",
+                        updateListItem.getUpdateName());
+                mEnqueue = mDownloadManager.enqueue(request);
                 dialog.dismiss();
             }
         });
@@ -138,7 +194,7 @@ public class UpdateFragment extends ListFragment {
     class CheckUpdateTask extends AsyncTask<Void, Void, Void> {
 
         final Context mContext = getActivity();
-        ProgressDialog mDialog = new ProgressDialog(mContext);
+        final ProgressDialog mDialog = new ProgressDialog(mContext);
 
         @Override
         protected void onPreExecute() {

@@ -22,6 +22,6 @@ package org.namelessrom.updatecenter.utils.interfaces;
  */
 public interface FragmentInterface {
 
-    public boolean onFragmentBackPressed();
+    boolean onFragmentBackPressed();
 
 }

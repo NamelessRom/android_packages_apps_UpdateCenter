@@ -28,11 +28,11 @@ import org.namelessrom.updatecenter.R;
 /**
  * Created by alex on 05.01.14.
  */
-public class AddonsFragment extends Fragment {
+class AddonsFragment extends Fragment {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_center_addons, container, false);
 
 
