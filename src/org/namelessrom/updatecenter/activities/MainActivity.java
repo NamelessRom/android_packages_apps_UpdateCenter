@@ -19,15 +19,19 @@ package org.namelessrom.updatecenter.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Environment;
 
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.fragments.CenterMainFragment;
+
+import java.io.File;
 
 public class MainActivity extends Activity {
 
 
     //
     public static final String CENTER_MAIN_FRAGMENT_TAG = "center_main_fragment_tag";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,10 @@ public class MainActivity extends Activity {
                     .add(R.id.container, new CenterMainFragment(), CENTER_MAIN_FRAGMENT_TAG)
                     .commit();
         }
+
+        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "UpdateCenter");
+        if (!f.exists()) f.mkdirs();
+
     }
 
     //
