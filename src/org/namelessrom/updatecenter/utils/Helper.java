@@ -17,10 +17,12 @@
 
 package org.namelessrom.updatecenter.utils;
 
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 
 /**
@@ -56,6 +58,11 @@ public class Helper {
         }
 
         return id;
+    }
+
+    public static void createDirectories(){
+        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "UpdateCenter");
+        if (!f.exists()) f.mkdirs();
     }
 
     public static void hideSystemUi(View v) {

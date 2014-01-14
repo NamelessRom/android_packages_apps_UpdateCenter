@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class HttpHandler {
 
-    static String response = null;
+    private static String response = null;
     public final static int GET = 1;
     public final static int POST = 2;
 
@@ -62,7 +62,7 @@ public class HttpHandler {
      * @method - http request method
      * @params - http request params
      */
-    public String sendRequest(String url, int method, List<NameValuePair> params) {
+    String sendRequest(String url, int method, List<NameValuePair> params) {
         try {
             // http client
             DefaultHttpClient httpClient = new DefaultHttpClient();

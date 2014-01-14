@@ -54,8 +54,9 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
 
     //
     private View rootView;
-    private FrameLayout updateView, addonView, dummyView1, dummyView2;
-    private static List<View> viewList = new ArrayList<View>();
+    private FrameLayout updateView;
+    //private FrameLayout addonView, dummyView1, dummyView2;
+    private static final List<View> viewList = new ArrayList<View>();
 
     //
 
@@ -67,14 +68,14 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
         updateView = (FrameLayout) rootView.findViewById(R.id.frameLayout0);
         updateView.setOnClickListener(this);
 
-        addonView = (FrameLayout) rootView.findViewById(R.id.frameLayout1);
-        addonView.setOnClickListener(this);
+        //addonView = (FrameLayout) rootView.findViewById(R.id.frameLayout1);
+        //addonView.setOnClickListener(this);
 
-        dummyView1 = (FrameLayout) rootView.findViewById(R.id.frameLayout2);
-        dummyView1.setOnClickListener(this);
+        //dummyView1 = (FrameLayout) rootView.findViewById(R.id.frameLayout2);
+        //dummyView1.setOnClickListener(this);
 
-        dummyView2 = (FrameLayout) rootView.findViewById(R.id.frameLayout3);
-        dummyView2.setOnClickListener(this);
+        //dummyView2 = (FrameLayout) rootView.findViewById(R.id.frameLayout3);
+        //dummyView2.setOnClickListener(this);
 
         getChildFragmentManager()
                 .beginTransaction()
@@ -82,9 +83,9 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
                 .commit();
 
         viewList.add(updateView);
-        viewList.add(addonView);
-        viewList.add(dummyView1);
-        viewList.add(dummyView2);
+        //viewList.add(addonView);
+        //viewList.add(dummyView1);
+        //viewList.add(dummyView2);
 
         return rootView;
     }
@@ -99,10 +100,6 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
                 mCurrentFragment = new UpdateFragment();
                 break;
 
-            case R.id.frameLayout1:
-                mCurrentFragment = new AddonsFragment();
-                break;
-
         }
 
         flipCard();
@@ -111,7 +108,7 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
 
     //
 
-    public void flipCard() {
+    void flipCard() {
 
         if (!mShowingBack) {
             mInitialWidth = mCurrentView.getWidth();
