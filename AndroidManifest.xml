@@ -8,7 +8,11 @@
         android:minSdkVersion="19"
         android:targetSdkVersion="19" />
 
+    <!-- Internet -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Read and Write -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"

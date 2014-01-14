@@ -37,6 +37,17 @@
         android:text="@android:string/ok"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
-        android:layout_below="@+id/dialog_updates_info" />
+        android:layout_below="@+id/dialog_updates_info"
+        android:layout_alignParentRight="true" />
+
+    <Button
+        android:id="@+id/dialogButtonDownload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_download"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_below="@+id/dialog_updates_info"
+        android:layout_alignParentLeft="true" />
 
 </RelativeLayout>

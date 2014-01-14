@@ -28,7 +28,7 @@ import org.namelessrom.updatecenter.R;
 /**
  * Created by alex on 05.01.14.
  */
-public class AddonsFragment extends Fragment {
+class AddonsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
