@@ -51,15 +51,9 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateListItem> {
         TextView txtUpdateChannel =
                 (TextView) rowView.findViewById(R.id.list_item_updates_channel);
         TextView txtUpdateName = (TextView) rowView.findViewById(R.id.list_item_updates_title);
-        TextView txtUpdateInfo = (TextView) rowView.findViewById(R.id.list_item_updates_info);
 
         txtUpdateChannel.setText(mUpdateListItems.get(position).getUpdateChannelShort());
         txtUpdateName.setText(mUpdateListItems.get(position).getUpdateName());
-        txtUpdateInfo.setText(mUpdateListItems.get(position).getUpdateInfo());
-
-        if (txtUpdateInfo.getText().toString().isEmpty()) {
-            txtUpdateInfo.setVisibility(View.GONE);
-        }
 
         return rowView;
     }

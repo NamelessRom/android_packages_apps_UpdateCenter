@@ -17,11 +17,13 @@
 
 package org.namelessrom.updatecenter.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.fragments.CenterMainFragment;
+import org.namelessrom.updatecenter.utils.Helper;
 
 public class MainActivity extends Activity {
 
@@ -29,16 +31,23 @@ public class MainActivity extends Activity {
     //
     public static final String CENTER_MAIN_FRAGMENT_TAG = "center_main_fragment_tag";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Helper.createDirectories();
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setHomeButtonEnabled(true);
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new CenterMainFragment(), CENTER_MAIN_FRAGMENT_TAG)
                     .commit();
         }
+
     }
 
     //
