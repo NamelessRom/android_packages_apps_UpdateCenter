@@ -215,8 +215,17 @@ public class UpdateFragment extends ListFragment {
             }
 
             // Builds: BaseUrl + Channel + DeviceId
-            String url = URL + "/" + CHANNEL_NIGHTLY + "/" + Helper.getDeviceId();
-            Log.e("HttpHandler", "Url: " + url);
+            final String url = URL + "/" + CHANNEL_NIGHTLY + "/"
+                    + Helper.readBuildProp("ro.nameless.device");
+
+            int currentDate;
+
+            try {
+                currentDate = Integer.parseInt(Helper.readBuildProp("ro.nameless.date"));
+            } catch (Exception exc) {
+                currentDate = 20140101;
+            }
+            //Log.e("HttpHandler", "Url: " + url);
 
             HttpHandler httpHandler = new HttpHandler();
             String jsonStr = httpHandler.sendRequest(url, HttpHandler.GET);
@@ -239,13 +248,21 @@ public class UpdateFragment extends ListFragment {
                         final String filename = c.getString(TAG_FILENAME).replace(".zip", "");
                         final String md5sum = c.getString(TAG_MD5SUM);
                         final String urlFile = c.getString(TAG_URL);
-                        final String timeStamp = c.getString(TAG_TIMESTAMP);
+                        final String timeStampString = c.getString(TAG_TIMESTAMP);
+                        int timeStamp;
+                        try {
+                            timeStamp = Integer.parseInt(timeStampString);
+                        } catch (Exception exc) {
+                            timeStamp = 20140102;
+                        }
                         final String changeLog = c.getString(TAG_CHANGELOG);
 
-                        UpdateListItem item = new UpdateListItem(channel, filename, md5sum,
-                                urlFile, timeStamp, changeLog);
+                        if (currentDate < timeStamp) {
+                            UpdateListItem item = new UpdateListItem(channel, filename, md5sum,
+                                    urlFile, timeStampString, changeLog);
 
-                        mTmpTitles.add(item);
+                            mTmpTitles.add(item);
+                        }
                     }
                 } catch (JSONException e) {
                     CheckUpdateTask.this.cancel(true);
