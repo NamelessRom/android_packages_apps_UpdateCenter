@@ -205,8 +205,6 @@ public class UpdateFragment extends ListFragment {
 
     class CheckUpdateTask extends AsyncTask<Void, Void, Void> {
 
-        final Context mContext = getActivity();
-
         @Override
         protected Void doInBackground(Void... voids) {
 
