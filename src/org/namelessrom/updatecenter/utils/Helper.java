@@ -45,7 +45,7 @@ public class Helper {
     }
 
 
-    public static String getDeviceId() {
+    public static String readBuildProp(String prop) {
         String id = "NULL";
         BufferedReader fileReader = null;
         String tmp;
@@ -55,8 +55,8 @@ public class Helper {
                     new FileReader("/system/build.prop"), FILE_BUFFER);
 
             while ((tmp = fileReader.readLine()) != null) {
-                if (tmp.contains("ro.nameless.device")) {
-                    id = tmp.replace("ro.nameless.device=", "");
+                if (tmp.contains(prop)) {
+                    id = tmp.replace(prop + "=", "");
                     break;
                 }
             }
@@ -79,23 +79,6 @@ public class Helper {
         if (!f.exists()) {
             f.mkdirs();
         }
-    }
-
-    public static void hideSystemUi(final View v) {
-        v.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
-    }
-
-    public static void showSystemUi(final View v) {
-        v.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
 }
