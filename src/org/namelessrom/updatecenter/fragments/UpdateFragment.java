@@ -146,7 +146,7 @@ public class UpdateFragment extends ListFragment {
                 DownloadManager.Request request = new DownloadManager.Request(
                         Uri.parse(updateListItem.getUpdateUrl()));
                 request.setDestinationInExternalPublicDir("/UpdateCenter",
-                        updateListItem.getUpdateName());
+                        updateListItem.getUpdateName() + ".zip");
                 mEnqueue = mDownloadManager.enqueue(request);
                 dialog.dismiss();
             }
