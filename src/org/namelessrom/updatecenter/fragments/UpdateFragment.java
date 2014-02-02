@@ -19,6 +19,7 @@ package org.namelessrom.updatecenter.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.DownloadManager;
 import android.app.ListFragment;
 import android.content.BroadcastReceiver;
@@ -34,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -41,6 +43,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.fragments.dialogs.ChangelogDialogFragment;
 import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.utils.adapters.UpdateListAdapter;
 import org.namelessrom.updatecenter.utils.classes.HttpHandler;
@@ -118,6 +121,8 @@ public class UpdateFragment extends ListFragment {
     private void showUpdateDialog(final UpdateListItem updateListItem) {
         if (updateListItem == null) return;
 
+        final boolean hasChangelog = !(updateListItem.getUpdateChangeLog().equals("-"));
+
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.dialog_updates);
         dialog.setTitle(getString(R.string.update_title));
@@ -127,7 +132,6 @@ public class UpdateFragment extends ListFragment {
         tmp += getString(R.string.update_channel, updateListItem.getUpdateChannel()) + "\n";
         tmp += getString(R.string.update_timestamp, updateListItem.getUpdateTimeStamp()) + "\n";
         tmp += getString(R.string.update_md5sum, updateListItem.getUpdateMd5()) + "\n";
-        tmp += getString(R.string.update_changelog, updateListItem.getUpdateChangeLog()) + "\n";
         text.setText(tmp);
 
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
@@ -138,7 +142,27 @@ public class UpdateFragment extends ListFragment {
             }
         });
 
-        Button updateButton = (Button) dialog.findViewById(R.id.dialogButtonDownload);
+        ImageButton changelogButton = (ImageButton) dialog.findViewById(R.id.dialogButtonChangelog);
+        if (hasChangelog) {
+            changelogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DialogFragment f = new ChangelogDialogFragment();
+                    Bundle b = new Bundle();
+                    b.putString(ChangelogDialogFragment.BUNDLE_FILENAME
+                            , updateListItem.getUpdateName() + ".zip.changelog");
+                    b.putString(ChangelogDialogFragment.BUNDLE_URL
+                            , updateListItem.getUpdateUrl()
+                            .replace("/download", ".changelog/download"));
+                    f.setArguments(b);
+                    f.show(getChildFragmentManager(), "changelogdialog");
+                }
+            });
+        } else {
+            changelogButton.setEnabled(false);
+        }
+
+        ImageButton updateButton = (ImageButton) dialog.findViewById(R.id.dialogButtonDownload);
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

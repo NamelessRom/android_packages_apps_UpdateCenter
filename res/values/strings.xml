@@ -36,4 +36,6 @@
     <string name="general_no_updates_available">No updates available</string>
     <string name="general_press_to_update">Press me, to check for updates.</string>
 
+    <string name="changelog_loaded">Changelog loaded!</string>
+
 </resources>

@@ -40,14 +40,26 @@
         android:layout_below="@+id/dialog_updates_info"
         android:layout_alignParentRight="true" />
 
-    <Button
+    <ImageButton
         android:id="@+id/dialogButtonDownload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/dialog_download"
+        android:src="@drawable/ic_action_download"
+        android:contentDescription="@string/dialog_download"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
         android:layout_below="@+id/dialog_updates_info"
         android:layout_alignParentLeft="true" />
+
+    <ImageButton
+        android:id="@+id/dialogButtonChangelog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_action_changelog"
+        android:contentDescription="@string/dialog_download"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_below="@+id/dialog_updates_info"
+        android:layout_toRightOf="@+id/dialogButtonDownload" />
 
 </RelativeLayout>
