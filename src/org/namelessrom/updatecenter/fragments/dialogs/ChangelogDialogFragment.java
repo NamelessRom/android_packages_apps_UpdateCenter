@@ -64,7 +64,7 @@ public class ChangelogDialogFragment extends DialogFragment {
         mTvChangelog.setText(fileName + "\n\n");
 
         filePath = Environment.getExternalStorageDirectory()
-                + File.separator + "UpdateCenter" + File.separator
+                + File.separator + "Nameless/UpdateCenter" + File.separator
                 + fileName;
 
         if (new File(filePath).exists()) {

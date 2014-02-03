@@ -75,7 +75,7 @@ public class Helper {
     }
 
     public static void createDirectories() {
-        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "UpdateCenter");
+        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "Nameless/UpdateCenter");
         if (!f.exists()) {
             f.mkdirs();
         }
