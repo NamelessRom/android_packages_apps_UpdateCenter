@@ -80,7 +80,8 @@ public class CenterMainFragment extends Fragment implements View.OnClickListener
 
         getChildFragmentManager()
                 .beginTransaction()
-                .replace(R.id.frameLayout0, new UpdateStaticFragment())
+                .replace(R.id.frameLayout0,
+                        DynamicEntryFragment.newInstance(0, R.drawable.ic_action_update))
                 .commit();
 
         viewList.add(updateView);

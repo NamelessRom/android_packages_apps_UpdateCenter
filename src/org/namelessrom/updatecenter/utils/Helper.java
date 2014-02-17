@@ -17,9 +17,7 @@
 
 package org.namelessrom.updatecenter.utils;
 
-import android.os.Environment;
 import android.util.Log;
-import android.view.View;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,7 +26,7 @@ import java.io.FileReader;
 /**
  * Created by alex on 05.01.14.
  */
-public class Helper {
+public class Helper implements Constants {
 
     private static final int FILE_BUFFER = 512;
     private static Helper sHelper;
@@ -75,7 +73,7 @@ public class Helper {
     }
 
     public static void createDirectories() {
-        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "Nameless/UpdateCenter");
+        File f = new File(SD_ROOT_DIR);
         if (!f.exists()) {
             f.mkdirs();
         }
