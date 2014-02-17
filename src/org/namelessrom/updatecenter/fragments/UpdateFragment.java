@@ -30,6 +30,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,10 +39,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.fragments.dialogs.ChangelogDialogFragment;
 import org.namelessrom.updatecenter.utils.Helper;
@@ -52,7 +55,11 @@ import org.namelessrom.updatecenter.utils.items.UpdateListItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateFragment extends ListFragment {
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
+public class UpdateFragment extends ListFragment implements OnRefreshListener {
 
     //
     private static final String URL = "http://nameless-rom.org:3000/api";
@@ -72,6 +79,8 @@ public class UpdateFragment extends ListFragment {
     //
     private List<UpdateListItem> mTitles = new ArrayList<UpdateListItem>();
     private List<UpdateListItem> mTmpTitles = new ArrayList<UpdateListItem>();
+    //
+    private PullToRefreshLayout mPullToRefreshLayout;
 
     @Override
     public View onCreateView(final LayoutInflater layoutInflater, final ViewGroup viewGroup,
@@ -84,18 +93,27 @@ public class UpdateFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
+
+        ViewGroup viewGroup = (ViewGroup) view;
+        mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+
+        ActionBarPullToRefresh.from(getActivity())
+                .insertLayoutInto(viewGroup)
+                .theseChildrenArePullable(getListView(), getListView().getEmptyView())
+                .listener(this)
+                .setup(mPullToRefreshLayout);
+
         new CheckUpdateTask().execute();
     }
 
     @Override
     public void onListItemClick(ListView listView, View view, int i, long l) {
         super.onListItemClick(listView, view, i, l);
-        if (i == 0) {
-            new CheckUpdateTask().execute();
-        } else {
-            if (!mTitles.get(i).getUpdateChannelShort().equals("?")) {
-                showUpdateDialog(mTitles.get(i));
-            }
+        if (!mTitles.get(i).getUpdateChannelShort().equals("?")) {
+            showUpdateDialog(mTitles.get(i));
+        }
+        if (Application.IS_DEBUG) {
+            Toast.makeText(getActivity(), "ITEM: " + i, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -188,16 +206,20 @@ public class UpdateFragment extends ListFragment {
             mTitles = new ArrayList<UpdateListItem>();
         }
 
-        UpdateListItem item = new UpdateListItem(
-                "---", getString(R.string.general_press_to_update), ""
-        );
-        mTitles.add(item);
-
         for (UpdateListItem mTmpTitle : mTmpTitles) {
             mTitles.add(mTmpTitle);
         }
 
-        if (mTitles.size() == 1) {
+        if (Application.IS_DEBUG) {
+            Time now = new Time();
+            now.setToNow();
+            mTitles.add(new UpdateListItem("-", "Date: " + now.toString()));
+            for (int i = 0; i < 20; i++) {
+                mTitles.add(new UpdateListItem("-", "---"));
+            }
+        }
+
+        if (mTitles.size() == 0) {
             mTitles.add(
                     new UpdateListItem("-", getString(R.string.general_no_updates_available), "")
             );
@@ -207,6 +229,7 @@ public class UpdateFragment extends ListFragment {
 
         setListAdapter(adapter);
         adapter.notifyDataSetChanged();
+        mPullToRefreshLayout.setRefreshComplete();
     }
 
     //
@@ -234,6 +257,11 @@ public class UpdateFragment extends ListFragment {
             }
         }
     };
+
+    @Override
+    public void onRefreshStarted(View view) {
+        new CheckUpdateTask().execute();
+    }
 
     class CheckUpdateTask extends AsyncTask<Void, Void, Void> {
 
