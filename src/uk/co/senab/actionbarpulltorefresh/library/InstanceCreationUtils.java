@@ -47,8 +47,8 @@ class InstanceCreationUtils {
     }
 
     private static void addBuiltinDelegates(Class[] supportedViews, Class<?> delegateClass) {
-        for (int i = 0, z = supportedViews.length; i < z; i++) {
-            BUILT_IN_DELEGATES.put(supportedViews[i], delegateClass);
+        for (Class supportedView : supportedViews) {
+            BUILT_IN_DELEGATES.put(supportedView, delegateClass);
         }
     }
 

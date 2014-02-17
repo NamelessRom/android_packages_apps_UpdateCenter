@@ -27,7 +27,7 @@ public final class Options {
     private static final int DEFAULT_HEADER_LAYOUT = R.layout.pull_to_refresh_header;
     private static final float DEFAULT_REFRESH_SCROLL_DISTANCE = 0.5f;
     private static final boolean DEFAULT_REFRESH_ON_UP = false;
-    private static final int DEFAULT_REFRESH_MINIMIZED_DELAY = 1 * 1000;
+    private static final int DEFAULT_REFRESH_MINIMIZED_DELAY = 1000;
     private static final boolean DEFAULT_REFRESH_MINIMIZE = true;
 
     public static Builder create() {

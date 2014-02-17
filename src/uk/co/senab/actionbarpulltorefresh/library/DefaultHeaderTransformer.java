@@ -292,10 +292,9 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
                 R.attr.ptrHeaderStyle, R.styleable.PullToRefreshHeader);
 
         // Retrieve the Action Bar size from the app theme or the Action Bar's style
-        if (mContentLayout != null) {
-            final int height = styleAttrs.getDimensionPixelSize(
+        if (mContentLayout != null && mContentLayout.getLayoutParams() != null) {
+            mContentLayout.getLayoutParams().height = styleAttrs.getDimensionPixelSize(
                     R.styleable.PullToRefreshHeader_ptrHeaderHeight, getActionBarSize(activity));
-            mContentLayout.getLayoutParams().height = height;
             mContentLayout.requestLayout();
         }
 
@@ -313,7 +312,7 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
         }
 
         // Retrieve the Action Bar Title Style from the app theme or the Action Bar's style
-        Context abContext = headerView.getContext();
+        final Context abContext = headerView.getContext();
         final int titleTextStyle = styleAttrs
                 .getResourceId(R.styleable.PullToRefreshHeader_ptrHeaderTitleTextAppearance,
                         getActionBarTitleStyle(abContext));

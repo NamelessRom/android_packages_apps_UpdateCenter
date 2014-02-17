@@ -91,7 +91,7 @@ public class PullToRefreshLayout extends FrameLayout {
      * Set a {@link uk.co.senab.actionbarpulltorefresh.library.listeners.HeaderViewListener} which is called when the visibility
      * state of the Header View has changed.
      *
-     * @param listener
+     * @param listener The HeaderViewListener
      */
     public final void setHeaderViewListener(HeaderViewListener listener) {
         ensureAttacher();
@@ -175,18 +175,18 @@ public class PullToRefreshLayout extends FrameLayout {
     }
 
     void addChildrenAsPullable(int[] viewIds) {
-        for (int i = 0, z = viewIds.length; i < z; i++) {
-            View view = findViewById(viewIds[i]);
+        for (int viewId : viewIds) {
+            View view = findViewById(viewId);
             if (view != null) {
-                addRefreshableView(findViewById(viewIds[i]));
+                addRefreshableView(findViewById(viewId));
             }
         }
     }
 
     void addChildrenAsPullable(View[] views) {
-        for (int i = 0, z = views.length; i < z; i++) {
-            if (views[i] != null) {
-                addRefreshableView(views[i]);
+        for (View view : views) {
+            if (view != null) {
+                addRefreshableView(view);
             }
         }
     }
