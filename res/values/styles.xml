@@ -18,7 +18,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="AppTheme" parent="@android:style/Theme.Holo">
         <!-- I want to thank all xml tags, which had to die for this project. -->
     </style>
 
