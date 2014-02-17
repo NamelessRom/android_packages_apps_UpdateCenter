@@ -15,11 +15,8 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses
   -->
 
-<resources>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo">
-        <!-- I want to thank all xml tags, which had to die for this project. -->
-    </style>
+    <Preference android:title="@string/app_name" />
 
-</resources>
+</PreferenceScreen>

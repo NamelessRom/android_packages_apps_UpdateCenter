@@ -42,6 +42,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activities.PreferenceActivity"
+            android:excludeFromRecents="true"
+            android:icon="@drawable/ic_settings"
+            android:label="@string/action_settings" />
+
     </application>
 
 </manifest>

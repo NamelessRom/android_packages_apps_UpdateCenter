@@ -19,7 +19,10 @@ package org.namelessrom.updatecenter.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.fragments.CenterMainFragment;
@@ -47,7 +50,22 @@ public class MainActivity extends Activity {
                     .add(R.id.container, new CenterMainFragment(), CENTER_MAIN_FRAGMENT_TAG)
                     .commit();
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(MainActivity.this, PreferenceActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //
