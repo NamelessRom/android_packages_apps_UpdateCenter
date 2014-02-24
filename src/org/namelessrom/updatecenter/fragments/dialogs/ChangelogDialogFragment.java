@@ -32,6 +32,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.utils.Constants;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -43,7 +44,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class ChangelogDialogFragment extends DialogFragment {
+public class ChangelogDialogFragment extends DialogFragment implements Constants {
 
     public static final String BUNDLE_FILENAME = "bundle_filename";
     public static final String BUNDLE_URL = "bundle_url";
@@ -63,9 +64,7 @@ public class ChangelogDialogFragment extends DialogFragment {
         mTvChangelog.setTypeface(Typeface.SANS_SERIF);
         mTvChangelog.setText(fileName + "\n\n");
 
-        filePath = Environment.getExternalStorageDirectory()
-                + File.separator + "Nameless/UpdateCenter" + File.separator
-                + fileName;
+        filePath = UPDATE_FOLDER_FULL + File.separator + fileName;
 
         if (new File(filePath).exists()) {
             mTvChangelog.setText(readFile(filePath));
@@ -183,7 +182,9 @@ public class ChangelogDialogFragment extends DialogFragment {
 
         @Override
         protected void onPostExecute(String s) {
-            mTvChangelog.setText(readFile(filePath));
+            if (isAdded()) {
+                mTvChangelog.setText(readFile(filePath));
+            }
         }
     }
 }

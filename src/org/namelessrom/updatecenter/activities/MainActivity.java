@@ -26,6 +26,7 @@ import android.view.MenuItem;
 
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.fragments.CenterMainFragment;
+import org.namelessrom.updatecenter.services.UpdateCheckService;
 import org.namelessrom.updatecenter.utils.Helper;
 
 public class MainActivity extends Activity {
@@ -50,6 +51,10 @@ public class MainActivity extends Activity {
                     .add(R.id.container, new CenterMainFragment(), CENTER_MAIN_FRAGMENT_TAG)
                     .commit();
         }
+
+        Intent i = new Intent(this, UpdateCheckService.class);
+        i.setAction(UpdateCheckService.ACTION_CHECK);
+        this.startService(i);
     }
 
     @Override

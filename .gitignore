@@ -34,3 +34,4 @@ out/
 proguard_logs/
 # Others
 .DS_Store
+build/

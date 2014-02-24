@@ -30,6 +30,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,10 +48,12 @@ import org.json.JSONObject;
 import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.fragments.dialogs.ChangelogDialogFragment;
+import org.namelessrom.updatecenter.receivers.DownloadReceiver;
+import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.utils.adapters.UpdateListAdapter;
 import org.namelessrom.updatecenter.utils.classes.HttpHandler;
-import org.namelessrom.updatecenter.utils.items.UpdateListItem;
+import org.namelessrom.updatecenter.utils.items.UpdateInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,36 +62,13 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class UpdateFragment extends ListFragment implements OnRefreshListener {
+public class UpdateFragment extends ListFragment implements OnRefreshListener, Constants {
 
     //
-    private static final String URL = "http://nameless-rom.org:3000/api";
-    private static final String CHANNEL_NIGHTLY = "NIGHTLY";
-    // JSON Node names
-    private static final String TAG_CHANNEL = "channel";
-    private static final String TAG_FILENAME = "filename";
-    private static final String TAG_MD5SUM = "md5sum";
-    private static final String TAG_TIMESTAMP = "timestamp";
-    // private static final String TAG_CODENAME = "codename";
-    private static final String TAG_CHANGELOG = "changelog";
-    private static final String TAG_URL = "downloadurl";
-    //
-    private long mEnqueue;
-    private DownloadManager mDownloadManager;
-
-    //
-    private List<UpdateListItem> mTitles = new ArrayList<UpdateListItem>();
-    private List<UpdateListItem> mTmpTitles = new ArrayList<UpdateListItem>();
+    private List<UpdateInfo> mTitles = new ArrayList<UpdateInfo>();
+    private List<UpdateInfo> mTmpTitles = new ArrayList<UpdateInfo>();
     //
     private PullToRefreshLayout mPullToRefreshLayout;
-
-    @Override
-    public View onCreateView(final LayoutInflater layoutInflater, final ViewGroup viewGroup,
-                             final Bundle bundle) {
-        mDownloadManager = (DownloadManager)
-                getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
-        return super.onCreateView(layoutInflater, viewGroup, bundle);
-    }
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
@@ -107,17 +87,6 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener {
     }
 
     @Override
-    public void onListItemClick(ListView listView, View view, int i, long l) {
-        super.onListItemClick(listView, view, i, l);
-        if (!mTitles.get(i).getUpdateChannelShort().equals("?")) {
-            showUpdateDialog(mTitles.get(i));
-        }
-        if (Application.IS_DEBUG) {
-            Toast.makeText(getActivity(), "ITEM: " + i, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         try {
@@ -129,72 +98,20 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener {
         }
     }
 
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (isAdded()) {
+                getListView().invalidateViews();
+            }
+        }
+    };
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         activity.registerReceiver(receiver,
                 new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-    }
-
-    private void showUpdateDialog(final UpdateListItem updateListItem) {
-        if (updateListItem == null) return;
-
-        final boolean hasChangelog = !(updateListItem.getUpdateChangeLog().equals("-"));
-
-        final Dialog dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.dialog_updates);
-        dialog.setTitle(getString(R.string.update_title));
-
-        TextView text = (TextView) dialog.findViewById(R.id.dialog_updates_info);
-        String tmp = getString(R.string.update_name, updateListItem.getUpdateName()) + "\n";
-        tmp += getString(R.string.update_channel, updateListItem.getUpdateChannel()) + "\n";
-        tmp += getString(R.string.update_timestamp, updateListItem.getUpdateTimeStamp()) + "\n";
-        tmp += getString(R.string.update_md5sum, updateListItem.getUpdateMd5()) + "\n";
-        text.setText(tmp);
-
-        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        ImageButton changelogButton = (ImageButton) dialog.findViewById(R.id.dialogButtonChangelog);
-        if (hasChangelog) {
-            changelogButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DialogFragment f = new ChangelogDialogFragment();
-                    Bundle b = new Bundle();
-                    b.putString(ChangelogDialogFragment.BUNDLE_FILENAME
-                            , updateListItem.getUpdateName() + ".zip.changelog");
-                    b.putString(ChangelogDialogFragment.BUNDLE_URL
-                            , updateListItem.getUpdateUrl()
-                            .replace("/download", ".changelog/download"));
-                    f.setArguments(b);
-                    f.show(getChildFragmentManager(), "changelogdialog");
-                }
-            });
-        } else {
-            changelogButton.setEnabled(false);
-        }
-
-        ImageButton updateButton = (ImageButton) dialog.findViewById(R.id.dialogButtonDownload);
-        updateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Helper.createDirectories();
-                DownloadManager.Request request = new DownloadManager.Request(
-                        Uri.parse(updateListItem.getUpdateUrl()));
-                request.setDestinationInExternalPublicDir("/UpdateCenter",
-                        updateListItem.getUpdateName() + ".zip");
-                mEnqueue = mDownloadManager.enqueue(request);
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
     }
 
 //
@@ -203,25 +120,25 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener {
         if (mTitles != null) {
             mTitles.clear();
         } else {
-            mTitles = new ArrayList<UpdateListItem>();
+            mTitles = new ArrayList<UpdateInfo>();
         }
 
-        for (UpdateListItem mTmpTitle : mTmpTitles) {
+        for (UpdateInfo mTmpTitle : mTmpTitles) {
             mTitles.add(mTmpTitle);
         }
 
         if (Application.IS_DEBUG) {
             Time now = new Time();
             now.setToNow();
-            mTitles.add(new UpdateListItem("-", "Date: " + now.toString()));
+            mTitles.add(new UpdateInfo("-", "Date: " + now.toString()));
             for (int i = 0; i < 20; i++) {
-                mTitles.add(new UpdateListItem("-", "---"));
+                mTitles.add(new UpdateInfo("-", "---"));
             }
         }
 
         if (mTitles.size() == 0) {
             mTitles.add(
-                    new UpdateListItem("-", getString(R.string.general_no_updates_available), "")
+                    new UpdateInfo("-", getString(R.string.general_no_updates_available), "")
             );
         }
 
@@ -231,32 +148,6 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener {
         adapter.notifyDataSetChanged();
         mPullToRefreshLayout.setRefreshComplete();
     }
-
-    //
-
-    BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
-                final long downloadId = intent.getLongExtra(
-                        DownloadManager.EXTRA_DOWNLOAD_ID, 0);
-                DownloadManager.Query query = new DownloadManager.Query();
-                query.setFilterById(mEnqueue);
-                final Cursor c = mDownloadManager.query(query);
-                if (c != null && c.moveToFirst()) {
-                    final int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
-                    if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
-                        if (downloadId == mEnqueue) {
-                            String uriString = c.getString(
-                                    c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-                            Uri.parse(uriString);
-                        }
-                    }
-                }
-            }
-        }
-    };
 
     @Override
     public void onRefreshStarted(View view) {
@@ -271,11 +162,15 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener {
             if (mTmpTitles != null) {
                 mTmpTitles.clear();
             } else {
-                mTmpTitles = new ArrayList<UpdateListItem>();
+                mTmpTitles = new ArrayList<UpdateInfo>();
+            }
+
+            if (!Helper.isOnline(getActivity())) {
+                cancel(true);
             }
 
             // Builds: BaseUrl + Channel + DeviceId
-            final String url = URL + "/" + CHANNEL_NIGHTLY + "/"
+            final String url = ROM_URL + "/" + CHANNEL_NIGHTLY + "/"
                     + Helper.readBuildProp("ro.nameless.device");
 
             int currentDate;
@@ -318,7 +213,7 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener {
                         final String changeLog = c.getString(TAG_CHANGELOG);
 
                         if (currentDate < timeStamp) {
-                            UpdateListItem item = new UpdateListItem(channel, filename, md5sum,
+                            UpdateInfo item = new UpdateInfo(channel, filename, md5sum,
                                     urlFile, timeStampString, changeLog);
 
                             mTmpTitles.add(item);
@@ -341,7 +236,7 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener {
             if (isAdded()) {
                 mTmpTitles.clear();
                 mTmpTitles.add(
-                        new UpdateListItem("-",
+                        new UpdateInfo("-",
                                 getString(R.string.general_no_updates_available),
                                 "-")
                 );
