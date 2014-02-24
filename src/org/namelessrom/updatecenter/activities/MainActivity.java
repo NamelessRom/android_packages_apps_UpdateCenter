@@ -20,25 +20,29 @@ package org.namelessrom.updatecenter.activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.fragments.CenterMainFragment;
+import org.namelessrom.updatecenter.services.UpdateCheckService;
+import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
 
-public class MainActivity extends Activity {
-
+public class MainActivity extends Activity implements Constants {
 
     //
     public static final String CENTER_MAIN_FRAGMENT_TAG = "center_main_fragment_tag";
-
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         Helper.createDirectories();
 
@@ -49,6 +53,12 @@ public class MainActivity extends Activity {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new CenterMainFragment(), CENTER_MAIN_FRAGMENT_TAG)
                     .commit();
+        }
+
+        if (prefs.getInt(UPDATE_CHECK_PREF, UPDATE_FREQ_WEEKLY) == UPDATE_FREQ_AT_APP_START) {
+            Intent i = new Intent(this, UpdateCheckService.class);
+            i.setAction(UpdateCheckService.ACTION_CHECK);
+            this.startService(i);
         }
     }
 
@@ -61,11 +71,9 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // TODO: display once needed
-            /* case R.id.action_settings:
+            case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, PreferenceActivity.class));
                 break;
-            */
         }
         return super.onOptionsItemSelected(item);
     }
