@@ -292,8 +292,8 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
         }
 
         public SmoothProgressDrawable build() {
-            SmoothProgressDrawable ret = new SmoothProgressDrawable(mInterpolator, mSectionsCount, mStrokeSeparatorLength, mColors, mStrokeWidth, mSpeed, mReversed, mMirrorMode);
-            return ret;
+            return new SmoothProgressDrawable(mInterpolator, mSectionsCount,
+                    mStrokeSeparatorLength, mColors, mStrokeWidth, mSpeed, mReversed, mMirrorMode);
         }
 
         private void initValues(Context context) {

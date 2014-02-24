@@ -121,10 +121,10 @@ public class PullToRefreshLayout extends FrameLayout {
         if (DEBUG) {
             Log.d(LOG_TAG, "onInterceptTouchEvent. " + event.toString());
         }
-        if (isEnabled() && mPullToRefreshAttacher != null && getChildCount() > 0) {
-            return mPullToRefreshAttacher.onInterceptTouchEvent(event);
-        }
-        return false;
+        return isEnabled()
+                && mPullToRefreshAttacher != null
+                && getChildCount() > 0
+                && mPullToRefreshAttacher.onInterceptTouchEvent(event);
     }
 
     @Override
