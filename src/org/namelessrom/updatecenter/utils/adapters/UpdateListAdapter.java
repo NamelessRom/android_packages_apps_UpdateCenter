@@ -85,14 +85,18 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
         }
 
         final UpdateInfo updateInfo = mUpdateInfos.get(position);
+        final String updateChannel = mUpdateInfos.get(position).getUpdateChannelShort();
 
-        holder.tvChannel.setText(mUpdateInfos.get(position).getUpdateChannelShort());
-        holder.tvChannel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showUpdateDialog(updateInfo);
-            }
-        });
+        holder.tvChannel.setText(updateChannel);
+
+        if (!updateChannel.equals("?")) {
+            holder.tvChannel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showUpdateDialog(updateInfo);
+                }
+            });
+        }
 
         final String fileName = mUpdateInfos.get(position).getUpdateName();
         holder.tvName.setText(fileName);
@@ -100,20 +104,25 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
 
         final boolean updateExists = new File(UPDATE_FOLDER_FULL + File.separator
                 + fileName + ".zip").exists();
-        holder.ibAction.setImageResource(updateExists
-                ? R.drawable.ic_tab_install : R.drawable.ic_tab_download);
 
-        holder.ibAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialog(updateExists, updateInfo);
-            }
-        });
+        if (!updateChannel.equals("?")) {
+            holder.ibAction.setImageResource(updateExists
+                    ? R.drawable.ic_tab_install : R.drawable.ic_tab_download);
+
+            holder.ibAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showDialog(updateExists, updateInfo);
+                }
+            });
+        } else {
+            holder.ibAction.setVisibility(View.GONE);
+        }
 
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!updateInfo.getUpdateChannelShort().equals("?")) {
+                if (!updateChannel.equals("?")) {
                     DialogFragment f = new ChangelogDialogFragment();
                     Bundle b = new Bundle();
                     b.putString(ChangelogDialogFragment.BUNDLE_FILENAME
