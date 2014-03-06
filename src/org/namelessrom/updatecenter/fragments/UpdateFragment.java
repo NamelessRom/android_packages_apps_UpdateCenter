@@ -32,14 +32,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.net.HttpHandler;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.utils.adapters.UpdateListAdapter;
-import org.namelessrom.updatecenter.utils.classes.HttpHandler;
 import org.namelessrom.updatecenter.utils.items.UpdateInfo;
 
 import java.util.ArrayList;
@@ -169,21 +168,21 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener, C
             }
             //Log.e("HttpHandler", "Url: " + url);
 
-            HttpHandler httpHandler = new HttpHandler();
-            String jsonStr = httpHandler.sendRequest(url, HttpHandler.GET);
-
-            if (jsonStr != null) {
-                try {
+            try {
+                final String jsonStr = HttpHandler.get(url);
+                if (jsonStr != null) {
                     // Getting JSON Array node
-                    JSONArray mUpdateArray = new JSONArray(jsonStr);
+                    final JSONArray mUpdateArray = new JSONArray(jsonStr);
+                    final int updateLength = mUpdateArray.length();
 
-                    if (mUpdateArray.length() == 0) {
+                    if (updateLength == 0) {
                         CheckUpdateTask.this.cancel(true);
                         return null;
                     }
 
-                    for (int i = 0; i < mUpdateArray.length(); i++) {
-                        JSONObject c = mUpdateArray.getJSONObject(i);
+                    JSONObject c;
+                    for (int i = 0; i < updateLength; i++) {
+                        c = mUpdateArray.getJSONObject(i);
 
                         //final String id = c.getString(TAG_ID);
                         String channel = c.getString(TAG_CHANNEL);
@@ -206,13 +205,12 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener, C
                             mTmpTitles.add(item);
                         }
                     }
-                } catch (JSONException e) {
+                } else {
                     CheckUpdateTask.this.cancel(true);
-                    e.printStackTrace();
+                    Log.e("HttpHandler", "Couldn't get any data from the url");
                 }
-            } else {
+            } catch (Exception e) {
                 CheckUpdateTask.this.cancel(true);
-                Log.e("HttpHandler", "Couldn't get any data from the url");
             }
 
             return null;

@@ -5,7 +5,6 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.IBinder;
 import android.os.Parcelable;
@@ -18,10 +17,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.activities.MainActivity;
+import org.namelessrom.updatecenter.net.HttpHandler;
 import org.namelessrom.updatecenter.receivers.DownloadReceiver;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
-import org.namelessrom.updatecenter.utils.classes.HttpHandler;
 import org.namelessrom.updatecenter.utils.items.UpdateInfo;
 
 import java.io.File;
@@ -169,7 +168,7 @@ public class UpdateCheckService extends IntentService implements Constants {
 
     private List<UpdateInfo> getAvailableUpdatesAndFillIntent(Intent intent) throws IOException {
         // Get the type of update we should check for
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         // int updateType = prefs.getInt(Constants.UPDATE_TYPE_PREF, 0); // TODO: choose channel
 
         List<UpdateInfo> updates = new ArrayList<UpdateInfo>();
@@ -187,8 +186,7 @@ public class UpdateCheckService extends IntentService implements Constants {
         }
         //Log.e("HttpHandler", "Url: " + url);
 
-        HttpHandler httpHandler = new HttpHandler();
-        String jsonStr = httpHandler.sendRequest(url, HttpHandler.GET);
+        String jsonStr = HttpHandler.get(url);
 
         if (jsonStr != null) {
             try {
