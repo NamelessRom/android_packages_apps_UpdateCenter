@@ -77,7 +77,7 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = mContext.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.list_item_updates, null, true);
+        final View rowView = inflater.inflate(R.layout.list_item_updates, null, true);
 
         ViewHolder holder = (ViewHolder) rowView.getTag();
         if (holder == null) {
@@ -125,8 +125,6 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
                 if (!updateChannel.equals("?")) {
                     DialogFragment f = new ChangelogDialogFragment();
                     Bundle b = new Bundle();
-                    b.putString(ChangelogDialogFragment.BUNDLE_FILENAME
-                            , updateInfo.getUpdateName() + ".zip.changelog");
                     b.putString(ChangelogDialogFragment.BUNDLE_URL
                             , updateInfo.getUpdateUrl()
                             .replace("/download", ".changelog/download"));
