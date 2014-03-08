@@ -79,4 +79,8 @@
     <string name="apply_trying_to_get_root_access">Trying to get root access to reboot in recovery mode</string>
     <string name="apply_unable_to_reboot_toast">Unable to reboot into recovery</string>
 
+    <string name="changelog_dialog_title">Newest Changes</string>
+    <string name="changelog_row_bulletpoint">\u2022</string>
+    <string name="changelog_header_version">"Project: "</string>
+
 </resources>
