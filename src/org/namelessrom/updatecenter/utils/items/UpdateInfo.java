@@ -47,12 +47,12 @@ public class UpdateInfo implements Parcelable, Serializable {
     }
 
     public UpdateInfo(String updateChannel, String updateName, String updateMd5,
-                      String updateUrl) {
+            String updateUrl) {
         this(updateChannel, updateName, updateMd5, updateUrl, "-", "-");
     }
 
     public UpdateInfo(String updateChannel, String updateName, String updateMd5,
-                      String updateUrl, String updateTimeStamp) {
+            String updateUrl, String updateTimeStamp) {
         this(updateChannel, updateName, updateMd5, updateUrl, updateTimeStamp, "-");
     }
 
@@ -61,7 +61,7 @@ public class UpdateInfo implements Parcelable, Serializable {
     }
 
     public UpdateInfo(String updateChannel, String updateName, String updateMd5,
-                      String updateUrl, String updateTimeStamp, String updateChangeLog) {
+            String updateUrl, String updateTimeStamp, String updateChangeLog) {
         mUpdateChannel = updateChannel;
         mUpdateName = updateName;
         mUpdateMd5 = updateMd5;
@@ -137,15 +137,16 @@ public class UpdateInfo implements Parcelable, Serializable {
                 && TextUtils.equals(mUpdateChangeLog, ui.mUpdateChangeLog);
     }
 
-    public static final Parcelable.Creator<UpdateInfo> CREATOR = new Parcelable.Creator<UpdateInfo>() {
-        public UpdateInfo createFromParcel(Parcel in) {
-            return new UpdateInfo(in);
-        }
+    public static final Parcelable.Creator<UpdateInfo> CREATOR =
+            new Parcelable.Creator<UpdateInfo>() {
+                public UpdateInfo createFromParcel(Parcel in) {
+                    return new UpdateInfo(in);
+                }
 
-        public UpdateInfo[] newArray(int size) {
-            return new UpdateInfo[size];
-        }
-    };
+                public UpdateInfo[] newArray(int size) {
+                    return new UpdateInfo[size];
+                }
+            };
 
     @Override
     public int describeContents() {

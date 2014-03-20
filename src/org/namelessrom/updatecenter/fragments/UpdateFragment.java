@@ -35,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.activities.MainActivity;
 import org.namelessrom.updatecenter.net.HttpHandler;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
@@ -51,7 +52,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 public class UpdateFragment extends ListFragment implements OnRefreshListener, Constants {
 
     //
-    private List<UpdateInfo> mTitles = new ArrayList<UpdateInfo>();
+    private List<UpdateInfo> mTitles    = new ArrayList<UpdateInfo>();
     private List<UpdateInfo> mTmpTitles = new ArrayList<UpdateInfo>();
     //
     private PullToRefreshLayout mPullToRefreshLayout;
@@ -68,6 +69,10 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener, C
                 .theseChildrenArePullable(getListView(), getListView().getEmptyView())
                 .listener(this)
                 .setup(mPullToRefreshLayout);
+
+        if (MainActivity.mSlidingMenu != null && MainActivity.mSlidingMenu.isMenuShowing()) {
+            MainActivity.mSlidingMenu.toggle(true);
+        }
 
         new CheckUpdateTask().execute();
     }

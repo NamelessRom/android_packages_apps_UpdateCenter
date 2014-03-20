@@ -40,37 +40,37 @@ import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 
 public class PullToRefreshAttacher {
 
-    private static final boolean DEBUG = false;
-    private static final String LOG_TAG = "PullToRefreshAttacher";
+    private static final boolean DEBUG   = false;
+    private static final String  LOG_TAG = "PullToRefreshAttacher";
 
     /* Member Variables */
 
     private EnvironmentDelegate mEnvironmentDelegate;
-    private HeaderTransformer mHeaderTransformer;
+    private HeaderTransformer   mHeaderTransformer;
 
     private OnRefreshListener mOnRefreshListener;
 
-    private Activity mActivity;
-    private View mHeaderView;
+    private Activity           mActivity;
+    private View               mHeaderView;
     private HeaderViewListener mHeaderViewListener;
 
-    private final int mTouchSlop;
+    private final int   mTouchSlop;
     private final float mRefreshScrollDistance;
 
     private float mInitialMotionY, mLastMotionY, mPullBeginY;
-    private float mInitialMotionX;
+    private float   mInitialMotionX;
     private boolean mIsBeingDragged, mIsRefreshing, mHandlingTouchEventFromDown;
     private View mViewBeingDragged;
 
     private final WeakHashMap<View, ViewDelegate> mRefreshableViews;
 
     private final boolean mRefreshOnUp;
-    private final int mRefreshMinimizeDelay;
+    private final int     mRefreshMinimizeDelay;
     private final boolean mRefreshMinimize;
     private boolean mIsDestroyed = false;
 
     private final int[] mViewLocationResult = new int[2];
-    private final Rect mRect = new Rect();
+    private final Rect  mRect               = new Rect();
 
     protected PullToRefreshAttacher(Activity activity, Options options) {
         if (activity == null) {
@@ -235,7 +235,8 @@ public class PullToRefreshAttacher {
     }
 
     /**
-     * Set a {@link uk.co.senab.actionbarpulltorefresh.library.listeners.HeaderViewListener} which is called when the visibility
+     * Set a {@link uk.co.senab.actionbarpulltorefresh.library.listeners.HeaderViewListener}
+     * which is called when the visibility
      * state of the Header View has changed.
      */
     final void setHeaderViewListener(HeaderViewListener listener) {
@@ -604,7 +605,8 @@ public class PullToRefreshAttacher {
         // Create LayoutParams for adding the View as a panel
         WindowManager.LayoutParams wlp = new WindowManager.LayoutParams(width, height,
                 WindowManager.LayoutParams.TYPE_APPLICATION_PANEL,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams
+                        .FLAG_NOT_TOUCHABLE,
                 PixelFormat.TRANSLUCENT);
         wlp.x = 0;
         wlp.y = mRect.top;

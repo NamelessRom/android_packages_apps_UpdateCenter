@@ -17,43 +17,79 @@
 
 package org.namelessrom.updatecenter.activities;
 
-import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.namelessrom.updatecenter.R;
-import org.namelessrom.updatecenter.fragments.CenterMainFragment;
+import org.namelessrom.updatecenter.fragments.UpdateFragment;
+import org.namelessrom.updatecenter.fragments.WelcomeFragment;
+import org.namelessrom.updatecenter.fragments.preferences.MainPreferenceFragment;
+import org.namelessrom.updatecenter.fragments.preferences.UpdatePreferenceFragment;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
+import org.namelessrom.updatecenter.utils.adapters.MenuListArrayAdapter;
 
-public class MainActivity extends Activity implements Constants {
+public class MainActivity extends Activity implements Constants, AdapterView.OnItemClickListener {
 
-    //
-    public static final String CENTER_MAIN_FRAGMENT_TAG = "center_main_fragment_tag";
+    public static SlidingMenu mSlidingMenu;
+
+    public static final int[] MENU_ICONS = {
+            0,
+            R.drawable.ic_action_update
+    };
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Helper.createDirectories();
 
-        ActionBar actionBar = getActionBar();
-        actionBar.setHomeButtonEnabled(true);
+        final View v = getLayoutInflater().inflate(R.layout.menu_list, null, false);
+        final ListView mMenuList = (ListView) v.findViewById(R.id.navbarlist);
 
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new CenterMainFragment(), CENTER_MAIN_FRAGMENT_TAG)
-                    .commit();
-        }
+        mSlidingMenu = new SlidingMenu(this);
+        mSlidingMenu.setBackground(getResources().getDrawable(R.drawable.bg_menu_dark));
+        mSlidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
+        mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        mSlidingMenu.setShadowWidthRes(R.dimen.shadow_width);
+        mSlidingMenu.setShadowDrawable(R.drawable.shadow);
+        mSlidingMenu.setBehindWidthRes(R.dimen.slidingmenu_offset);
+        mSlidingMenu.setFadeDegree(0.35f);
+        mSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        mSlidingMenu.setMenu(v);
+
+        final View vv = getLayoutInflater().inflate(R.layout.menu_prefs, null, false);
+        mSlidingMenu.setSecondaryMenu(vv);
+        mSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadow_right);
+
+        final MenuListArrayAdapter mAdapter = new MenuListArrayAdapter(
+                this,
+                R.layout.menu_main_list_item,
+                getResources().getStringArray(R.array.menu_entries),
+                MENU_ICONS);
+        mMenuList.setAdapter(mAdapter);
+        mMenuList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        mMenuList.setOnItemClickListener(this);
+
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        final Fragment main = new WelcomeFragment();
+        final Fragment right = new MainPreferenceFragment();
+        ft.replace(R.id.container, main);
+        ft.replace(R.id.menu_frame, right);
+        ft.commit();
 
         if (prefs.getInt(UPDATE_CHECK_PREF, UPDATE_FREQ_WEEKLY) == UPDATE_FREQ_AT_APP_START) {
             Intent i = new Intent(this, UpdateCheckService.class);
@@ -63,36 +99,25 @@ public class MainActivity extends Activity implements Constants {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Fragment main;
+        Fragment right;
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(MainActivity.this, PreferenceActivity.class));
+        switch (i) {
+            default:
+            case 1:
+                main = new UpdateFragment();
+                right = new UpdatePreferenceFragment();
                 break;
         }
-        return super.onOptionsItemSelected(item);
+
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+        ft.replace(R.id.container, main);
+        ft.replace(R.id.menu_frame, right);
+
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.commit();
     }
 
-    //
-
-
-    @Override
-    public void onBackPressed() {
-        boolean mCancelBackPress = false;
-
-        CenterMainFragment f = (CenterMainFragment)
-                getFragmentManager().findFragmentByTag(CENTER_MAIN_FRAGMENT_TAG);
-        if (f != null) {
-            mCancelBackPress = f.onFragmentBackPressed();
-        }
-
-        if (!mCancelBackPress) {
-            super.onBackPressed();
-        }
-    }
 }

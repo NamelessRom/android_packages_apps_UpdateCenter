@@ -34,7 +34,8 @@ public class ChangelogDialogFragment extends DialogFragment implements Constants
     public static final String BUNDLE_URL = "bundle_url";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         ChangeLogListView v = (ChangeLogListView)
                 inflater.inflate(R.layout.dialog_changelog, container, false);
 

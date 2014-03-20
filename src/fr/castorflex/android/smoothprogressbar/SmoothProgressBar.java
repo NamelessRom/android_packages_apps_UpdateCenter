@@ -19,10 +19,10 @@ import org.namelessrom.updatecenter.R;
  */
 public class SmoothProgressBar extends ProgressBar {
 
-    private static final int INTERPOLATOR_ACCELERATE = 0;
-    private static final int INTERPOLATOR_LINEAR = 1;
+    private static final int INTERPOLATOR_ACCELERATE           = 0;
+    private static final int INTERPOLATOR_LINEAR               = 1;
     private static final int INTERPOLATOR_ACCELERATEDECELERATE = 2;
-    private static final int INTERPOLATOR_DECELERATE = 3;
+    private static final int INTERPOLATOR_DECELERATE           = 3;
 
     public SmoothProgressBar(Context context) {
         this(context, null);
@@ -36,17 +36,27 @@ public class SmoothProgressBar extends ProgressBar {
         super(context, attrs, defStyle);
 
         Resources res = context.getResources();
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SmoothProgressBar, defStyle, 0);
+        TypedArray a =
+                context.obtainStyledAttributes(attrs, R.styleable.SmoothProgressBar, defStyle, 0);
 
 
-        final int color = a.getColor(R.styleable.SmoothProgressBar_spb_color, res.getColor(R.color.spb_default_color));
-        final int sectionsCount = a.getInteger(R.styleable.SmoothProgressBar_spb_sections_count, res.getInteger(R.integer.spb_default_sections_count));
-        final int separatorLength = a.getDimensionPixelSize(R.styleable.SmoothProgressBar_spb_stroke_separator_length, res.getDimensionPixelSize(R.dimen.spb_default_stroke_separator_length));
-        final float strokeWidth = a.getDimension(R.styleable.SmoothProgressBar_spb_stroke_width, res.getDimension(R.dimen.spb_default_stroke_width));
-        final float speed = a.getFloat(R.styleable.SmoothProgressBar_spb_speed, Float.parseFloat(res.getString(R.string.spb_default_speed)));
-        final int iInterpolator = a.getInteger(R.styleable.SmoothProgressBar_spb_interpolator, res.getInteger(R.integer.spb_default_interpolator));
-        final boolean reversed = a.getBoolean(R.styleable.SmoothProgressBar_spb_reversed, res.getBoolean(R.bool.spb_default_reversed));
-        final boolean mirrorMode = a.getBoolean(R.styleable.SmoothProgressBar_spb_mirror_mode, res.getBoolean(R.bool.spb_default_mirror_mode));
+        final int color = a.getColor(R.styleable.SmoothProgressBar_spb_color,
+                res.getColor(R.color.spb_default_color));
+        final int sectionsCount = a.getInteger(R.styleable.SmoothProgressBar_spb_sections_count,
+                res.getInteger(R.integer.spb_default_sections_count));
+        final int separatorLength =
+                a.getDimensionPixelSize(R.styleable.SmoothProgressBar_spb_stroke_separator_length,
+                        res.getDimensionPixelSize(R.dimen.spb_default_stroke_separator_length));
+        final float strokeWidth = a.getDimension(R.styleable.SmoothProgressBar_spb_stroke_width,
+                res.getDimension(R.dimen.spb_default_stroke_width));
+        final float speed = a.getFloat(R.styleable.SmoothProgressBar_spb_speed,
+                Float.parseFloat(res.getString(R.string.spb_default_speed)));
+        final int iInterpolator = a.getInteger(R.styleable.SmoothProgressBar_spb_interpolator,
+                res.getInteger(R.integer.spb_default_interpolator));
+        final boolean reversed = a.getBoolean(R.styleable.SmoothProgressBar_spb_reversed,
+                res.getBoolean(R.bool.spb_default_reversed));
+        final boolean mirrorMode = a.getBoolean(R.styleable.SmoothProgressBar_spb_mirror_mode,
+                res.getBoolean(R.bool.spb_default_mirror_mode));
         final int colorsId = a.getResourceId(R.styleable.SmoothProgressBar_spb_colors, 0);
         a.recycle();
 
@@ -82,16 +92,16 @@ public class SmoothProgressBar extends ProgressBar {
                 .reversed(reversed)
                 .mirrorMode(mirrorMode);
 
-        if (colors != null && colors.length > 0)
-            builder.colors(colors);
-        else
+        if (colors != null && colors.length > 0) { builder.colors(colors); } else {
             builder.color(color);
+        }
 
         setIndeterminateDrawable(builder.build());
     }
 
     public void applyStyle(int styleResId) {
-        TypedArray a = getContext().obtainStyledAttributes(null, R.styleable.SmoothProgressBar, 0, styleResId);
+        TypedArray a = getContext()
+                .obtainStyledAttributes(null, R.styleable.SmoothProgressBar, 0, styleResId);
 
         if (a.hasValue(R.styleable.SmoothProgressBar_spb_color)) {
             setSmoothProgressDrawableColor(a.getColor(R.styleable.SmoothProgressBar_spb_color, 0));
@@ -100,27 +110,33 @@ public class SmoothProgressBar extends ProgressBar {
             int colorsId = a.getResourceId(R.styleable.SmoothProgressBar_spb_colors, 0);
             if (colorsId != 0) {
                 int[] colors = getResources().getIntArray(colorsId);
-                if (colors != null && colors.length > 0)
+                if (colors != null && colors.length > 0) {
                     setSmoothProgressDrawableColors(colors);
+                }
             }
         }
         if (a.hasValue(R.styleable.SmoothProgressBar_spb_sections_count)) {
-            setSmoothProgressDrawableSectionsCount(a.getInteger(R.styleable.SmoothProgressBar_spb_sections_count, 0));
+            setSmoothProgressDrawableSectionsCount(
+                    a.getInteger(R.styleable.SmoothProgressBar_spb_sections_count, 0));
         }
         if (a.hasValue(R.styleable.SmoothProgressBar_spb_stroke_separator_length)) {
-            setSmoothProgressDrawableSeparatorLength(a.getDimensionPixelSize(R.styleable.SmoothProgressBar_spb_stroke_separator_length, 0));
+            setSmoothProgressDrawableSeparatorLength(a.getDimensionPixelSize(
+                    R.styleable.SmoothProgressBar_spb_stroke_separator_length, 0));
         }
         if (a.hasValue(R.styleable.SmoothProgressBar_spb_stroke_width)) {
-            setSmoothProgressDrawableStrokeWidth(a.getDimension(R.styleable.SmoothProgressBar_spb_stroke_width, 0));
+            setSmoothProgressDrawableStrokeWidth(
+                    a.getDimension(R.styleable.SmoothProgressBar_spb_stroke_width, 0));
         }
         if (a.hasValue(R.styleable.SmoothProgressBar_spb_speed)) {
             setSmoothProgressDrawableSpeed(a.getFloat(R.styleable.SmoothProgressBar_spb_speed, 0));
         }
         if (a.hasValue(R.styleable.SmoothProgressBar_spb_reversed)) {
-            setSmoothProgressDrawableReversed(a.getBoolean(R.styleable.SmoothProgressBar_spb_reversed, false));
+            setSmoothProgressDrawableReversed(
+                    a.getBoolean(R.styleable.SmoothProgressBar_spb_reversed, false));
         }
         if (a.hasValue(R.styleable.SmoothProgressBar_spb_mirror_mode)) {
-            setSmoothProgressDrawableMirrorMode(a.getBoolean(R.styleable.SmoothProgressBar_spb_mirror_mode, false));
+            setSmoothProgressDrawableMirrorMode(
+                    a.getBoolean(R.styleable.SmoothProgressBar_spb_mirror_mode, false));
         }
         if (a.hasValue(R.styleable.SmoothProgressBar_spb_interpolator)) {
             int iInterpolator = a.getInteger(R.styleable.SmoothProgressBar_spb_interpolator, -1);
@@ -150,8 +166,9 @@ public class SmoothProgressBar extends ProgressBar {
 
     private SmoothProgressDrawable checkIndeterminateDrawable() {
         Drawable ret = getIndeterminateDrawable();
-        if (ret == null || !(ret instanceof SmoothProgressDrawable))
+        if (ret == null || !(ret instanceof SmoothProgressDrawable)) {
             throw new RuntimeException("The drawable is not a SmoothProgressDrawable");
+        }
         return (SmoothProgressDrawable) ret;
     }
 
@@ -159,8 +176,9 @@ public class SmoothProgressBar extends ProgressBar {
     public void setInterpolator(Interpolator interpolator) {
         super.setInterpolator(interpolator);
         Drawable ret = getIndeterminateDrawable();
-        if (ret != null && (ret instanceof SmoothProgressDrawable))
+        if (ret != null && (ret instanceof SmoothProgressDrawable)) {
             ((SmoothProgressDrawable) ret).setInterpolator(interpolator);
+        }
     }
 
     public void setSmoothProgressDrawableInterpolator(Interpolator interpolator) {

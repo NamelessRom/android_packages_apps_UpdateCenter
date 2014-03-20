@@ -11,7 +11,7 @@ import android.view.View;
 public class ContentLoadingSmoothProgressBar extends SmoothProgressBar {
 
     private static final int MIN_SHOW_TIME = 500; // ms
-    private static final int MIN_DELAY = 500; // ms
+    private static final int MIN_DELAY     = 500; // ms
 
     private long mStartTime = -1;
 

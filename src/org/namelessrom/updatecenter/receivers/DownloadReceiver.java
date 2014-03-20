@@ -36,13 +36,16 @@ import java.io.IOException;
 public class DownloadReceiver extends BroadcastReceiver implements Constants {
     private static final String TAG = "DownloadReceiver";
 
-    public static final String ACTION_START_DOWNLOAD = "org.namelessrom.updatecenter.action.START_DOWNLOAD";
-    public static final String EXTRA_UPDATE_INFO = "update_info";
+    public static final String ACTION_START_DOWNLOAD =
+            "org.namelessrom.updatecenter.action.START_DOWNLOAD";
+    public static final String EXTRA_UPDATE_INFO     = "update_info";
 
-    public static final String ACTION_DOWNLOAD_STARTED = "org.namelessrom.updatecenter.action.DOWNLOAD_STARTED";
+    public static final String ACTION_DOWNLOAD_STARTED =
+            "org.namelessrom.updatecenter.action.DOWNLOAD_STARTED";
 
-    public static final String ACTION_INSTALL_UPDATE = "org.namelessrom.updatecenter.action.INSTALL_UPDATE";
-    public static final String EXTRA_FILENAME = "filename";
+    public static final String ACTION_INSTALL_UPDATE =
+            "org.namelessrom.updatecenter.action.INSTALL_UPDATE";
+    public static final String EXTRA_FILENAME        = "filename";
 
     @Override
     public void onReceive(Context context, Intent intent) {

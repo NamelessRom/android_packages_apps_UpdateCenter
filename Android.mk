@@ -5,7 +5,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_JAVA_LIBRARIES := okhttp
-LOCAL_STATIC_JAVA_LIBRARIES := changeloglib
+LOCAL_STATIC_JAVA_LIBRARIES := android-support-v13 changeloglib
 
 LOCAL_SRC_FILES := \
     $(call all-java-files-under, src)

@@ -33,15 +33,16 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.HeaderViewListener;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 
 /**
- * The main component of the library. You wrap the views you wish to be 'pullable' within this layout.
+ * The main component of the library. You wrap the views you wish to be 'pullable' within this
+ * layout.
  * This layout is setup by using the {@link ActionBarPullToRefresh} setup-wizard return by
  *
  * @link ActionBarPullToRefresh#from(android.app.Activity)}.
  */
 public class PullToRefreshLayout extends FrameLayout {
 
-    private static final boolean DEBUG = false;
-    private static final String LOG_TAG = "PullToRefreshLayout";
+    private static final boolean DEBUG   = false;
+    private static final String  LOG_TAG = "PullToRefreshLayout";
 
     private PullToRefreshAttacher mPullToRefreshAttacher;
 
@@ -88,7 +89,8 @@ public class PullToRefreshLayout extends FrameLayout {
     }
 
     /**
-     * Set a {@link uk.co.senab.actionbarpulltorefresh.library.listeners.HeaderViewListener} which is called when the visibility
+     * Set a {@link uk.co.senab.actionbarpulltorefresh.library.listeners.HeaderViewListener}
+     * which is called when the visibility
      * state of the Header View has changed.
      *
      * @param listener The HeaderViewListener
@@ -217,13 +219,14 @@ public class PullToRefreshLayout extends FrameLayout {
     }
 
     protected PullToRefreshAttacher createPullToRefreshAttacher(Activity activity,
-                                                                Options options) {
+            Options options) {
         return new PullToRefreshAttacher(activity, options != null ? options : new Options());
     }
 
     private void ensureAttacher() {
         if (mPullToRefreshAttacher == null) {
-            throw new IllegalStateException("You need to setup the PullToRefreshLayout before using it");
+            throw new IllegalStateException(
+                    "You need to setup the PullToRefreshLayout before using it");
         }
     }
 
