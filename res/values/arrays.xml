@@ -17,7 +17,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses
   -->
 
-<resources xmlns:xliff="http://schemas.android.com/apk/res/android">
+<resources>
 
     <string-array name="update_check_entries" translatable="false">
         <item>@string/check_manual</item>
@@ -39,6 +39,18 @@
         <item>604800</item>
         <item>1209600</item>
         <item>2419200</item>
+    </string-array>
+
+    <string-array name="recovery_type_entries" translatable="false">
+        <item>@string/recovery_type_both</item>
+        <item>@string/recovery_type_cwm</item>
+        <item>@string/recovery_type_open</item>
+    </string-array>
+
+    <string-array name="recovery_type_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 
 </resources>
