@@ -41,7 +41,8 @@
     <string name="changelog_loaded">Changelog loaded!</string>
 
     <!-- Settings strings -->
-    <string name="update_check_title">Check for updates</string>
+    <string name="update_check_title">Update check interval</string>
+    <string name="update_check_summary">The interval to check for updates</string>
     <string name="check_manual">Manual</string>
     <string name="check_on_app_start">On app start</string>
     <string name="check_on_boot">On every boot</string>
@@ -82,5 +83,11 @@
     <string name="changelog_dialog_title">Newest Changes</string>
     <string name="changelog_row_bulletpoint">\u2022</string>
     <string name="changelog_header_version">"Project: "</string>
+
+    <string name="recovery_type_title">Recovery script type</string>
+    <string name="recovery_type_summary">The type of the recovery script to generate</string>
+    <string name="recovery_type_both">Both</string>
+    <string name="recovery_type_cwm">ClockWorkMod</string>
+    <string name="recovery_type_open">OpenRecovery</string>
 
 </resources>

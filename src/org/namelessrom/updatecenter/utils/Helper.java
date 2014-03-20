@@ -180,7 +180,7 @@ public class Helper implements Constants {
                 if (f.getName().toLowerCase(Locale.ENGLISH).endsWith(".zip")) {
                     filename = f.getAbsolutePath();
                     if (filename.startsWith(UPDATE_FOLDER_FULL)) {
-                        extras.add(filename.replace(UPDATE_FOLDER_FULL, ""));
+                        extras.add(filename.replace(UPDATE_FOLDER_FULL + "/", ""));
                     }
                 }
             }
@@ -190,7 +190,45 @@ public class Helper implements Constants {
         return extras;
     }
 
-    public static void triggerUpdate(Context context, String updateFileName) throws IOException {
+    private static void createOpenRecoveryScript(final String root, final String filename,
+            final List<String> files)
+            throws IOException {
+        final FileOutputStream os = new FileOutputStream("/cache/recovery/openrecoveryscript",
+                false);
+        try {
+            writeString(os, "set tw_signed_zip_verify 0");
+            writeString(os, String.format("install %s", filename));
+
+            for (final String file : files) {
+                writeString(os, String.format("install %s", root + file));
+            }
+            writeString(os, "wipe cache");
+        } finally {
+            os.close();
+        }
+
+        FileUtils.setPermissions("/cache/recovery/openrecoveryscript", 0644, Process.myUid(), 2001);
+    }
+
+    private static void createCwmScript(final String root, final String filename,
+            final List<String> files) throws IOException {
+        final FileOutputStream os = new FileOutputStream("/cache/recovery/extendedcommand", false);
+        try {
+            writeString(os, String.format("install_zip(\"%s\");", filename));
+
+            for (String file : files) {
+                writeString(os, String.format("install_zip(\"%s\");", root + file));
+            }
+            writeString(os, "run_program(\"/sbin/busybox\", \"rm\", \"-rf\", \"/cache/*\");");
+        } finally {
+            os.close();
+        }
+
+        FileUtils.setPermissions("/cache/recovery/extendedcommand", 0644, Process.myUid(), 2001);
+    }
+
+    public static void triggerUpdate(final Context context, final String updateFileName)
+            throws IOException {
         // Add the update folder/file name
         // Emulated external storage moved to user-specific paths in 4.2
         final String userPath = Environment.isExternalStorageEmulated()
@@ -200,21 +238,18 @@ public class Helper implements Constants {
         final String rootPath =
                 getStorageMountpoint(context) + userPath + "/" + UPDATE_FOLDER + "/";
         final String flashFilename = rootPath + updateFileName + ".zip";
+        final List<String> extras = getFlashAfterUpdateZIPs();
 
-        final FileOutputStream os = new FileOutputStream("/cache/recovery/extendedcommand", false);
-        try {
-            writeString(os, String.format("install_zip(\"%s\");", flashFilename));
-
-            final List<String> extras = getFlashAfterUpdateZIPs();
-            for (String file : extras) {
-                writeString(os, String.format("install_zip(\"%s\");", rootPath + file));
-            }
-            writeString(os, "run_program(\"/sbin/busybox\", \"rm\", \"-rf\", \"/cache/*\");");
-        } finally {
-            os.close();
+        final int flashType = PreferenceManager.getDefaultSharedPreferences(context)
+                .getInt(PREF_RECOVERY_TYPE, RECOVERY_TYPE_BOTH);
+        if (RECOVERY_TYPE_BOTH == flashType) {
+            createCwmScript(rootPath, flashFilename, extras);
+            createOpenRecoveryScript(rootPath, flashFilename, extras);
+        } else if (RECOVERY_TYPE_CWM == flashType) {
+            createCwmScript(rootPath, flashFilename, extras);
+        } else if (RECOVERY_TYPE_OPEN == flashType) {
+            createOpenRecoveryScript(rootPath, flashFilename, extras);
         }
-
-        FileUtils.setPermissions("/cache/recovery/extendedcommand", 0644, Process.myUid(), 2001);
 
         // Trigger the reboot
         final PowerManager powerManager = (PowerManager)
