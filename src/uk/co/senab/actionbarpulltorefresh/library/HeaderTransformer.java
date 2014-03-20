@@ -58,7 +58,8 @@ public abstract class HeaderTransformer {
 
     /**
      * Called when a refresh has begun. Theoretically this call is similar
-     * to that provided from {@link uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener} but is more suitable
+     * to that provided from {@link uk.co.senab.actionbarpulltorefresh.library.listeners
+     * .OnRefreshListener} but is more suitable
      * for header view updates.
      */
     public void onRefreshStarted() {
@@ -66,7 +67,8 @@ public abstract class HeaderTransformer {
 
     /**
      * Called when a refresh can be initiated when the user ends the touch
-     * event. This is only called when {@link uk.co.senab.actionbarpulltorefresh.library.Options#refreshOnUp} is set to
+     * event. This is only called when {@link uk.co.senab.actionbarpulltorefresh.library
+     * .Options#refreshOnUp} is set to
      * true.
      */
     public void onReleaseToRefresh() {

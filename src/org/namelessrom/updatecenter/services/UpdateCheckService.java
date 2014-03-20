@@ -37,13 +37,15 @@ public class UpdateCheckService extends IntentService implements Constants {
     private static final String TAG = "UpdateCheckService";
 
     // request actions
-    public static final String ACTION_CHECK = "org.namelessrom.updatecenter.action.CHECK";
-    public static final String ACTION_CANCEL_CHECK = "org.namelessrom.updatecenter.action.CANCEL_CHECK";
+    public static final String ACTION_CHECK        = "org.namelessrom.updatecenter.action.CHECK";
+    public static final String ACTION_CANCEL_CHECK =
+            "org.namelessrom.updatecenter.action.CANCEL_CHECK";
 
     // broadcast actions
-    public static final String ACTION_CHECK_FINISHED = "org.namelessrom.updatecenter.action.UPDATE_CHECK_FINISHED";
+    public static final String ACTION_CHECK_FINISHED =
+            "org.namelessrom.updatecenter.action.UPDATE_CHECK_FINISHED";
     // extra for ACTION_CHECK_FINISHED: total amount of found updates
-    public static final String EXTRA_UPDATE_COUNT = "update_count";
+    public static final String EXTRA_UPDATE_COUNT    = "update_count";
 
     // max. number of updates listed in the expanded notification
     private static final int EXPANDED_NOTIF_UPDATE_COUNT = 4;

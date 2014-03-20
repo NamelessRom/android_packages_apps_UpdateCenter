@@ -19,16 +19,17 @@ package uk.co.senab.actionbarpulltorefresh.library;
 import org.namelessrom.updatecenter.R;
 
 /**
- * Allows you to specify a number of configuration options when setting up a {@link PullToRefreshLayout}.
+ * Allows you to specify a number of configuration options when setting up a {@link
+ * PullToRefreshLayout}.
  */
 public final class Options {
 
     /* Default configuration values */
-    private static final int DEFAULT_HEADER_LAYOUT = R.layout.pull_to_refresh_header;
-    private static final float DEFAULT_REFRESH_SCROLL_DISTANCE = 0.5f;
-    private static final boolean DEFAULT_REFRESH_ON_UP = false;
-    private static final int DEFAULT_REFRESH_MINIMIZED_DELAY = 1000;
-    private static final boolean DEFAULT_REFRESH_MINIMIZE = true;
+    private static final int     DEFAULT_HEADER_LAYOUT           = R.layout.pull_to_refresh_header;
+    private static final float   DEFAULT_REFRESH_SCROLL_DISTANCE = 0.5f;
+    private static final boolean DEFAULT_REFRESH_ON_UP           = false;
+    private static final int     DEFAULT_REFRESH_MINIMIZED_DELAY = 1000;
+    private static final boolean DEFAULT_REFRESH_MINIMIZE        = true;
 
     public static Builder create() {
         return new Builder();
@@ -37,12 +38,12 @@ public final class Options {
     Options() {
     }
 
-    EnvironmentDelegate environmentDelegate = null;
-    int headerLayout = DEFAULT_HEADER_LAYOUT;
-    HeaderTransformer headerTransformer = null;
-    float refreshScrollDistance = DEFAULT_REFRESH_SCROLL_DISTANCE;
-    boolean refreshOnUp = DEFAULT_REFRESH_ON_UP;
-    int refreshMinimizeDelay = DEFAULT_REFRESH_MINIMIZED_DELAY;
+    EnvironmentDelegate environmentDelegate   = null;
+    int                 headerLayout          = DEFAULT_HEADER_LAYOUT;
+    HeaderTransformer   headerTransformer     = null;
+    float               refreshScrollDistance = DEFAULT_REFRESH_SCROLL_DISTANCE;
+    boolean             refreshOnUp           = DEFAULT_REFRESH_ON_UP;
+    int                 refreshMinimizeDelay  = DEFAULT_REFRESH_MINIMIZED_DELAY;
 
     /**
      * Enable or disable the header 'minimization', which by default means that the majority of

@@ -50,12 +50,12 @@ import uk.co.senab.actionbarpulltorefresh.library.sdk.Compat;
  */
 public class DefaultHeaderTransformer extends HeaderTransformer {
 
-    public static final int PROGRESS_BAR_STYLE_INSIDE = 0;
+    public static final int PROGRESS_BAR_STYLE_INSIDE  = 0;
     public static final int PROGRESS_BAR_STYLE_OUTSIDE = 1;
 
-    private View mHeaderView;
-    private ViewGroup mContentLayout;
-    private TextView mHeaderTextView;
+    private View              mHeaderView;
+    private ViewGroup         mContentLayout;
+    private TextView          mHeaderTextView;
     private SmoothProgressBar mHeaderProgressBar;
 
     private CharSequence mPullRefreshLabel, mRefreshingLabel, mReleaseLabel;
@@ -63,7 +63,7 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
     private int mProgressDrawableColor;
 
     private long mAnimationDuration;
-    private int mProgressBarStyle;
+    private int  mProgressBarStyle;
     private int mProgressBarHeight = RelativeLayout.LayoutParams.WRAP_CONTENT;
 
     private final Interpolator mInterpolator = new AccelerateInterpolator();
@@ -73,7 +73,8 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
         if (Build.VERSION.SDK_INT < min) {
             throw new IllegalStateException("This HeaderTransformer is designed to run on SDK "
                     + min
-                    + "+. If using ActionBarSherlock or ActionBarCompat you should use the appropriate provided extra.");
+                    + "+. If using ActionBarSherlock or ActionBarCompat you should use the " +
+                    "appropriate provided extra.");
         }
     }
 
@@ -303,7 +304,7 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
                 ? styleAttrs.getDrawable(R.styleable.PullToRefreshHeader_ptrHeaderBackground)
                 : getActionBarBackground(activity);
         if (bg != null) {
-            mHeaderTextView.setBackgroundDrawable(bg);
+            mHeaderTextView.setBackground(bg);
 
             // If we have an opaque background we can remove the background from the content layout
             if (mContentLayout != null && bg.getOpacity() == PixelFormat.OPAQUE) {
@@ -374,12 +375,14 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
                     new SmoothProgressDrawable.Builder(mHeaderProgressBar.getContext())
                             .color(mProgressDrawableColor)
                             .strokeWidth(strokeWidth)
-                            .build());
+                            .build()
+            );
 
             ShapeDrawable shape = new ShapeDrawable();
             shape.setShape(new RectShape());
             shape.getPaint().setColor(mProgressDrawableColor);
-            ClipDrawable clipDrawable = new ClipDrawable(shape, Gravity.CENTER, ClipDrawable.HORIZONTAL);
+            ClipDrawable clipDrawable =
+                    new ClipDrawable(shape, Gravity.CENTER, ClipDrawable.HORIZONTAL);
 
             mHeaderProgressBar.setProgressDrawable(clipDrawable);
         }
@@ -439,7 +442,7 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
     }
 
     protected static TypedArray obtainStyledAttrsFromThemeAttr(Context context, int themeAttr,
-                                                               int[] styleAttrs) {
+            int[] styleAttrs) {
         // Need to get resource id of style pointed to from the theme attr
         TypedValue outValue = new TypedValue();
         context.getTheme().resolveAttribute(themeAttr, outValue, true);
