@@ -12,6 +12,8 @@ public interface Constants {
     public static final String SD_ROOT_DIR              =
             Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String UPDATE_FOLDER            = "Nameless/UpdateCenter";
+    public static final String UPDATE_FOLDER_CHANGELOG  =
+            SD_ROOT_DIR + File.separator + "Nameless/UpdateCenter/Changelogs";
     public static final String UPDATE_FOLDER_FULL       =
             SD_ROOT_DIR + File.separator + UPDATE_FOLDER;
     public static final String UPDATE_FOLDER_ADDITIONAL = UPDATE_FOLDER_FULL + "/FlashAfterUpdate";
