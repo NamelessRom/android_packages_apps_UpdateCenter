@@ -35,7 +35,7 @@ class InstanceCreationUtils {
     private static final String LOG_TAG = "InstanceCreationUtils";
 
     private static final Class<?>[] VIEW_DELEGATE_CONSTRUCTOR_SIGNATURE = new Class[]{};
-    private static final Class<?>[] TRANSFORMER_CONSTRUCTOR_SIGNATURE = new Class[]{};
+    private static final Class<?>[] TRANSFORMER_CONSTRUCTOR_SIGNATURE   = new Class[]{};
 
     private static final HashMap<Class, Class> BUILT_IN_DELEGATES;
 
@@ -84,9 +84,9 @@ class InstanceCreationUtils {
     }
 
     private static <T> T newInstance(Context context, Class clazz, Class[] constructorSig,
-                                     Object... arguments) {
+            Object... arguments) {
         try {
-            Constructor<?> constructor = clazz.getConstructor(constructorSig);
+            final Constructor<?> constructor = clazz.getConstructor(constructorSig);
             return (T) constructor.newInstance(arguments);
         } catch (Exception e) {
             Log.w(LOG_TAG, "Cannot instantiate class: " + clazz.getName(), e);

@@ -16,31 +16,28 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="org.namelessrom.updatecenter.fragments.UpdateFragment">
+    android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:id="@+id/dynamic_imageView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_action_update" />
-
-    <TextView
+        android:id="@+id/welcome_imageview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/action_updates"
-        android:id="@+id/dynamic_textView"
-        android:layout_below="@+id/dynamic_imageView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:textAlignment="center"
+        android:layout_above="@+id/welcome_textview"
+        android:src="@mipmap/ic_launcher"
+        android:scaleType="centerCrop"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/welcome_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome_text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:gravity="center"
-        android:textStyle="italic" />
+        android:layout_centerInParent="true"
+        android:fontFamily="sans-serif-light"
+        android:textStyle="bold"
+        android:padding="10dp" />
+
 </RelativeLayout>

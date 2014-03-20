@@ -52,7 +52,7 @@ import static org.namelessrom.updatecenter.Application.logDebug;
  */
 public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Constants {
 
-    private final Activity mContext;
+    private final Activity         mContext;
     private final List<UpdateInfo> mUpdateInfos;
 
     public UpdateListAdapter(Activity context, List<UpdateInfo> updateInfos) {
@@ -62,8 +62,8 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
     }
 
     private class ViewHolder {
-        private final TextView tvChannel;
-        private final TextView tvName;
+        private final TextView    tvChannel;
+        private final TextView    tvName;
         private final ImageButton ibAction;
 
         private ViewHolder(View rootView) {
@@ -147,31 +147,33 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
             dialog.setTitle(R.string.not_action_install_update);
             dialog.setMessage(mContext.getString(R.string.not_download_install_notice,
                     updateInfo.getUpdateName()));
-            dialog.setPositiveButton(R.string.not_action_install_update, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i1) {
-                    try {
-                        Helper.triggerUpdate(mContext, updateInfo.getUpdateName());
-                    } catch (Exception exc) {
-                        logDebug("Error: " + exc.getMessage());
-                    }
-                    dialogInterface.dismiss();
-                }
-            });
+            dialog.setPositiveButton(R.string.not_action_install_update,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i1) {
+                            try {
+                                Helper.triggerUpdate(mContext, updateInfo.getUpdateName());
+                            } catch (Exception exc) {
+                                logDebug("Error: " + exc.getMessage());
+                            }
+                            dialogInterface.dismiss();
+                        }
+                    });
         } else {
             dialog.setTitle(R.string.not_action_download);
             dialog.setMessage(mContext.getString(R.string.not_download_notice,
                     updateInfo.getUpdateName()));
-            dialog.setPositiveButton(R.string.not_action_download, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i1) {
-                    Intent i = new Intent(mContext, DownloadReceiver.class);
-                    i.setAction(DownloadReceiver.ACTION_START_DOWNLOAD);
-                    i.putExtra(DownloadReceiver.EXTRA_UPDATE_INFO, (Parcelable) updateInfo);
-                    mContext.sendBroadcast(i);
-                    dialogInterface.dismiss();
-                }
-            });
+            dialog.setPositiveButton(R.string.not_action_download,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i1) {
+                            Intent i = new Intent(mContext, DownloadReceiver.class);
+                            i.setAction(DownloadReceiver.ACTION_START_DOWNLOAD);
+                            i.putExtra(DownloadReceiver.EXTRA_UPDATE_INFO, (Parcelable) updateInfo);
+                            mContext.sendBroadcast(i);
+                            dialogInterface.dismiss();
+                        }
+                    });
         }
 
         dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -194,7 +196,8 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
         TextView text = (TextView) dialog.findViewById(R.id.dialog_updates_info);
         String tmp = mContext.getString(R.string.update_name, updateInfo.getUpdateName()) + "\n";
         tmp += mContext.getString(R.string.update_channel, updateInfo.getUpdateChannel()) + "\n";
-        tmp += mContext.getString(R.string.update_timestamp, updateInfo.getUpdateTimeStamp()) + "\n";
+        tmp += mContext.getString(R.string.update_timestamp,
+                updateInfo.getUpdateTimeStamp()) + "\n";
         tmp += mContext.getString(R.string.update_md5sum, updateInfo.getUpdateMd5()) + "\n";
         text.setText(tmp);
 

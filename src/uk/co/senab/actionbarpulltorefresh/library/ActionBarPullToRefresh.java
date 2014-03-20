@@ -35,13 +35,13 @@ public class ActionBarPullToRefresh {
     }
 
     public static final class SetupWizard {
-        private final Activity mActivity;
-        private Options mOptions;
-        private int[] refreshableViewIds;
-        private View[] refreshableViews;
-        private OnRefreshListener mOnRefreshListener;
-        private ViewGroup mViewGroupToInsertInto;
-        private HashMap<Class, ViewDelegate> mViewDelegates;
+        private final Activity                     mActivity;
+        private       Options                      mOptions;
+        private       int[]                        refreshableViewIds;
+        private       View[]                       refreshableViews;
+        private       OnRefreshListener            mOnRefreshListener;
+        private       ViewGroup                    mViewGroupToInsertInto;
+        private       HashMap<Class, ViewDelegate> mViewDelegates;
 
         private SetupWizard(Activity activity) {
             mActivity = activity;
@@ -118,7 +118,7 @@ public class ActionBarPullToRefresh {
         }
 
         private static void insertLayoutIntoViewGroup(ViewGroup viewGroup,
-                                                      PullToRefreshLayout pullToRefreshLayout) {
+                PullToRefreshLayout pullToRefreshLayout) {
             // Move all children to PullToRefreshLayout. This code looks a bit silly but the child
             // indices change every time we remove a View (so we can't just iterate through)
             View child = viewGroup.getChildAt(0);

@@ -45,7 +45,8 @@ public class UpdateCheckReceiver extends BroadcastReceiver implements Constants 
 
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
             // Connectivity has changed
-            boolean hasConnection = !intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
+            boolean hasConnection =
+                    !intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
             Log.i(TAG, "Got connectivity change, has connection: " + hasConnection);
             if (!hasConnection) {
                 return;
