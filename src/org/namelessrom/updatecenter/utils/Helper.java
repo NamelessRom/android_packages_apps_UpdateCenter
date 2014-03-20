@@ -26,7 +26,9 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.os.PowerManager;
+import android.os.Process;
 import android.os.UserHandle;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
@@ -38,9 +40,14 @@ import org.namelessrom.updatecenter.services.UpdateCheckService;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by alex on 05.01.14.
@@ -96,6 +103,10 @@ public class Helper implements Constants {
         if (!f.exists()) {
             f.mkdirs();
         }
+        f = new File(UPDATE_FOLDER_ADDITIONAL);
+        if (!f.exists()) {
+            f.mkdirs();
+        }
     }
 
     public static void cancelNotification(Context context) {
@@ -142,52 +153,72 @@ public class Helper implements Constants {
         // Get the intent ready
         Intent i = new Intent(context, UpdateCheckService.class);
         i.setAction(UpdateCheckService.ACTION_CHECK);
-        PendingIntent pi = PendingIntent.getService(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi =
+                PendingIntent.getService(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Clear any old alarms and schedule the new alarm
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.cancel(pi);
 
         if (updateFrequency != Constants.UPDATE_FREQ_NONE) {
-            am.setRepeating(AlarmManager.RTC_WAKEUP, lastCheck + updateFrequency, updateFrequency, pi);
+            am.setRepeating(AlarmManager.RTC_WAKEUP, lastCheck + updateFrequency, updateFrequency,
+                    pi);
         }
     }
 
+    private static void writeString(OutputStream os, String s) throws IOException {
+        os.write((s + "\n").getBytes("UTF-8"));
+    }
+
+    private static List<String> getFlashAfterUpdateZIPs() {
+        final List<String> extras = new ArrayList<String>();
+        final File[] files = (new File(UPDATE_FOLDER_ADDITIONAL)).listFiles();
+        String filename;
+
+        if (files != null) {
+            for (File f : files) {
+                if (f.getName().toLowerCase(Locale.ENGLISH).endsWith(".zip")) {
+                    filename = f.getAbsolutePath();
+                    if (filename.startsWith(UPDATE_FOLDER_FULL)) {
+                        extras.add(filename.replace(UPDATE_FOLDER_FULL, ""));
+                    }
+                }
+            }
+            Collections.sort(extras);
+        }
+
+        return extras;
+    }
+
     public static void triggerUpdate(Context context, String updateFileName) throws IOException {
-        /*
-         * Should perform the following steps.
-         * 1.- mkdir -p /cache/recovery
-         * 2.- echo 'boot-recovery' > /cache/recovery/command
-         * 3.- if(mBackup) echo '--nandroid'  >> /cache/recovery/command
-         * 4.- echo '--update_package=SDCARD:update.zip' >> /cache/recovery/command
-         * 5.- reboot recovery
-         */
-
-        // Set the 'boot recovery' command
-        Process p = Runtime.getRuntime().exec("sh");
-        OutputStream os = p.getOutputStream();
-        os.write("mkdir -p /cache/recovery/\n".getBytes());
-        os.write("echo 'boot-recovery' >/cache/recovery/command\n".getBytes());
-
-        // See if backups are enabled and add the nandroid flag
-        /* TODO: add this back once we have a way of doing backups that is not recovery specific
-           if (mPrefs.getBoolean(Constants.BACKUP_PREF, true)) {
-           os.write("echo '--nandroid'  >> /cache/recovery/command\n".getBytes());
-           }
-           */
-
         // Add the update folder/file name
         // Emulated external storage moved to user-specific paths in 4.2
-        String userPath = Environment.isExternalStorageEmulated() ? ("/" + UserHandle.myUserId()) : "";
+        final String userPath = Environment.isExternalStorageEmulated()
+                ? ("/" + UserHandle.myUserId())
+                : "";
 
-        String cmd = "echo '--update_package=" + getStorageMountpoint(context) + userPath
-                + "/" + UPDATE_FOLDER + "/" + updateFileName
-                + "' >> /cache/recovery/command\n";
-        os.write(cmd.getBytes());
-        os.flush();
+        final String rootPath =
+                getStorageMountpoint(context) + userPath + "/" + UPDATE_FOLDER + "/";
+        final String flashFilename = rootPath + updateFileName + ".zip";
+
+        final FileOutputStream os = new FileOutputStream("/cache/recovery/extendedcommand", false);
+        try {
+            writeString(os, String.format("install_zip(\"%s\");", flashFilename));
+
+            final List<String> extras = getFlashAfterUpdateZIPs();
+            for (String file : extras) {
+                writeString(os, String.format("install_zip(\"%s\");", rootPath + file));
+            }
+            writeString(os, "run_program(\"/sbin/busybox\", \"rm\", \"-rf\", \"/cache/*\");");
+        } finally {
+            os.close();
+        }
+
+        FileUtils.setPermissions("/cache/recovery/extendedcommand", 0644, Process.myUid(), 2001);
 
         // Trigger the reboot
-        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        final PowerManager powerManager = (PowerManager)
+                context.getSystemService(Context.POWER_SERVICE);
         powerManager.reboot("recovery");
     }
 
