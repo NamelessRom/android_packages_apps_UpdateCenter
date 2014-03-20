@@ -7,7 +7,8 @@ import android.util.Log;
  */
 public class Application extends android.app.Application {
 
-    public static boolean IS_DEBUG = false;
+    public static boolean IS_DEBUG     = false;
+    public static boolean IS_LOG_DEBUG = false;
 
     @Override
     public void onCreate() {
@@ -16,10 +17,12 @@ public class Application extends android.app.Application {
         /*final String isDebug = SystemProperties.get("ro.nameless.debug");
         IS_DEBUG = (isDebug != null && isDebug.equals("1"));*/
 
+        logDebug("Debugging enabled!");
+
     }
 
     public static void logDebug(String msg) {
-        if (IS_DEBUG) {
+        if (IS_LOG_DEBUG) {
             Log.e("LOGDEBUG", msg);
         }
     }

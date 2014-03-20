@@ -30,6 +30,7 @@ import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -93,7 +94,10 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener, C
         @Override
         public void onReceive(Context context, Intent intent) {
             if (isAdded()) {
-                getListView().invalidateViews();
+                final ListView listView = getListView();
+                if (listView != null) {
+                    listView.invalidateViews();
+                }
             }
         }
     };
@@ -164,13 +168,7 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener, C
             final String url = ROM_URL + "/" + CHANNEL_NIGHTLY + "/"
                     + Helper.readBuildProp("ro.nameless.device");
 
-            int currentDate;
-
-            try {
-                currentDate = Integer.parseInt(Helper.readBuildProp("ro.nameless.date"));
-            } catch (Exception exc) {
-                currentDate = 20140101;
-            }
+            final int currentDate = Helper.getBuildDate();
             //Log.e("HttpHandler", "Url: " + url);
 
             try {
@@ -203,10 +201,10 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener, C
                         }
                         final String changeLog = c.getString(TAG_CHANGELOG);
 
-                        if (currentDate < timeStamp) {
-                            UpdateInfo item = new UpdateInfo(channel, filename, md5sum,
+                        if (currentDate < timeStamp
+                                || Helper.updateIsDownloaded(String.valueOf(timeStamp))) {
+                            final UpdateInfo item = new UpdateInfo(channel, filename, md5sum,
                                     urlFile, timeStampString, changeLog);
-
                             mTmpTitles.add(item);
                         }
                     }

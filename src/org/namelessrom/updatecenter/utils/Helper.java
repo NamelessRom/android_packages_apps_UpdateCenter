@@ -49,6 +49,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import static org.namelessrom.updatecenter.Application.logDebug;
+
 /**
  * Created by alex on 05.01.14.
  */
@@ -101,16 +103,84 @@ public class Helper implements Constants {
     public static void createDirectories() {
         File f = new File(UPDATE_FOLDER_FULL);
         if (!f.exists()) {
-            f.mkdirs();
+            logDebug("Created: " + f.getAbsolutePath() + ": " + (f.mkdirs() ? "true" : "false"));
         }
         f = new File(UPDATE_FOLDER_ADDITIONAL);
         if (!f.exists()) {
-            f.mkdirs();
+            logDebug("Created: " + f.getAbsolutePath() + ": " + (f.mkdirs() ? "true" : "false"));
         }
         f = new File(UPDATE_FOLDER_CHANGELOG);
         if (!f.exists()) {
-            f.mkdirs();
+            logDebug("Created: " + f.getAbsolutePath() + ": " + (f.mkdirs() ? "true" : "false"));
+        } else {
+            logDebug("Cleaning changelogs.");
+            cleanChangelogs(f);
         }
+    }
+
+    public static void cleanChangelogs() {
+        cleanChangelogs(new File(UPDATE_FOLDER_CHANGELOG));
+    }
+
+    public static void cleanChangelogs(final File changelogDir) {
+        final int currentDate = getBuildDate();
+        final File[] files = changelogDir.listFiles();
+
+        String filename;
+        int changelogDate;
+        if (files != null) {
+            for (final File f : files) {
+                if (f.getName().toLowerCase(Locale.ENGLISH).endsWith(".changelog")) {
+                    filename = f.getAbsolutePath();
+                    logDebug("Processing: " + filename);
+                    if (filename.startsWith(UPDATE_FOLDER_CHANGELOG)) {
+                        final String[] tmp = filename
+                                .replace(UPDATE_FOLDER_CHANGELOG + "/", "")
+                                .split("-");
+                        try {
+                            changelogDate = Integer.parseInt(tmp[2]);
+                        } catch (Exception ignored) { changelogDate = Integer.MAX_VALUE;}
+
+                        if (changelogDate < currentDate) {
+                            logDebug("Deleted file: " + (f.delete() ? "true" : "false"));
+                        } else {
+                            logDebug("Not deleting changelog");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static boolean updateIsDownloaded(final String date) {
+        final File[] files = new File(UPDATE_FOLDER_FULL).listFiles();
+        String filename;
+        if (files != null) {
+            for (final File f : files) {
+                if (f.getName().toLowerCase(Locale.ENGLISH).endsWith(".zip")) {
+                    filename = f.getAbsolutePath();
+                    logDebug("Processing: " + filename);
+                    if (filename.startsWith(UPDATE_FOLDER_FULL)) {
+                        final String[] tmp = filename
+                                .replace(UPDATE_FOLDER_FULL + "/", "")
+                                .split("-");
+                        return date.equals(tmp[2]);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static int getBuildDate() {
+        int date;
+        try {
+            date = Integer.parseInt(Helper.readBuildProp("ro.nameless.date"));
+        } catch (Exception exc) {
+            date = 20140101;
+        }
+        return date;
     }
 
     public static void cancelNotification(Context context) {
