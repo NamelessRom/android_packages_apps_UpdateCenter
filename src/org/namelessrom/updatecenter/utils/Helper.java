@@ -107,6 +107,10 @@ public class Helper implements Constants {
         if (!f.exists()) {
             f.mkdirs();
         }
+        f = new File(UPDATE_FOLDER_CHANGELOG);
+        if (!f.exists()) {
+            f.mkdirs();
+        }
     }
 
     public static void cancelNotification(Context context) {
