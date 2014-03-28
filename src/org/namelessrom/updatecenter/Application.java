@@ -10,6 +10,9 @@ public class Application extends android.app.Application {
     public static boolean IS_DEBUG     = false;
     public static boolean IS_LOG_DEBUG = false;
 
+    // TODO: update every time the supported api version changes
+    public static final String API_CLIENT = "2.1";
+
     @Override
     public void onCreate() {
         super.onCreate();

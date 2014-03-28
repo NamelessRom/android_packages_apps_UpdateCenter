@@ -20,6 +20,7 @@ public interface Constants {
     public static final String DOWNLOAD_ID              = "download_id";
 
     public static final String URL             = "http://api.nameless-rom.org";
+    public static final String API_URL         = URL + "/version";
     public static final String ROM_URL         = URL + "/update";
     public static final String APP_URL         = URL + "/app";
     public static final String CHANNEL_NIGHTLY = "NIGHTLY";
@@ -30,6 +31,8 @@ public interface Constants {
     public static final String TAG_TIMESTAMP   = "timestamp";
     public static final String TAG_CHANGELOG   = "changelog";
     public static final String TAG_URL         = "downloadurl";
+    // JSON API
+    public static final String TAG_API_VERSION = "api_version";
 
     // Preferences
     public static final String UPDATE_CHECK_PREF      = "pref_update_check_interval";

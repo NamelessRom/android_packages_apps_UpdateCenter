@@ -19,13 +19,16 @@
 
 <resources xmlns:xliff="http://schemas.android.com/apk/res/android">
 
-    <string name="app_name">Update Center</string>
     <string name="app_version_name">Versionname: %s</string>
     <string name="app_version_code">Versioncode: %s</string>
 
-    <string name="action_settings">Settings</string>
-    <string name="action_updates">Updates</string>
-    <string name="action_updates_summary">Tweak your update preferences, setup automated update checking and much more.</string>
+    <string name="api_version">API Version</string>
+    <string name="app_version">App Version</string>
+    <string name="version">Version: %s</string>
+    <string name="client">Client</string>
+    <string name="server">Server</string>
+    <string name="press_to_load">Press to load</string>
+
     <string name="unknown">Unknown</string>
 
     <string name="dialog_download">Download</string>
@@ -94,8 +97,9 @@
     <string name="recovery_type_open">OpenRecovery</string>
 
     <string name="preferences">Preferences</string>
-    <string name="prefs_version_cat">Version</string>
-    <string name="rom_center_header">--ROM Center</string>
+    <string name="rom_center">ROM Center</string>
     <string name="updates">Updates</string>
+    <string name="menu">Menu</string>
+    <string name="settings">Settings</string>
 
 </resources>

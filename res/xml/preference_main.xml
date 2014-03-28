@@ -18,13 +18,29 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:key="prefs_version_cat"
-        android:title="@string/prefs_version_cat">
+        android:key="version"
+        android:title="@string/app_version">
 
         <Preference
             android:key="prefs_version"
             android:title="@string/empty"
             android:summary="@string/empty" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="api"
+        android:title="@string/api_version">
+
+        <Preference
+            android:key="prefs_api_client"
+            android:title="@string/client"
+            android:summary="@string/empty" />
+
+        <Preference
+            android:key="prefs_api_server"
+            android:title="@string/server"
+            android:summary="@string/press_to_load" />
 
     </PreferenceCategory>
 
