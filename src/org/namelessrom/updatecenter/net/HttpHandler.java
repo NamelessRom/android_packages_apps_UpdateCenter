@@ -26,6 +26,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Handler for HTTP Requests
+ * TODO: drop for volley
+ */
 public class HttpHandler {
 
     private static final OkHttpClient mOkHttpClient = new OkHttpClient();

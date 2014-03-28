@@ -11,9 +11,6 @@ import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
 
-/**
- * Created by alex on 20.03.14.
- */
 public class UpdatePreferenceFragment extends PreferenceFragment implements
         Preference.OnPreferenceChangeListener {
 

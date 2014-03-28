@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.namelessrom.updatecenter.R;
@@ -33,8 +32,9 @@ import org.namelessrom.updatecenter.utils.items.UpdateInfo;
 import java.io.File;
 import java.io.IOException;
 
+import static org.namelessrom.updatecenter.Application.logDebug;
+
 public class DownloadReceiver extends BroadcastReceiver implements Constants {
-    private static final String TAG = "DownloadReceiver";
 
     public static final String ACTION_START_DOWNLOAD =
             "org.namelessrom.updatecenter.action.START_DOWNLOAD";
@@ -49,21 +49,21 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String action = intent.getAction();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final String action = intent.getAction();
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (ACTION_START_DOWNLOAD.equals(action)) {
-            UpdateInfo ui = intent.getParcelableExtra(EXTRA_UPDATE_INFO);
+            final UpdateInfo ui = intent.getParcelableExtra(EXTRA_UPDATE_INFO);
             handleStartDownload(context, ui);
         } else if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
             long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             handleDownloadComplete(context, prefs, id);
         } else if (ACTION_INSTALL_UPDATE.equals(action)) {
-            String fileName = intent.getStringExtra(EXTRA_FILENAME);
+            final String fileName = intent.getStringExtra(EXTRA_FILENAME);
             try {
                 Helper.triggerUpdate(context, fileName);
             } catch (IOException e) {
-                Log.e(TAG, "Unable to reboot into recovery mode", e);
+                logDebug("Unable to reboot into recovery mode: " + e.getMessage());
                 Toast.makeText(context, R.string.apply_unable_to_reboot_toast,
                         Toast.LENGTH_SHORT).show();
                 Helper.cancelNotification(context);
@@ -108,11 +108,11 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
             // Get the full path name of the downloaded file and the MD5
 
             // Strip off the .partial at the end to get the completed file
-            String partialFileFullPath = c.getString(
+            final String partialFileFullPath = c.getString(
                     c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-            String completedFileFullPath = partialFileFullPath.replace(".partial", "");
+            final String completedFileFullPath = partialFileFullPath.replace(".partial", "");
 
-            File partialFile = new File(partialFileFullPath);
+            final File partialFile = new File(partialFileFullPath);
             updateFile = new File(completedFileFullPath);
             partialFile.renameTo(updateFile);
 
