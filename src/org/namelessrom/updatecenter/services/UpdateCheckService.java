@@ -210,7 +210,7 @@ public class UpdateCheckService extends IntentService implements Constants {
                     final int timeStamp = Helper.parseDate(timeStampString);
                     final String changeLog = c.getString(TAG_CHANGELOG);
 
-                    if (currentDate <= timeStamp) {
+                    if (currentDate < timeStamp) {
                         final UpdateInfo item = new UpdateInfo(channel, filename, md5sum,
                                 urlFile, timeStampString, changeLog);
 

@@ -28,8 +28,6 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenedListener;
 
 import java.util.ArrayList;
 import java.util.List;
-//import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnCloseListener;
-//import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenListener;
 
 public class CustomViewAbove extends ViewGroup {
 
@@ -97,7 +95,7 @@ public class CustomViewAbove extends ViewGroup {
     private OnClosedListener mClosedListener;
     private OnOpenedListener mOpenedListener;
 
-    private List<View> mIgnoredViews = new ArrayList<View>();
+    private final List<View> mIgnoredViews = new ArrayList<View>();
 
     //	private int mScrollState = SCROLL_STATE_IDLE;
 

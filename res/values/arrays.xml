@@ -22,7 +22,8 @@
     <!-- Menu -->
 
     <string-array name="menu_entries">
-        <item>@string/rom_center_header</item>
+        <item>@string/app_name</item>
+        <item>@string/rom_center</item>
         <item>@string/updates</item>
     </string-array>
 

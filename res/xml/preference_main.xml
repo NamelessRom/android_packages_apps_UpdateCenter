@@ -19,7 +19,7 @@
 
     <PreferenceCategory
         android:key="prefs_version_cat"
-        android:title="@string/prefs_version_cat">
+        android:title="@string/version">
 
         <Preference
             android:key="prefs_version"
