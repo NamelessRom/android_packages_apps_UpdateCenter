@@ -14,6 +14,8 @@ changelog_dir := ../../../external/changeloglib/res
 res_dirs := res $(changelog_dir)
 LOCAL_RESOURCE_DIR := $(addprefix $(LOCAL_PATH)/, $(res_dirs))
 
+LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+
 LOCAL_PACKAGE_NAME := UpdateCenter
 LOCAL_CERTIFICATE := platform
 LOCAL_PRIVILEGED_MODULE := true

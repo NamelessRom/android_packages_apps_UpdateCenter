@@ -8,7 +8,7 @@ import android.util.Log;
 public class Application extends android.app.Application {
 
     public static boolean IS_DEBUG     = false;
-    public static boolean IS_LOG_DEBUG = false;
+    public static boolean IS_LOG_DEBUG = true;
 
     @Override
     public void onCreate() {
@@ -23,7 +23,7 @@ public class Application extends android.app.Application {
 
     public static void logDebug(String msg) {
         if (IS_LOG_DEBUG) {
-            Log.e("LOGDEBUG", msg);
+            Log.e("UpdateCenter", msg);
         }
     }
 
