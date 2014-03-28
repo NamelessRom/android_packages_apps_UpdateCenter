@@ -152,13 +152,14 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i1) {
                             try {
-                                Helper.triggerUpdate(mContext, updateInfo.getUpdateName());
+                                Helper.triggerUpdate(mContext, updateInfo.getUpdateName() + ".zip");
                             } catch (Exception exc) {
                                 logDebug("Error: " + exc.getMessage());
                             }
                             dialogInterface.dismiss();
                         }
-                    });
+                    }
+            );
         } else {
             dialog.setTitle(R.string.not_action_download);
             dialog.setMessage(mContext.getString(R.string.not_download_notice,
@@ -173,7 +174,8 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
                             mContext.sendBroadcast(i);
                             dialogInterface.dismiss();
                         }
-                    });
+                    }
+            );
         }
 
         dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
