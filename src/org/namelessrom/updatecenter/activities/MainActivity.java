@@ -92,7 +92,7 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         ft.commit();
 
         if (prefs.getInt(UPDATE_CHECK_PREF, UPDATE_FREQ_WEEKLY) == UPDATE_FREQ_AT_APP_START) {
-            Intent i = new Intent(this, UpdateCheckService.class);
+            final Intent i = new Intent(this, UpdateCheckService.class);
             i.setAction(UpdateCheckService.ACTION_CHECK);
             this.startService(i);
         }

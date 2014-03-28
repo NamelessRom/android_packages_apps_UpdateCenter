@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import org.namelessrom.updatecenter.services.UpdateCheckService;
 import org.namelessrom.updatecenter.utils.Constants;
@@ -47,7 +46,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver implements Constants 
             // Connectivity has changed
             boolean hasConnection =
                     !intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-            Log.i(TAG, "Got connectivity change, has connection: " + hasConnection);
+            logDebug("Got connectivity change, has connection: " + hasConnection);
             if (!hasConnection) {
                 return;
             }
@@ -60,16 +59,16 @@ public class UpdateCheckReceiver extends BroadcastReceiver implements Constants 
         if (updateFrequency == UPDATE_FREQ_AT_BOOT) {
             boolean bootCheckCompleted = prefs.getBoolean(BOOT_CHECK_COMPLETED, false);
             if (!bootCheckCompleted) {
-                Log.i(TAG, "Start an on-boot check");
+                logDebug("Start an on-boot check");
                 Intent i = new Intent(context, UpdateCheckService.class);
                 i.setAction(UpdateCheckService.ACTION_CHECK);
                 context.startService(i);
             } else {
                 // Nothing to do
-                Log.i(TAG, "On-boot update check was already completed.");
+                logDebug("On-boot update check was already completed.");
             }
         } else if (updateFrequency > 0) {
-            Log.i(TAG, "Scheduling future, repeating update checks.");
+            logDebug("Scheduling future, repeating update checks.");
             Helper.scheduleUpdateService(context, updateFrequency * 1000);
         }
     }

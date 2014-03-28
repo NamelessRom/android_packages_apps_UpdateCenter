@@ -23,7 +23,7 @@ public class Application extends android.app.Application {
 
     public static void logDebug(String msg) {
         if (IS_LOG_DEBUG) {
-            Log.e("LOGDEBUG", msg);
+            Log.e("UpdateCenter", msg);
         }
     }
 

@@ -10,15 +10,16 @@ import android.os.IBinder;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.activities.MainActivity;
+import org.namelessrom.updatecenter.events.UpdateCheckDoneEvent;
 import org.namelessrom.updatecenter.net.HttpHandler;
 import org.namelessrom.updatecenter.receivers.DownloadReceiver;
+import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.utils.items.UpdateInfo;
@@ -29,17 +30,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by alex on 24.02.14.
- */
-public class UpdateCheckService extends IntentService implements Constants {
+import static org.namelessrom.updatecenter.Application.logDebug;
 
-    private static final String TAG = "UpdateCheckService";
+public class UpdateCheckService extends IntentService implements Constants {
 
     // request actions
     public static final String ACTION_CHECK        = "org.namelessrom.updatecenter.action.CHECK";
     public static final String ACTION_CANCEL_CHECK =
             "org.namelessrom.updatecenter.action.CANCEL_CHECK";
+    public static final String ACTION_CHECK_UI     = "org.namelessrom.updatecenter.action.CHECK_UI";
 
     // broadcast actions
     public static final String ACTION_CHECK_FINISHED =
@@ -69,26 +68,32 @@ public class UpdateCheckService extends IntentService implements Constants {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(final Intent intent) {
+        final String action = intent.getAction();
 
         if (!Helper.isOnline(this)) {
             // Only check for updates if the device is actually connected to a network
-            Log.i(TAG, "Could not check for updates. Not connected to the network.");
+            BusProvider.getBus().post(new UpdateCheckDoneEvent(false));
             return;
         }
 
         // Start the update check
-        Intent finishedIntent = new Intent(ACTION_CHECK_FINISHED); // for dashclock
+        final Intent finishedIntent = new Intent(ACTION_CHECK_FINISHED); // for dashclock
         List<UpdateInfo> availableUpdates;
         try {
             availableUpdates = getAvailableUpdatesAndFillIntent(finishedIntent);
         } catch (IOException e) {
-            Log.e(TAG, "Could not check for updates", e);
             availableUpdates = null;
         }
 
         if (availableUpdates == null) {
             sendBroadcast(finishedIntent);
+            BusProvider.getBus().post(new UpdateCheckDoneEvent(false));
+            return;
+        }
+
+        if (ACTION_CHECK_UI.equals(action)) {
+            BusProvider.getBus().post(new UpdateCheckDoneEvent(true, availableUpdates));
             return;
         }
 
@@ -102,7 +107,7 @@ public class UpdateCheckService extends IntentService implements Constants {
         int realUpdateCount = finishedIntent.getIntExtra(EXTRA_UPDATE_COUNT, 0);
 
         // Write to log
-        Log.i(TAG, "The update check successfully completed at " + d + " and found "
+        logDebug("The update check successfully completed at " + d + " and found "
                 + availableUpdates.size() + " updates ("
                 + realUpdateCount + " newer than installed)");
 
@@ -114,8 +119,8 @@ public class UpdateCheckService extends IntentService implements Constants {
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, i,
                     PendingIntent.FLAG_ONE_SHOT);
 
-            Resources res = getResources();
-            String text = res.getQuantityString(R.plurals.not_new_updates_found_body,
+            final Resources res = getResources();
+            final String text = res.getQuantityString(R.plurals.not_new_updates_found_body,
                     realUpdateCount, realUpdateCount);
 
             // Get the notification ready
@@ -130,9 +135,10 @@ public class UpdateCheckService extends IntentService implements Constants {
 
             Notification.InboxStyle inbox = new Notification.InboxStyle(builder)
                     .setBigContentTitle(text);
-            int added = 0, count = availableUpdates.size();
+            int added = 0;
+            final int count = availableUpdates.size();
 
-            for (UpdateInfo ui : availableUpdates) {
+            for (final UpdateInfo ui : availableUpdates) {
                 if (added < EXPANDED_NOTIF_UPDATE_COUNT) {
                     inbox.addLine(ui.getUpdateName());
                     added++;
@@ -166,6 +172,7 @@ public class UpdateCheckService extends IntentService implements Constants {
         }
 
         sendBroadcast(finishedIntent);
+        BusProvider.getBus().post(new UpdateCheckDoneEvent(true, availableUpdates));
     }
 
     private List<UpdateInfo> getAvailableUpdatesAndFillIntent(Intent intent) throws IOException {
@@ -173,34 +180,26 @@ public class UpdateCheckService extends IntentService implements Constants {
         // SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         // int updateType = prefs.getInt(Constants.UPDATE_TYPE_PREF, 0); // TODO: choose channel
 
-        List<UpdateInfo> updates = new ArrayList<UpdateInfo>();
+        final List<UpdateInfo> updates = new ArrayList<UpdateInfo>();
 
         // Builds: BaseUrl + Channel + DeviceId
         final String url = ROM_URL + "/" + CHANNEL_NIGHTLY + "/"
                 + Helper.readBuildProp("ro.nameless.device");
 
-        int currentDate;
-
-        try {
-            currentDate = Integer.parseInt(Helper.readBuildProp("ro.nameless.date"));
-        } catch (Exception exc) {
-            currentDate = 20140101;
-        }
-        //Log.e("HttpHandler", "Url: " + url);
-
-        String jsonStr = HttpHandler.get(url);
+        final String jsonStr = HttpHandler.get(url);
 
         if (jsonStr != null) {
             try {
                 // Getting JSON Array node
-                JSONArray mUpdateArray = new JSONArray(jsonStr);
+                final JSONArray mUpdateArray = new JSONArray(jsonStr);
 
                 if (mUpdateArray.length() == 0) {
                     return null;
                 }
 
+                final int currentDate = Helper.getBuildDate();
                 for (int i = 0; i < mUpdateArray.length(); i++) {
-                    JSONObject c = mUpdateArray.getJSONObject(i);
+                    final JSONObject c = mUpdateArray.getJSONObject(i);
 
                     //final String id = c.getString(TAG_ID);
                     final String channel = c.getString(TAG_CHANNEL);
@@ -208,26 +207,21 @@ public class UpdateCheckService extends IntentService implements Constants {
                     final String md5sum = c.getString(TAG_MD5SUM);
                     final String urlFile = c.getString(TAG_URL);
                     final String timeStampString = c.getString(TAG_TIMESTAMP);
-                    int timeStamp;
-                    try {
-                        timeStamp = Integer.parseInt(timeStampString);
-                    } catch (Exception exc) {
-                        timeStamp = 20140102;
-                    }
+                    final int timeStamp = Helper.parseDate(timeStampString);
                     final String changeLog = c.getString(TAG_CHANGELOG);
 
-                    if (currentDate < timeStamp) {
-                        UpdateInfo item = new UpdateInfo(channel, filename, md5sum,
+                    if (currentDate <= timeStamp) {
+                        final UpdateInfo item = new UpdateInfo(channel, filename, md5sum,
                                 urlFile, timeStampString, changeLog);
 
                         updates.add(item);
                     }
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                logDebug("Json Exception: " + e.getMessage());
             }
         } else {
-            Log.e("HttpHandler", "Couldn't get any data from the url");
+            logDebug("Couldn't get any data from the url");
         }
 
         intent.putExtra(EXTRA_UPDATE_COUNT, updates.size());

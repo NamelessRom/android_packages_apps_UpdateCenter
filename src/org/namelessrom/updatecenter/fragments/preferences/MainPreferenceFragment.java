@@ -9,9 +9,6 @@ import android.preference.PreferenceFragment;
 
 import org.namelessrom.updatecenter.R;
 
-/**
- * Created by alex on 20.03.14.
- */
 public class MainPreferenceFragment extends PreferenceFragment {
 
     @Override

@@ -174,13 +174,17 @@ public class Helper implements Constants {
     }
 
     public static int getBuildDate() {
-        int date;
+        return parseDate(Helper.readBuildProp("ro.nameless.date"));
+    }
+
+    public static int parseDate(final String timeStampString) {
+        int timeStamp;
         try {
-            date = Integer.parseInt(Helper.readBuildProp("ro.nameless.date"));
+            timeStamp = Integer.parseInt(timeStampString);
         } catch (Exception exc) {
-            date = 20140101;
+            timeStamp = 20140101;
         }
-        return date;
+        return timeStamp;
     }
 
     public static void cancelNotification(Context context) {

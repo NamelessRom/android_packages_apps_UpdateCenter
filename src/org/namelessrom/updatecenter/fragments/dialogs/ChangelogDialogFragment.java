@@ -36,7 +36,7 @@ public class ChangelogDialogFragment extends DialogFragment implements Constants
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        ChangeLogListView v = (ChangeLogListView)
+        final ChangeLogListView v = (ChangeLogListView)
                 inflater.inflate(R.layout.dialog_changelog, container, false);
 
         final Bundle bundle = getArguments();
@@ -58,7 +58,7 @@ public class ChangelogDialogFragment extends DialogFragment implements Constants
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        final Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.setTitle(R.string.changelog_dialog_title);
         return dialog;
     }

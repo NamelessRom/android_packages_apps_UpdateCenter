@@ -24,22 +24,21 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.squareup.otto.Subscribe;
+
 import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.activities.MainActivity;
-import org.namelessrom.updatecenter.net.HttpHandler;
+import org.namelessrom.updatecenter.events.UpdateCheckDoneEvent;
+import org.namelessrom.updatecenter.services.UpdateCheckService;
+import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
-import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.utils.adapters.UpdateListAdapter;
 import org.namelessrom.updatecenter.utils.items.UpdateInfo;
 
@@ -49,6 +48,8 @@ import java.util.List;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
+import static org.namelessrom.updatecenter.Application.logDebug;
 
 public class UpdateFragment extends ListFragment implements OnRefreshListener, Constants {
 
@@ -62,7 +63,7 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener, C
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
 
-        ViewGroup viewGroup = (ViewGroup) view;
+        final ViewGroup viewGroup = (ViewGroup) view;
         mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
 
         ActionBarPullToRefresh.from(getActivity())
@@ -75,22 +76,32 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener, C
             MainActivity.mSlidingMenu.toggle(true);
         }
 
-        new CheckUpdateTask().execute();
+        checkForUpdates();
+    }
+
+    @Override
+    public void onAttach(final Activity activity) {
+        super.onAttach(activity);
+        activity.registerReceiver(receiver,
+                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+        BusProvider.getBus().register(this);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         try {
-            if (getActivity() != null && receiver != null) {
-                getActivity().unregisterReceiver(receiver);
+            final Activity activity = getActivity();
+            if (activity != null) {
+                activity.unregisterReceiver(receiver);
             }
-        } catch (Exception exc) {
-            // Not registered, nothing to do
-        }
+        } catch (Exception ignored) { /* Not registered, nothing to do */ }
+
+        BusProvider.getBus().unregister(this);
     }
 
-    BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (isAdded()) {
@@ -102,13 +113,6 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener, C
         }
     };
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        activity.registerReceiver(receiver,
-                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-    }
-
 //
 
     private void getTitles() {
@@ -118,7 +122,7 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener, C
             mTitles = new ArrayList<UpdateInfo>();
         }
 
-        for (UpdateInfo mTmpTitle : mTmpTitles) {
+        for (final UpdateInfo mTmpTitle : mTmpTitles) {
             mTitles.add(mTmpTitle);
         }
 
@@ -132,112 +136,55 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener, C
         }
 
         if (mTitles.size() == 0) {
-            mTitles.add(
-                    new UpdateInfo("-", getString(R.string.general_no_updates_available), "")
-            );
+            mTitles.add(new UpdateInfo("-", getString(R.string.general_no_updates_available), ""));
         }
 
-        UpdateListAdapter adapter = new UpdateListAdapter(getActivity(), mTitles);
+        final UpdateListAdapter adapter = new UpdateListAdapter(getActivity(), mTitles);
 
         setListAdapter(adapter);
         adapter.notifyDataSetChanged();
         mPullToRefreshLayout.setRefreshComplete();
     }
 
+    private void checkForUpdates() {
+        final Activity activity = getActivity();
+        if (activity != null) {
+            final Intent i = new Intent(activity, UpdateCheckService.class);
+            i.setAction(UpdateCheckService.ACTION_CHECK_UI);
+            activity.startService(i);
+        }
+    }
+
     @Override
-    public void onRefreshStarted(View view) {
-        new CheckUpdateTask().execute();
+    public void onRefreshStarted(final View view) {
+        checkForUpdates();
     }
 
-    class CheckUpdateTask extends AsyncTask<Void, Void, Void> {
+    @Subscribe
+    public void onUpdateCheckDone(final UpdateCheckDoneEvent event) {
+        final Activity activity = getActivity();
+        if (isAdded() && activity != null) {
+            final boolean isSuccess = event.isSuccess();
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            if (mTmpTitles != null) {
-                mTmpTitles.clear();
-            } else {
-                mTmpTitles = new ArrayList<UpdateInfo>();
-            }
-
-            if (!Helper.isOnline(getActivity())) {
-                cancel(true);
-            }
-
-            // Builds: BaseUrl + Channel + DeviceId
-            final String url = ROM_URL + "/" + CHANNEL_NIGHTLY + "/"
-                    + Helper.readBuildProp("ro.nameless.device");
-
-            final int currentDate = Helper.getBuildDate();
-            //Log.e("HttpHandler", "Url: " + url);
-
-            try {
-                final String jsonStr = HttpHandler.get(url);
-                if (jsonStr != null) {
-                    // Getting JSON Array node
-                    final JSONArray mUpdateArray = new JSONArray(jsonStr);
-                    final int updateLength = mUpdateArray.length();
-
-                    if (updateLength == 0) {
-                        CheckUpdateTask.this.cancel(true);
-                        return null;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    logDebug("onUpdateCheckDone: " + (isSuccess ? "true" : "false"));
+                    if (isSuccess) {
+                        mTmpTitles = event.getUpdates();
+                        getTitles();
+                    } else {
+                        mTmpTitles.clear();
+                        mTmpTitles.add(
+                                new UpdateInfo("-",
+                                        getString(R.string.general_no_updates_available),
+                                        "-")
+                        );
+                        getTitles();
                     }
-
-                    JSONObject c;
-                    for (int i = 0; i < updateLength; i++) {
-                        c = mUpdateArray.getJSONObject(i);
-
-                        //final String id = c.getString(TAG_ID);
-                        String channel = c.getString(TAG_CHANNEL);
-                        final String filename = c.getString(TAG_FILENAME).replace(".zip", "");
-                        final String md5sum = c.getString(TAG_MD5SUM);
-                        final String urlFile = c.getString(TAG_URL);
-                        final String timeStampString = c.getString(TAG_TIMESTAMP);
-                        int timeStamp;
-                        try {
-                            timeStamp = Integer.parseInt(timeStampString);
-                        } catch (Exception exc) {
-                            timeStamp = 20140102;
-                        }
-                        final String changeLog = c.getString(TAG_CHANGELOG);
-
-                        if (currentDate < timeStamp
-                                || Helper.updateIsDownloaded(String.valueOf(timeStamp))) {
-                            final UpdateInfo item = new UpdateInfo(channel, filename, md5sum,
-                                    urlFile, timeStampString, changeLog);
-                            mTmpTitles.add(item);
-                        }
-                    }
-                } else {
-                    CheckUpdateTask.this.cancel(true);
-                    Log.e("HttpHandler", "Couldn't get any data from the url");
                 }
-            } catch (Exception e) {
-                CheckUpdateTask.this.cancel(true);
-            }
-
-            return null;
+            });
         }
-
-        @Override
-        protected void onCancelled() {
-            if (isAdded()) {
-                mTmpTitles.clear();
-                mTmpTitles.add(
-                        new UpdateInfo("-",
-                                getString(R.string.general_no_updates_available),
-                                "-")
-                );
-                getTitles();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (isAdded()) {
-                getTitles();
-            }
-        }
-
     }
+
 }
