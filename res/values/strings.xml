@@ -19,7 +19,6 @@
 
 <resources xmlns:xliff="http://schemas.android.com/apk/res/android">
 
-    <string name="app_name">Update Center</string>
     <string name="app_version_name">Versionname: %s</string>
     <string name="app_version_code">Versioncode: %s</string>
 
@@ -97,5 +96,6 @@
     <string name="prefs_version_cat">Version</string>
     <string name="rom_center_header">--ROM Center</string>
     <string name="updates">Updates</string>
+    <string name="menu">Menu</string>
 
 </resources>
