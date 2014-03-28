@@ -17,6 +17,7 @@
 
 package org.namelessrom.updatecenter.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -24,28 +25,44 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.squareup.otto.Subscribe;
 
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.events.SectionAttachedEvent;
 import org.namelessrom.updatecenter.fragments.UpdateFragment;
 import org.namelessrom.updatecenter.fragments.WelcomeFragment;
 import org.namelessrom.updatecenter.fragments.preferences.MainPreferenceFragment;
 import org.namelessrom.updatecenter.fragments.preferences.UpdatePreferenceFragment;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
+import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.utils.adapters.MenuListArrayAdapter;
 
-public class MainActivity extends Activity implements Constants, AdapterView.OnItemClickListener {
+public class MainActivity extends Activity implements Constants, AdapterView.OnItemClickListener,
+        SlidingMenu.OnOpenedListener, SlidingMenu.OnClosedListener {
 
     public static SlidingMenu mSlidingMenu;
+    private static final int ID_RESTORE     = 10;
+    private static final int ID_FIRST_MENU  = 20;
+    private static final int ID_SECOND_MENU = 30;
+
+    private static final int MENU_UC         = 0;
+    private static final int MENU_ROM_UPDATE = 2;
+
+    private int mTitle         = R.string.app_name;
+    private int mFragmentTitle = R.string.app_name;
 
     public static final int[] MENU_ICONS = {
-            0,
+            R.mipmap.ic_launcher,
+            -1,
             R.drawable.ic_action_update
     };
 
@@ -84,6 +101,9 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         mMenuList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mMenuList.setOnItemClickListener(this);
 
+        mSlidingMenu.setOnClosedListener(this);
+        mSlidingMenu.setOnOpenedListener(this);
+
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         final Fragment main = new WelcomeFragment();
         final Fragment right = new MainPreferenceFragment();
@@ -99,13 +119,45 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        BusProvider.getBus().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BusProvider.getBus().unregister(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        restoreActionBar();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mSlidingMenu.toggle(true);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Fragment main;
         Fragment right;
 
         switch (i) {
             default:
-            case 1:
+            case MENU_UC:
+                main = new WelcomeFragment();
+                right = new MainPreferenceFragment();
+                break;
+            case MENU_ROM_UPDATE:
                 main = new UpdateFragment();
                 right = new UpdatePreferenceFragment();
                 break;
@@ -120,4 +172,59 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         ft.commit();
     }
 
+    //==============================================================================================
+    // Methods
+    //==============================================================================================
+
+    @Subscribe
+    public void onSectionAttached(final SectionAttachedEvent event) {
+        final int id = event.getId();
+        switch (id) {
+            case ID_RESTORE:
+                mTitle = mFragmentTitle;
+                break;
+            case ID_FIRST_MENU:
+                mTitle = R.string.menu;
+                break;
+            case ID_SECOND_MENU:
+                mTitle = R.string.preferences;
+                break;
+            default:
+            case WelcomeFragment.ID:
+                mTitle = R.string.app_name;
+                mFragmentTitle = mTitle;
+                break;
+            case UpdateFragment.ID:
+                mTitle = R.string.updates;
+                mFragmentTitle = mTitle;
+                break;
+        }
+
+        restoreActionBar();
+    }
+
+    private void restoreActionBar() {
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(mTitle);
+        }
+    }
+
+    @Override
+    public void onOpened() {
+        int id;
+        if (mSlidingMenu.isMenuShowing() && !mSlidingMenu.isSecondaryMenuShowing()) {
+            id = ID_FIRST_MENU;
+        } else {
+            id = ID_SECOND_MENU;
+        }
+        onSectionAttached(new SectionAttachedEvent(id));
+    }
+
+    @Override
+    public void onClosed() {
+        onSectionAttached(new SectionAttachedEvent(ID_RESTORE));
+    }
 }

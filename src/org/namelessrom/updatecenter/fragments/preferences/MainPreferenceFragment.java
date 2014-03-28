@@ -6,8 +6,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.view.View;
 
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.activities.MainActivity;
 
 public class MainPreferenceFragment extends PreferenceFragment {
 
@@ -33,6 +35,14 @@ public class MainPreferenceFragment extends PreferenceFragment {
                 mVersion.setTitle(unknown);
                 mVersion.setSummary(unknown);
             }
+        }
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (MainActivity.mSlidingMenu != null && MainActivity.mSlidingMenu.isMenuShowing()) {
+            MainActivity.mSlidingMenu.toggle(true);
         }
     }
 }

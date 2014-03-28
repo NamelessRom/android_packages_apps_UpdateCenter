@@ -19,7 +19,6 @@ package org.namelessrom.updatecenter.fragments;
 
 import android.app.Activity;
 import android.app.DownloadManager;
-import android.app.ListFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -41,6 +40,7 @@ import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.adapters.UpdateListAdapter;
 import org.namelessrom.updatecenter.utils.items.UpdateInfo;
+import org.namelessrom.updatecenter.widgets.AttachListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,13 +51,36 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 import static org.namelessrom.updatecenter.Application.logDebug;
 
-public class UpdateFragment extends ListFragment implements OnRefreshListener, Constants {
+public class UpdateFragment extends AttachListFragment implements OnRefreshListener, Constants {
 
+    public static final int              ID         = 200;
     //
-    private List<UpdateInfo> mTitles    = new ArrayList<UpdateInfo>();
-    private List<UpdateInfo> mTmpTitles = new ArrayList<UpdateInfo>();
+    private             List<UpdateInfo> mTitles    = new ArrayList<UpdateInfo>();
+    private             List<UpdateInfo> mTmpTitles = new ArrayList<UpdateInfo>();
     //
     private PullToRefreshLayout mPullToRefreshLayout;
+
+    @Override
+    public void onAttach(final Activity activity) {
+        super.onAttach(activity, ID);
+        activity.registerReceiver(receiver,
+                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+        BusProvider.getBus().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            final Activity activity = getActivity();
+            if (activity != null) {
+                activity.unregisterReceiver(receiver);
+            }
+        } catch (Exception ignored) { /* Not registered, nothing to do */ }
+
+        BusProvider.getBus().unregister(this);
+    }
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
@@ -77,28 +100,6 @@ public class UpdateFragment extends ListFragment implements OnRefreshListener, C
         }
 
         checkForUpdates();
-    }
-
-    @Override
-    public void onAttach(final Activity activity) {
-        super.onAttach(activity);
-        activity.registerReceiver(receiver,
-                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-
-        BusProvider.getBus().register(this);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        try {
-            final Activity activity = getActivity();
-            if (activity != null) {
-                activity.unregisterReceiver(receiver);
-            }
-        } catch (Exception ignored) { /* Not registered, nothing to do */ }
-
-        BusProvider.getBus().unregister(this);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
