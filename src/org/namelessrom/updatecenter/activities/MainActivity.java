@@ -44,9 +44,14 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
 
     public static SlidingMenu mSlidingMenu;
 
+    private static final int MENU_ROM_UPDATE = 1;
+    private static final int MENU_UC_PREFS   = 3;
+
     public static final int[] MENU_ICONS = {
-            0,
-            R.drawable.ic_action_update
+            -1,
+            R.drawable.ic_action_update,
+            -1,
+            0
     };
 
     @Override
@@ -105,9 +110,13 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
 
         switch (i) {
             default:
-            case 1:
+            case MENU_ROM_UPDATE:
                 main = new UpdateFragment();
                 right = new UpdatePreferenceFragment();
+                break;
+            case MENU_UC_PREFS:
+                main = new MainPreferenceFragment();
+                right = new MainPreferenceFragment();
                 break;
         }
 

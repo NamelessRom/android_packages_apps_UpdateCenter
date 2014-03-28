@@ -24,6 +24,8 @@
     <string-array name="menu_entries">
         <item>@string/rom_center_header</item>
         <item>@string/updates</item>
+        <item>@string/app_name</item>
+        <item>@string/preferences</item>
     </string-array>
 
     <!-- Preference Entries -->

@@ -19,7 +19,6 @@
 
 <resources xmlns:xliff="http://schemas.android.com/apk/res/android">
 
-    <string name="app_name">Update Center</string>
     <string name="app_version_name">Versionname: %s</string>
     <string name="app_version_code">Versioncode: %s</string>
 
