@@ -311,7 +311,10 @@ public class Helper implements Constants {
 
         final String rootPath =
                 getStorageMountpoint(context) + userPath + "/" + UPDATE_FOLDER + "/";
-        final String flashFilename = rootPath + updateFileName + ".zip";
+        String flashFilename = rootPath + updateFileName;
+        if (!flashFilename.endsWith(".zip")) {
+            flashFilename += ".zip";
+        }
         final List<String> extras = getFlashAfterUpdateZIPs();
 
         final int flashType = PreferenceManager.getDefaultSharedPreferences(context)
