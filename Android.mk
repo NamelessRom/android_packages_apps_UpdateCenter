@@ -3,6 +3,7 @@ LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE_TAGS := optional
+LOCAL_AAPT_INCLUDE_ALL_RESOURCES := true
 
 LOCAL_JAVA_LIBRARIES := okhttp
 LOCAL_STATIC_JAVA_LIBRARIES := android-support-v13 changeloglib
