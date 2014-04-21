@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name" translatable="false">Update Center</string>
     <string name="empty" translatable="false" />
+    <string name="changelog_row_bulletpoint" translatable="false">\u2022</string>
 </resources>
