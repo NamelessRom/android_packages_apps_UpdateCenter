@@ -2,6 +2,7 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'libs' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.9.+'
@@ -11,6 +12,7 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
+        maven { url 'libs' }
     }
 }
 
@@ -33,9 +35,40 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            def Properties localProps = new Properties()
+            localProps.load(new FileInputStream(file('local.properties')))
+            def Properties keyProps = new Properties()
+            assert localProps['keystore.props.file'];
+            keyProps.load(new FileInputStream(file(localProps['keystore.props.file'])))
+            storeFile file(keyProps["store"])
+            keyAlias keyProps["alias"]
+            storePassword keyProps["storePass"]
+            keyPassword keyProps["pass"]
+        }
+    }
+
+    buildTypes {
+        release {
+            runProguard true
+            signingConfig signingConfigs.release
+            proguardFile 'proguard.flags'
+            zipAlign true
+        }
+    }
+
+    lintOptions {
+        disable 'HardcodedDebugMode'
+        disable 'ValidFragment'
+        disable 'MissingTranslation'
+        disable 'ExtraTranslation'
+    }
+
 }
 
 dependencies {
     compile 'com.android.support:support-v13:19.+'
+    compile 'com.android:changelibs:1.0.0'
     compile fileTree(dir: 'libs', include: '*.jar')
 }
