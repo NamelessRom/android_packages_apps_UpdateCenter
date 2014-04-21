@@ -71,5 +71,8 @@ public class UpdateCheckReceiver extends BroadcastReceiver implements Constants 
             logDebug("Scheduling future, repeating update checks.");
             Helper.scheduleUpdateService(context, updateFrequency * 1000);
         }
+
+        // TODO: preferences
+        Helper.scheduleAutoUpdate(context, UPDATE_FREQ_TWICE_DAILY * 1000);
     }
 }

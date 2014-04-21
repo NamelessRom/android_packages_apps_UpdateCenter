@@ -36,13 +36,17 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.services.AutoUpdater;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,8 +74,34 @@ public class Helper implements Constants {
         return sHelper;
     }
 
+    public static boolean isNamelessDebug() {
+        return existsInBuildProp("ro.nameless.debug=1");
+    }
 
-    public static String readBuildProp(String prop) {
+    public static boolean existsInBuildProp(final String filter) {
+        final File f = new File("/system/build.prop");
+        BufferedReader bufferedReader = null;
+        if (f.exists() && f.canRead()) {
+            try {
+                bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+                String s;
+                while ((s = bufferedReader.readLine()) != null) {
+                    if (s.contains(filter)) return true;
+                }
+            } catch (Exception whoops) {
+                return false;
+            } finally {
+                try {
+                    if (bufferedReader != null) bufferedReader.close();
+                } catch (Exception ignored) {
+                    // mepmep
+                }
+            }
+        }
+        return false;
+    }
+
+    public static String readBuildProp(final String prop) {
         String id = "NULL";
         BufferedReader fileReader = null;
         String tmp;
@@ -242,6 +272,37 @@ public class Helper implements Constants {
             am.setRepeating(AlarmManager.RTC_WAKEUP, lastCheck + updateFrequency, updateFrequency,
                     pi);
         }
+    }
+
+    public static void scheduleAutoUpdate(Context context, int updateFrequency) {
+        // Load the required settings from preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        long lastCheck = prefs.getLong(Constants.LAST_AUTO_UPDATE_CHECK_PREF, 0);
+
+        // Get the intent ready
+        Intent i = new Intent(context, AutoUpdater.class);
+        i.setAction(UpdateCheckService.ACTION_CHECK);
+        PendingIntent pi =
+                PendingIntent.getService(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Clear any old alarms and schedule the new alarm
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(pi);
+
+        if (updateFrequency != Constants.UPDATE_FREQ_NONE) {
+            am.setRepeating(AlarmManager.RTC_WAKEUP, lastCheck + updateFrequency, updateFrequency,
+                    pi);
+        }
+    }
+
+    public static void runShellCommands(final String... cmds) throws IOException {
+        java.lang.Process p = Runtime.getRuntime().exec("sh");
+        DataOutputStream os = new DataOutputStream(p.getOutputStream());
+        for (final String s : cmds) {
+            writeString(os, s);
+        }
+        writeString(os, "exit\n");
+        os.flush();
     }
 
     private static void writeString(OutputStream os, String s) throws IOException {
