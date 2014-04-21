@@ -19,6 +19,7 @@
 
 <resources>
     <bool name="alternateIsInternal">false</bool>
+    <bool name="changelog_enable_logging">false</bool>
     <string name="changelog_cache_path">Nameless/UpdateCenter/Changelogs</string>
     <bool name="changelog_is_sourceforge">true</bool>
 </resources>
