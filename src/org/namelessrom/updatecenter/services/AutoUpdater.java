@@ -71,10 +71,14 @@ public class AutoUpdater extends Service implements Constants {
             try {
                 final PackageManager pm = getPackageManager();
                 final String version = HttpHandler.get(UC_APK_VERSION);
-                if (pm != null && version != null && !version.isEmpty()) {
-                    final int remoteVersion = Integer.parseInt(version);
-                    final int localVersion = pm.getPackageInfo(getPackageName(), 0).versionCode;
-                    shouldUpdate = (remoteVersion > localVersion);
+                if (version != null && !version.isEmpty()) {
+                    if (version.startsWith("!")) {
+                        shouldUpdate = true;
+                    } else if (pm != null) {
+                        final int remoteVersion = Integer.parseInt(version);
+                        final int localVersion = pm.getPackageInfo(getPackageName(), 0).versionCode;
+                        shouldUpdate = (remoteVersion > localVersion);
+                    }
                 }
             } catch (Exception ignored) { }
 
