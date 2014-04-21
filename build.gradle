@@ -2,6 +2,7 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'libs' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.9.+'
@@ -11,6 +12,7 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
+        maven { url 'libs' }
     }
 }
 
@@ -37,5 +39,6 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v13:19.+'
+    compile 'com.android:changelibs:1.0.0'
     compile fileTree(dir: 'libs', include: '*.jar')
 }
