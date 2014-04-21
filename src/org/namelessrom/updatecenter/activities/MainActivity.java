@@ -40,6 +40,7 @@ import org.namelessrom.updatecenter.fragments.UpdateFragment;
 import org.namelessrom.updatecenter.fragments.WelcomeFragment;
 import org.namelessrom.updatecenter.fragments.preferences.MainPreferenceFragment;
 import org.namelessrom.updatecenter.fragments.preferences.UpdatePreferenceFragment;
+import org.namelessrom.updatecenter.services.AutoUpdater;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
 import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
@@ -116,6 +117,8 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
             i.setAction(UpdateCheckService.ACTION_CHECK);
             this.startService(i);
         }
+
+        startService(new Intent(MainActivity.this, AutoUpdater.class));
     }
 
     @Override

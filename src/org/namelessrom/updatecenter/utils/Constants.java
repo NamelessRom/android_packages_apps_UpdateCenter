@@ -24,6 +24,8 @@ public interface Constants {
     public static final String ROM_URL         = URL + "/update";
     public static final String APP_URL         = URL + "/app";
     public static final String CHANNEL_NIGHTLY = "NIGHTLY";
+    public static final String UC_APK          = URL + "/uc.apk";
+    public static final String UC_APK_VERSION  = URL + "/uc.apk.version";
     // JSON Node names
     public static final String TAG_CHANNEL     = "channel";
     public static final String TAG_FILENAME    = "filename";
@@ -35,14 +37,16 @@ public interface Constants {
     public static final String TAG_API_VERSION = "api_version";
 
     // Preferences
-    public static final String UPDATE_CHECK_PREF      = "pref_update_check_interval";
-    public static final String UPDATE_TYPE_PREF       = "pref_update_types";
-    public static final String LAST_UPDATE_CHECK_PREF = "pref_last_update_check";
+    public static final String UPDATE_CHECK_PREF           = "pref_update_check_interval";
+    public static final String UPDATE_TYPE_PREF            = "pref_update_types";
+    public static final String LAST_UPDATE_CHECK_PREF      = "pref_last_update_check";
+    public static final String LAST_AUTO_UPDATE_CHECK_PREF = "pref_last_auto_update_check";
+
     // Flasher
-    public static final String PREF_RECOVERY_TYPE     = "pref_recovery_type";
-    public static final int    RECOVERY_TYPE_BOTH     = 0;
-    public static final int    RECOVERY_TYPE_CWM      = 1;
-    public static final int    RECOVERY_TYPE_OPEN     = 2;
+    public static final String PREF_RECOVERY_TYPE = "pref_recovery_type";
+    public static final int    RECOVERY_TYPE_BOTH = 0;
+    public static final int    RECOVERY_TYPE_CWM  = 1;
+    public static final int    RECOVERY_TYPE_OPEN = 2;
 
     // Update Check items
     public static final String BOOT_CHECK_COMPLETED     = "boot_check_completed";
