@@ -14,6 +14,7 @@ import android.app.DownloadManager.Query;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.StatusBarManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -59,6 +60,10 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
             long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             handleDownloadComplete(context, prefs, id);
         } else if (ACTION_INSTALL_UPDATE.equals(action)) {
+            final StatusBarManager sb = (StatusBarManager)
+                    context.getSystemService(Context.STATUS_BAR_SERVICE);
+            sb.collapsePanels();
+
             final String fileName = intent.getStringExtra(EXTRA_FILENAME);
             try {
                 Helper.triggerUpdate(context, fileName);
