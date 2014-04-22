@@ -2,9 +2,6 @@
 <resources>
     <string name="welcome_text">Welcome to the Update Center!\n
         \n
-        If you swipe left, you will find a menu where you can explore the Update Center.\n
-        On the right side, you find preferences, depending on the screen you are currently on.\n
-        \n
         This area is actively worked on.\n
         More to come soon!</string>
 </resources>
