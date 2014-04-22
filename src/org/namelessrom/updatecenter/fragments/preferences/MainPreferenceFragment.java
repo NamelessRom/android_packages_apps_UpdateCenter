@@ -4,15 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
+import com.squareup.otto.Subscribe;
+
 import org.json.JSONObject;
 import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.events.VolleyResponseEvent;
 import org.namelessrom.updatecenter.net.HttpHandler;
+import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.widgets.AttachPreferenceFragment;
 
@@ -24,8 +27,18 @@ public class MainPreferenceFragment extends AttachPreferenceFragment implements 
     private              boolean mIsUpdating = false;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity, Constants.ID_PREFERENCES);
+    public void onAttach(Activity activity) { super.onAttach(activity, Constants.ID_PREFERENCES); }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BusProvider.getBus().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BusProvider.getBus().unregister(this);
     }
 
     @Override
@@ -64,7 +77,10 @@ public class MainPreferenceFragment extends AttachPreferenceFragment implements 
         if (mApiServer == preference) {
             mApiServer.setEnabled(false);
             synchronized (mLockObject) {
-                new ServerApiChecker().execute();
+                if (!mIsUpdating) {
+                    mIsUpdating = true;
+                    HttpHandler.getVolley(API_URL, HttpHandler.TYPE_GENERAL);
+                }
             }
             return true;
         }
@@ -72,39 +88,28 @@ public class MainPreferenceFragment extends AttachPreferenceFragment implements 
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 
-    private class ServerApiChecker extends AsyncTask<Void, Void, String> {
-        @Override
-        protected String doInBackground(Void... voids) {
-            if (mIsUpdating) return null;
+    @Subscribe
+    public void onVolleyResponseEvent(final VolleyResponseEvent event) {
+        if (event == null) return;
 
-            mIsUpdating = true;
-
-            String version;
-            String result;
-            try {
-                result = HttpHandler.get(API_URL);
-            } catch (Exception ignored) { result = null; }
-
+        String result = null;
+        if (!event.isError()) {
+            result = event.getOutput();
             if (result != null && !result.isEmpty()) {
                 try {
                     final JSONObject jsonObject = new JSONObject(result);
-                    version = jsonObject.getString(TAG_API_VERSION);
-                } catch (Exception ignored) { version = null; }
-            } else { version = null; }
-
-            return version;
+                    result = jsonObject.getString(TAG_API_VERSION);
+                } catch (Exception ignored) { result = null; }
+            } else { result = null; }
         }
 
-        @Override
-        protected void onPostExecute(String result) {
-            if (mApiServer != null) {
-                if (result == null) result = getString(R.string.unknown);
-                mApiServer.setSummary(getString(R.string.version, result));
-                mApiServer.setEnabled(true);
-            }
-
-            mIsUpdating = false;
+        if (mApiServer != null) {
+            if (result == null) result = getString(R.string.unknown);
+            mApiServer.setSummary(getString(R.string.version, result));
+            mApiServer.setEnabled(true);
         }
+
+        mIsUpdating = false;
     }
 
 }

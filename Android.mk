@@ -6,7 +6,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_AAPT_INCLUDE_ALL_RESOURCES := true
 
 LOCAL_JAVA_LIBRARIES := okhttp
-LOCAL_STATIC_JAVA_LIBRARIES := android-support-v13 changeloglib
+LOCAL_STATIC_JAVA_LIBRARIES := android-support-v13 changeloglib volley
 
 LOCAL_SRC_FILES := \
     $(call all-java-files-under, src)

@@ -18,6 +18,15 @@
 package org.namelessrom.updatecenter.net;
 
 import com.android.okhttp.OkHttpClient;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONObject;
+import org.namelessrom.updatecenter.Application;
+import org.namelessrom.updatecenter.events.VolleyResponseEvent;
+import org.namelessrom.updatecenter.utils.BusProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,14 +34,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Handler for HTTP Requests
- * TODO: drop for volley
  */
 public class HttpHandler {
 
     private static final OkHttpClient mOkHttpClient = new OkHttpClient();
+
+    public static final int TYPE_GENERAL = 1;
 
     public static String get(String url) throws IOException {
         String responseString;
@@ -87,6 +98,70 @@ public class HttpHandler {
             out.write(buffer, 0, count);
         }
         return out.toByteArray();
+    }
+
+    public static void getVolley(final String url, final int type) {
+        final JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(final JSONObject res) {
+                        try {
+                            if (res != null) {
+                                switch (type) {
+                                    default:
+                                    case TYPE_GENERAL:
+                                        BusProvider.getBus().post(
+                                                new VolleyResponseEvent(res.toString()));
+                                        break;
+                                }
+                            }
+                        } catch (Exception exc) {
+                            BusProvider.getBus().post(
+                                    new VolleyResponseEvent(exc.getMessage(), true));
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        BusProvider.getBus().post(
+                                new VolleyResponseEvent(error.getMessage(), true));
+                    }
+                }
+        );
+        Application.addToRequestQueue(req);
+    }
+
+    public static void postVolley(final String url, final Map<String, String> map, final int type) {
+        final JsonObjectRequest req = new JsonObjectRequest(url, new JSONObject(map),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(final JSONObject res) {
+                        try {
+                            if (res != null) {
+                                switch (type) {
+                                    default:
+                                    case TYPE_GENERAL:
+                                        BusProvider.getBus().post(
+                                                new VolleyResponseEvent(res.toString()));
+                                        break;
+                                }
+                            }
+                        } catch (Exception exc) {
+                            BusProvider.getBus().post(
+                                    new VolleyResponseEvent(exc.getMessage(), true));
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        BusProvider.getBus().post(
+                                new VolleyResponseEvent(error.getMessage(), true));
+                    }
+                }
+        );
+        Application.addToRequestQueue(req);
     }
 
 }
