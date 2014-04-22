@@ -13,12 +13,16 @@ import android.app.DownloadManager;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 
+import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.database.DatabaseHandler;
+import org.namelessrom.updatecenter.database.DownloadItem;
+import org.namelessrom.updatecenter.events.RefreshEvent;
+import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.items.UpdateInfo;
 
@@ -39,13 +43,27 @@ public class DownloadService extends IntentService implements Constants {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        UpdateInfo ui = intent.getParcelableExtra(EXTRA_UPDATE_INFO);
+        final UpdateInfo ui = intent.getParcelableExtra(EXTRA_UPDATE_INFO);
 
         if (ui != null) {
-            mPrefs.edit()
-                    .putLong(DOWNLOAD_ID, enqueueDownload(ui.getUpdateUrl(), ui.getUpdateName()))
-                    .commit();
+            final long downloadId = enqueueDownload(ui.getUpdateUrl(), ui.getUpdateName());
+
+            PreferenceManager.getDefaultSharedPreferences(this)
+                    .edit().putLong(DOWNLOAD_ID, downloadId).commit();
+
+            final DownloadItem item = new DownloadItem(
+                    ui.getUpdateName() + ".zip", String.valueOf(downloadId),
+                    ui.getUpdateMd5(), "0");
+            DatabaseHandler.getInstance(this).insertOrUpdate(item, DatabaseHandler.TABLE_DOWNLOADS);
+            org.namelessrom.updatecenter.Application.mDownloadItems =
+                    DatabaseHandler.getInstance(this).getAllItems(DatabaseHandler.TABLE_DOWNLOADS);
+
+            Application.sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    BusProvider.getBus().post(new RefreshEvent());
+                }
+            });
         }
     }
 

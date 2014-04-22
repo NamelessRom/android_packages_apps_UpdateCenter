@@ -1,4 +1,4 @@
-package org.namelessrom.updatecenter.utils.adapters;
+package org.namelessrom.updatecenter.widgets.adapters;
 
 import android.app.Activity;
 import android.content.Context;

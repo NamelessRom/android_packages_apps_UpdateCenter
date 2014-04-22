@@ -81,7 +81,7 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
     }
 
     private void handleDownloadComplete(Context context, SharedPreferences prefs, long id) {
-        long enqueued = prefs.getLong(DOWNLOAD_ID, -1);
+        final long enqueued = prefs.getLong(DOWNLOAD_ID, -1);
 
         if (enqueued < 0 || id < 0 || id != enqueued) {
             return;
