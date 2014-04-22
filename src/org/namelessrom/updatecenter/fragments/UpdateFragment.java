@@ -37,12 +37,13 @@ import com.squareup.otto.Subscribe;
 
 import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.events.RefreshEvent;
 import org.namelessrom.updatecenter.events.SubFragmentEvent;
 import org.namelessrom.updatecenter.events.UpdateCheckDoneEvent;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
 import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
-import org.namelessrom.updatecenter.utils.adapters.UpdateListAdapter;
+import org.namelessrom.updatecenter.widgets.adapters.UpdateListAdapter;
 import org.namelessrom.updatecenter.utils.items.UpdateInfo;
 import org.namelessrom.updatecenter.widgets.AttachListFragment;
 
@@ -126,10 +127,35 @@ public class UpdateFragment extends AttachListFragment implements OnRefreshListe
         return super.onOptionsItemSelected(item);
     }
 
+    @Subscribe
+    public void onRefreshEvent(final RefreshEvent event) {
+        if (event == null) {
+            return;
+        }
+
+        Application.sHandler.removeCallbacks(mRefreshRunnable);
+        Application.sHandler.postDelayed(mRefreshRunnable, 250);
+    }
+
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            onRefreshEvent(new RefreshEvent());
+        }
+    };
+
+    private final Runnable mRefreshRunnable = new Runnable() {
+        @Override
+        public void run() {
             if (isAdded()) {
+                final Activity activity = getActivity();
+                if (activity != null) {
+                    final UpdateListAdapter adapter = new UpdateListAdapter(activity, mTitles);
+
+                    setListAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+
                 final ListView listView = getListView();
                 if (listView != null) {
                     listView.invalidateViews();
@@ -164,10 +190,7 @@ public class UpdateFragment extends AttachListFragment implements OnRefreshListe
             mTitles.add(new UpdateInfo("-", getString(R.string.general_no_updates_available), ""));
         }
 
-        final UpdateListAdapter adapter = new UpdateListAdapter(getActivity(), mTitles);
-
-        setListAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        BusProvider.getBus().post(new RefreshEvent());
         mPullToRefreshLayout.setRefreshComplete();
     }
 
