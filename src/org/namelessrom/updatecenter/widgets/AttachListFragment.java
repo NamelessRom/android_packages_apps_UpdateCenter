@@ -20,21 +20,19 @@ package org.namelessrom.updatecenter.widgets;
 import android.app.Activity;
 import android.app.ListFragment;
 
+import org.namelessrom.updatecenter.activities.MainActivity;
 import org.namelessrom.updatecenter.events.SectionAttachedEvent;
 import org.namelessrom.updatecenter.utils.BusProvider;
 
 public class AttachListFragment extends ListFragment {
 
-    protected Activity mActivity;
-
-    @Override
-    public void onAttach(final Activity activity) {
-        super.onAttach(activity);
-        mActivity = activity;
-    }
-
     protected void onAttach(final Activity activity, final int number) {
         super.onAttach(activity);
+
         BusProvider.getBus().post(new SectionAttachedEvent(number));
+
+        if (MainActivity.mSlidingMenu != null && MainActivity.mSlidingMenu.isMenuShowing()) {
+            MainActivity.mSlidingMenu.toggle(true);
+        }
     }
 }

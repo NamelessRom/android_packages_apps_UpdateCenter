@@ -11,6 +11,8 @@
     <string name="server">Server</string>
     <string name="press_to_load">Press to load</string>
 
+    <string name="home">Home</string>
+
     <string name="unknown">Unknown</string>
 
     <string name="dialog_download">Download</string>

@@ -36,6 +36,7 @@ import com.squareup.otto.Subscribe;
 
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.events.SectionAttachedEvent;
+import org.namelessrom.updatecenter.events.SubFragmentEvent;
 import org.namelessrom.updatecenter.fragments.UpdateFragment;
 import org.namelessrom.updatecenter.fragments.WelcomeFragment;
 import org.namelessrom.updatecenter.fragments.preferences.MainPreferenceFragment;
@@ -51,21 +52,10 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         SlidingMenu.OnOpenedListener, SlidingMenu.OnClosedListener {
 
     public static SlidingMenu mSlidingMenu;
-    private static final int ID_RESTORE     = 10;
-    private static final int ID_FIRST_MENU  = 20;
-    private static final int ID_SECOND_MENU = 30;
 
-    private static final int MENU_UC         = 0;
-    private static final int MENU_ROM_UPDATE = 2;
-
-    private int mTitle         = R.string.app_name;
-    private int mFragmentTitle = R.string.app_name;
-
-    public static final int[] MENU_ICONS = {
-            R.mipmap.ic_launcher,
-            -1,
-            R.drawable.ic_action_update
-    };
+    private int mTitle            = R.string.app_name;
+    private int mFragmentTitle    = R.string.app_name;
+    private int mSubFragmentTitle = -1;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -80,7 +70,7 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
 
         mSlidingMenu = new SlidingMenu(this);
         mSlidingMenu.setBackground(getResources().getDrawable(R.drawable.bg_menu_dark));
-        mSlidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
+        mSlidingMenu.setMode(SlidingMenu.LEFT);
         mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         mSlidingMenu.setShadowWidthRes(R.dimen.shadow_width);
         mSlidingMenu.setShadowDrawable(R.drawable.shadow);
@@ -89,9 +79,9 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         mSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
         mSlidingMenu.setMenu(v);
 
-        final View vv = getLayoutInflater().inflate(R.layout.menu_prefs, null, false);
+        /*final View vv = getLayoutInflater().inflate(R.layout.menu_prefs, null, false);
         mSlidingMenu.setSecondaryMenu(vv);
-        mSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadow_right);
+        mSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadow_right);*/
 
         final MenuListArrayAdapter mAdapter = new MenuListArrayAdapter(
                 this,
@@ -107,9 +97,9 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
 
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         final Fragment main = new WelcomeFragment();
-        final Fragment right = new MainPreferenceFragment();
+        /*final Fragment right = new MainPreferenceFragment();*/
         ft.replace(R.id.container, main);
-        ft.replace(R.id.menu_frame, right);
+        /*ft.replace(R.id.menu_frame, right);*/
         ft.commit();
 
         if (prefs.getInt(UPDATE_CHECK_PREF, UPDATE_FREQ_WEEKLY) == UPDATE_FREQ_AT_APP_START) {
@@ -145,7 +135,9 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mSlidingMenu.toggle(true);
+                if (mSubFragmentTitle == -1) {
+                    mSlidingMenu.toggle(true);
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -154,24 +146,27 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Fragment main;
-        Fragment right;
+        /*Fragment right;*/
 
         switch (i) {
             default:
-            case MENU_UC:
+            case ID_UC:
                 main = new WelcomeFragment();
-                right = new MainPreferenceFragment();
+                /*right = new MainPreferenceFragment();*/
                 break;
-            case MENU_ROM_UPDATE:
+            case ID_ROM_UPDATE:
                 main = new UpdateFragment();
-                right = new UpdatePreferenceFragment();
+                /*right = new UpdatePreferenceFragment();*/
+                break;
+            case ID_PREFERENCES:
+                main = new MainPreferenceFragment();
                 break;
         }
 
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
 
         ft.replace(R.id.container, main);
-        ft.replace(R.id.menu_frame, right);
+        /*ft.replace(R.id.menu_frame, right);*/
 
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.commit();
@@ -186,6 +181,14 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         final int id = event.getId();
         switch (id) {
             case ID_RESTORE:
+                if (mSubFragmentTitle != -1) {
+                    mTitle = mSubFragmentTitle;
+                } else {
+                    mTitle = mFragmentTitle;
+                }
+                break;
+            case ID_RESTORE_FROM_SUB:
+                mSubFragmentTitle = -1;
                 mTitle = mFragmentTitle;
                 break;
             case ID_FIRST_MENU:
@@ -195,13 +198,24 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
                 mTitle = R.string.preferences;
                 break;
             default:
-            case WelcomeFragment.ID:
-                mTitle = R.string.app_name;
-                mFragmentTitle = mTitle;
+                mTitle = mFragmentTitle = R.string.app_name;
+                mSubFragmentTitle = -1;
                 break;
-            case UpdateFragment.ID:
-                mTitle = R.string.updates;
-                mFragmentTitle = mTitle;
+            //--------------------------------------------------------------------------------------
+            case ID_UC:
+                mTitle = mFragmentTitle = R.string.app_name;
+                mSubFragmentTitle = -1;
+                break;
+            case ID_ROM_UPDATE:
+                mTitle = mFragmentTitle = R.string.updates;
+                mSubFragmentTitle = -1;
+                break;
+            case ID_ROM_UPDATE_PREFERENCES:
+                mTitle = mSubFragmentTitle = R.string.updates;
+                break;
+            case ID_PREFERENCES:
+                mTitle = mFragmentTitle = R.string.preferences;
+                mSubFragmentTitle = -1;
                 break;
         }
 
@@ -231,5 +245,34 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
     @Override
     public void onClosed() {
         onSectionAttached(new SectionAttachedEvent(ID_RESTORE));
+    }
+
+    @Subscribe
+    public void onSubFragmentEvent(final SubFragmentEvent event) {
+        if (event == null) return;
+
+        Fragment main = null;
+        final int id = event.getId();
+
+        /*Fragment right = HelpFragment.newInstance(id);*/
+
+        switch (id) {
+            case ID_ROM_UPDATE_PREFERENCES:
+                main = new UpdatePreferenceFragment();
+                break;
+            default:
+                break;
+        }
+
+        if (main == null /*|| right == null*/) return;
+
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+        ft.replace(R.id.container, main);
+        /*ft.replace(R.id.menu_frame, right);*/
+        ft.addToBackStack(null);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+        ft.commit();
     }
 }

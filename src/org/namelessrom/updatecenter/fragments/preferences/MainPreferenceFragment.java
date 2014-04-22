@@ -1,23 +1,22 @@
 package org.namelessrom.updatecenter.fragments.preferences;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.view.View;
 
 import org.json.JSONObject;
 import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
-import org.namelessrom.updatecenter.activities.MainActivity;
 import org.namelessrom.updatecenter.net.HttpHandler;
 import org.namelessrom.updatecenter.utils.Constants;
+import org.namelessrom.updatecenter.widgets.AttachPreferenceFragment;
 
-public class MainPreferenceFragment extends PreferenceFragment implements Constants {
+public class MainPreferenceFragment extends AttachPreferenceFragment implements Constants {
 
     private Preference mApiServer;
 
@@ -25,11 +24,8 @@ public class MainPreferenceFragment extends PreferenceFragment implements Consta
     private              boolean mIsUpdating = false;
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (MainActivity.mSlidingMenu != null && MainActivity.mSlidingMenu.isMenuShowing()) {
-            MainActivity.mSlidingMenu.toggle(true);
-        }
+    public void onAttach(Activity activity) {
+        super.onAttach(activity, Constants.ID_PREFERENCES);
     }
 
     @Override
@@ -39,9 +35,8 @@ public class MainPreferenceFragment extends PreferenceFragment implements Consta
 
         final Context context = getActivity();
 
-        Preference mVersion = findPreference("prefs_version");
+        final Preference mVersion = findPreference("prefs_version");
         if (mVersion != null && context != null) {
-            mVersion.setEnabled(false);
             try {
                 final PackageManager pm = context.getPackageManager();
                 if (pm != null) {
@@ -56,9 +51,8 @@ public class MainPreferenceFragment extends PreferenceFragment implements Consta
             }
         }
 
-        Preference mApiClient = findPreference("prefs_api_client");
+        final Preference mApiClient = findPreference("prefs_api_client");
         if (mApiClient != null) {
-            mApiClient.setEnabled(false);
             mApiClient.setSummary(getString(R.string.version, Application.API_CLIENT));
         }
 

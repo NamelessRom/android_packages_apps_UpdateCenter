@@ -7,20 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.widgets.AttachFragment;
 
 public class WelcomeFragment extends AttachFragment {
 
-    public static final int ID = 100;
-
     @Override
     public void onAttach(final Activity activity) {
-        super.onAttach(activity, ID);
+        super.onAttach(activity, Constants.ID_UC);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_welcome, container, false);
+        final View v = inflater.inflate(R.layout.fragment_welcome, container, false);
+
+        return v;
     }
 }

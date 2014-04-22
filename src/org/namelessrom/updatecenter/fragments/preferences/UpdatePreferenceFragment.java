@@ -1,17 +1,21 @@
 package org.namelessrom.updatecenter.fragments.preferences;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.view.MenuItem;
 
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.events.SectionAttachedEvent;
+import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
+import org.namelessrom.updatecenter.widgets.AttachPreferenceFragment;
 
-public class UpdatePreferenceFragment extends PreferenceFragment implements
+public class UpdatePreferenceFragment extends AttachPreferenceFragment implements Constants,
         Preference.OnPreferenceChangeListener {
 
     private SharedPreferences mPrefs;
@@ -19,9 +23,40 @@ public class UpdatePreferenceFragment extends PreferenceFragment implements
     private ListPreference    mRecoveryType;
 
     @Override
+    public void onAttach(final Activity activity) {
+        super.onAttach(activity, ID_ROM_UPDATE_PREFERENCES);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        BusProvider.getBus().post(new SectionAttachedEvent(ID_RESTORE_FROM_SUB));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        final int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                final Activity activity = getActivity();
+                if (activity != null) {
+                    activity.onBackPressed();
+                }
+                return true;
+            default:
+                break;
+        }
+
+        return false;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preference_update);
+
+        setHasOptionsMenu(true);
+
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         mUpdateCheck = (ListPreference) findPreference(Constants.UPDATE_CHECK_PREF);

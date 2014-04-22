@@ -25,6 +25,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -33,7 +37,7 @@ import com.squareup.otto.Subscribe;
 
 import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
-import org.namelessrom.updatecenter.activities.MainActivity;
+import org.namelessrom.updatecenter.events.SubFragmentEvent;
 import org.namelessrom.updatecenter.events.UpdateCheckDoneEvent;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
 import org.namelessrom.updatecenter.utils.BusProvider;
@@ -53,16 +57,14 @@ import static org.namelessrom.updatecenter.Application.logDebug;
 
 public class UpdateFragment extends AttachListFragment implements OnRefreshListener, Constants {
 
-    public static final int              ID         = 200;
-    //
-    private             List<UpdateInfo> mTitles    = new ArrayList<UpdateInfo>();
-    private             List<UpdateInfo> mTmpTitles = new ArrayList<UpdateInfo>();
+    private List<UpdateInfo> mTitles    = new ArrayList<UpdateInfo>();
+    private List<UpdateInfo> mTmpTitles = new ArrayList<UpdateInfo>();
     //
     private PullToRefreshLayout mPullToRefreshLayout;
 
     @Override
     public void onAttach(final Activity activity) {
-        super.onAttach(activity, ID);
+        super.onAttach(activity, Constants.ID_ROM_UPDATE);
         activity.registerReceiver(receiver,
                 new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
@@ -83,6 +85,13 @@ public class UpdateFragment extends AttachListFragment implements OnRefreshListe
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
 
@@ -95,11 +104,26 @@ public class UpdateFragment extends AttachListFragment implements OnRefreshListe
                 .listener(this)
                 .setup(mPullToRefreshLayout);
 
-        if (MainActivity.mSlidingMenu != null && MainActivity.mSlidingMenu.isMenuShowing()) {
-            MainActivity.mSlidingMenu.toggle(true);
+        checkForUpdates();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_updates, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_settings:
+                BusProvider.getBus().post(new SubFragmentEvent(ID_ROM_UPDATE_PREFERENCES));
+                break;
         }
 
-        checkForUpdates();
+        return super.onOptionsItemSelected(item);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
