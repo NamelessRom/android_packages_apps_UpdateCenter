@@ -25,7 +25,9 @@ import android.widget.Toast;
 
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.activities.MainActivity;
+import org.namelessrom.updatecenter.events.RefreshEvent;
 import org.namelessrom.updatecenter.services.DownloadService;
+import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.utils.items.UpdateInfo;
@@ -55,6 +57,7 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
 
         if (ACTION_START_DOWNLOAD.equals(action)) {
             final UpdateInfo ui = intent.getParcelableExtra(EXTRA_UPDATE_INFO);
+            BusProvider.getBus().post(new RefreshEvent());
             handleStartDownload(context, ui);
         } else if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
             long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
@@ -81,11 +84,13 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
     }
 
     private void handleDownloadComplete(Context context, SharedPreferences prefs, long id) {
-        long enqueued = prefs.getLong(DOWNLOAD_ID, -1);
+        final long enqueued = prefs.getLong(DOWNLOAD_ID, -1);
 
         if (enqueued < 0 || id < 0 || id != enqueued) {
             return;
         }
+
+        prefs.edit().remove(DOWNLOAD_ID).remove(String.valueOf(enqueued)).commit();
 
         DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         Query query = new Query();

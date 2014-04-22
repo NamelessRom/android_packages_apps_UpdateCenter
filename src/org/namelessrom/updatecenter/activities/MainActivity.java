@@ -46,7 +46,7 @@ import org.namelessrom.updatecenter.services.UpdateCheckService;
 import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
-import org.namelessrom.updatecenter.utils.adapters.MenuListArrayAdapter;
+import org.namelessrom.updatecenter.widgets.adapters.MenuListArrayAdapter;
 
 public class MainActivity extends Activity implements Constants, AdapterView.OnItemClickListener,
         SlidingMenu.OnOpenedListener, SlidingMenu.OnClosedListener {
