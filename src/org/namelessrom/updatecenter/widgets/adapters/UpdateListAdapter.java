@@ -15,12 +15,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses
  */
 
-package org.namelessrom.updatecenter.utils.adapters;
+package org.namelessrom.updatecenter.widgets.adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +30,7 @@ import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -36,8 +38,12 @@ import android.widget.Toast;
 
 import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.database.DatabaseHandler;
+import org.namelessrom.updatecenter.database.DownloadItem;
+import org.namelessrom.updatecenter.events.RefreshEvent;
 import org.namelessrom.updatecenter.fragments.dialogs.ChangelogDialogFragment;
 import org.namelessrom.updatecenter.receivers.DownloadReceiver;
+import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.utils.items.UpdateInfo;
@@ -50,13 +56,12 @@ import static org.namelessrom.updatecenter.Application.logDebug;
 /**
  * Created by alex on 06.01.14.
  */
-public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Constants {
+public class UpdateListAdapter extends BaseAdapter implements Constants {
 
     private final Activity         mContext;
     private final List<UpdateInfo> mUpdateInfos;
 
-    public UpdateListAdapter(Activity context, List<UpdateInfo> updateInfos) {
-        super(context, R.layout.list_item_updates, updateInfos);
+    public UpdateListAdapter(final Activity context, final List<UpdateInfo> updateInfos) {
         mContext = context;
         mUpdateInfos = updateInfos;
     }
@@ -72,6 +77,21 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
             ibAction = (ImageButton) rootView.findViewById(R.id.list_item_updates_action);
         }
 
+    }
+
+    @Override
+    public int getCount() {
+        return mUpdateInfos.size();
+    }
+
+    @Override
+    public Object getItem(int i) {
+        return mUpdateInfos.get(i);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return 0;
     }
 
     @Override
@@ -106,13 +126,31 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
                 + fileName + ".zip").exists();
 
         if (!updateChannel.equals("?")) {
-            holder.ibAction.setImageResource(updateExists
-                    ? R.drawable.ic_tab_install : R.drawable.ic_tab_download);
+            int tmpResId = updateExists ? R.drawable.ic_tab_install : R.drawable.ic_tab_download;
+            DownloadItem tmpDownloadItem = null;
+
+            if (Application.mDownloadItems != null) {
+                for (final DownloadItem item : Application.mDownloadItems) {
+                    if (item.getMd5().equals(updateInfo.getUpdateMd5())) {
+                        if (item.getCompleted().equals("0")) {
+                            tmpDownloadItem = item;
+                            tmpResId = R.drawable.ic_tab_cancel;
+                            mUpdateInfos
+                                    .set(position, mUpdateInfos.get(position).setDownloading(true));
+                            break;
+                        }
+                    }
+                }
+            }
+
+            final int resId = tmpResId;
+            final DownloadItem downloadItem = tmpDownloadItem;
+            holder.ibAction.setImageResource(resId);
 
             holder.ibAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDialog(updateExists, updateInfo);
+                    showDialog(resId, updateInfo, downloadItem);
                 }
             });
         } else {
@@ -140,10 +178,10 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
         return rowView;
     }
 
-    private void showDialog(boolean fileExists, final UpdateInfo updateInfo) {
+    private void showDialog(final int resId, final UpdateInfo updateInfo, final DownloadItem item) {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
 
-        if (fileExists) {
+        if (R.drawable.ic_tab_install == resId) {
             dialog.setTitle(R.string.not_action_install_update);
             dialog.setMessage(mContext.getString(R.string.not_download_install_notice,
                     updateInfo.getUpdateName()));
@@ -160,7 +198,7 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
                         }
                     }
             );
-        } else {
+        } else if (R.drawable.ic_tab_download == resId) {
             dialog.setTitle(R.string.not_action_download);
             dialog.setMessage(mContext.getString(R.string.not_download_notice,
                     updateInfo.getUpdateName()));
@@ -176,9 +214,37 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
                         }
                     }
             );
+        } else if (R.drawable.ic_tab_cancel == resId) {
+            if (item != null) {
+                dialog.setTitle(android.R.string.cancel);
+                dialog.setMessage(mContext.getString(
+                        R.string.cancel_download_question, updateInfo.getUpdateName()));
+                dialog.setPositiveButton(R.string.cancel_download,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                final DownloadManager downloadManager = (DownloadManager)
+                                        mContext.getSystemService(Context.DOWNLOAD_SERVICE);
+                                downloadManager.remove(Long.parseLong(item.getDownloadId()));
+
+                                final DatabaseHandler db = DatabaseHandler.getInstance(mContext);
+                                db.deleteItem(item, DatabaseHandler.TABLE_DOWNLOADS);
+                                Application.mDownloadItems =
+                                        db.getAllItems(DatabaseHandler.TABLE_DOWNLOADS);
+                                BusProvider.getBus().post(new RefreshEvent());
+                                dialogInterface.dismiss();
+                            }
+                        });
+            } else {
+                dialog.setTitle(R.string.error);
+                dialog.setMessage(R.string.error_occured);
+            }
         }
 
-        dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+        final int msgId = (R.drawable.ic_tab_cancel == resId
+                ? android.R.string.cancel // TODO: Dismiss or whatever
+                : android.R.string.cancel);
+        dialog.setNegativeButton(msgId, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -213,4 +279,5 @@ public class UpdateListAdapter extends ArrayAdapter<UpdateInfo> implements Const
 
         dialog.show();
     }
+
 }

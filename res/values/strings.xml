@@ -64,6 +64,11 @@
     <string name="not_action_download">Download</string>
     <string name="data_connection_required">A data connection is required.</string>
 
+    <string name="error">Error</string>
+    <string name="error_occured">An error occured. Please try again!</string>
+    <string name="cancel_download">Cancel download</string>
+    <string name="cancel_download_question">Do you want to cancel the download of %s?</string>
+
     <!-- Apply update strings -->
     <string name="apply_update_dialog_title">Apply update</string>
     <string name="apply_update_dialog_text">You are about to upgrade to <xliff:g id="filename">%s</xliff:g>.\n\nIf you press Update, the device will restart itself in recovery mode to install the update.\n\nNote: This feature requires a compatible Recovery or updates will need to be installed manually.</string>

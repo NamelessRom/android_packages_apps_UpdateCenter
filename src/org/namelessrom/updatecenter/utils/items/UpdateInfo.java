@@ -30,13 +30,14 @@ public class UpdateInfo implements Parcelable, Serializable {
 
     private static final long serialVersionUID = 5499890003569313403L;
 
-    private String mUpdateChannel;
-    private String mUpdateChannelShort;
-    private String mUpdateName;
-    private String mUpdateMd5;
-    private String mUpdateUrl;
-    private String mUpdateTimeStamp;
-    private String mUpdateChangeLog;
+    private String  mUpdateChannel;
+    private String  mUpdateChannelShort;
+    private String  mUpdateName;
+    private String  mUpdateMd5;
+    private String  mUpdateUrl;
+    private String  mUpdateTimeStamp;
+    private String  mUpdateChangeLog;
+    private boolean mIsDownloading;
 
     public UpdateInfo(String updateChannel, String updateName) {
         this(updateChannel, updateName, "-", "-", "-", "-");
@@ -112,6 +113,15 @@ public class UpdateInfo implements Parcelable, Serializable {
         return mUpdateChangeLog;
     }
 
+    public boolean isDownloading() {
+        return mIsDownloading;
+    }
+
+    public UpdateInfo setDownloading(boolean isDownloading) {
+        mIsDownloading = isDownloading;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "UpdateInfo: " + mUpdateName;
@@ -134,7 +144,8 @@ public class UpdateInfo implements Parcelable, Serializable {
                 && TextUtils.equals(mUpdateMd5, ui.mUpdateMd5)
                 && TextUtils.equals(mUpdateUrl, ui.mUpdateUrl)
                 && TextUtils.equals(mUpdateTimeStamp, ui.mUpdateTimeStamp)
-                && TextUtils.equals(mUpdateChangeLog, ui.mUpdateChangeLog);
+                && TextUtils.equals(mUpdateChangeLog, ui.mUpdateChangeLog)
+                && mIsDownloading == ui.isDownloading();
     }
 
     public static final Parcelable.Creator<UpdateInfo> CREATOR =
@@ -162,6 +173,7 @@ public class UpdateInfo implements Parcelable, Serializable {
         parcel.writeString(mUpdateUrl);
         parcel.writeString(mUpdateTimeStamp);
         parcel.writeString(mUpdateChangeLog);
+        parcel.writeString(mIsDownloading ? "1" : "0");
     }
 
     private void readFromParcel(Parcel in) {
@@ -172,5 +184,6 @@ public class UpdateInfo implements Parcelable, Serializable {
         mUpdateUrl = in.readString();
         mUpdateTimeStamp = in.readString();
         mUpdateChangeLog = in.readString();
+        mIsDownloading = in.readString().equals("1");
     }
 }
