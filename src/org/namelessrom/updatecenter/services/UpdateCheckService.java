@@ -11,28 +11,32 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.activities.MainActivity;
 import org.namelessrom.updatecenter.events.UpdateCheckDoneEvent;
-import org.namelessrom.updatecenter.net.HttpHandler;
+import org.namelessrom.updatecenter.net.requests.GsonRequest;
 import org.namelessrom.updatecenter.receivers.DownloadReceiver;
 import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
+import org.namelessrom.updatecenter.utils.items.JsonUpdateInfo;
 import org.namelessrom.updatecenter.utils.items.UpdateInfo;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static org.namelessrom.updatecenter.Application.logDebug;
 
-public class UpdateCheckService extends IntentService implements Constants {
+public class UpdateCheckService extends IntentService implements Constants,
+        Response.Listener<JsonUpdateInfo[]>, Response.ErrorListener {
 
     // request actions
     public static final String ACTION_CHECK        = "org.namelessrom.updatecenter.action.CHECK";
@@ -48,6 +52,8 @@ public class UpdateCheckService extends IntentService implements Constants {
 
     // max. number of updates listed in the expanded notification
     private static final int EXPANDED_NOTIF_UPDATE_COUNT = 4;
+
+    private String mAction;
 
     public UpdateCheckService() {
         super("UpdateCheckService");
@@ -69,7 +75,8 @@ public class UpdateCheckService extends IntentService implements Constants {
 
     @Override
     protected void onHandleIntent(final Intent intent) {
-        final String action = intent.getAction();
+        if (intent == null) return;
+        mAction = intent.getAction();
 
         if (!Helper.isOnline(this)) {
             // Only check for updates if the device is actually connected to a network
@@ -77,25 +84,56 @@ public class UpdateCheckService extends IntentService implements Constants {
             return;
         }
 
-        // Start the update check
-        final Intent finishedIntent = new Intent(ACTION_CHECK_FINISHED); // for dashclock
-        List<UpdateInfo> availableUpdates;
-        try {
-            availableUpdates = getAvailableUpdatesAndFillIntent(finishedIntent);
-        } catch (IOException e) {
-            availableUpdates = null;
-        }
+        final String url = ROM_URL + "/" + CHANNEL_NIGHTLY + "/"
+                + Helper.readBuildProp("ro.nameless.device");
 
-        if (availableUpdates == null) {
-            sendBroadcast(finishedIntent);
+        Application.addToRequestQueue(new GsonRequest(Request.Method.GET, url,
+                JsonUpdateInfo[].class, this, this));
+    }
+
+    @Override
+    public void onErrorResponse(final VolleyError volleyError) {
+        logDebug("Error when checking for updates: " + volleyError.getMessage());
+        BusProvider.getBus().post(new UpdateCheckDoneEvent(false));
+    }
+
+    @Override
+    public void onResponse(final JsonUpdateInfo[] jsonUpdates) {
+        if (jsonUpdates == null) {
             BusProvider.getBus().post(new UpdateCheckDoneEvent(false));
             return;
         }
 
-        if (ACTION_CHECK_UI.equals(action)) {
-            BusProvider.getBus().post(new UpdateCheckDoneEvent(true, availableUpdates));
+        final List<JsonUpdateInfo> list = Arrays.asList(jsonUpdates);
+        final List<UpdateInfo> updates = new ArrayList<UpdateInfo>();
+        final int currentDate = Helper.getBuildDate();
+
+        for (final JsonUpdateInfo info : list) {
+            final String channel = info.getChannel();
+            final String filename = info.getFilename().replace(".zip", "");
+            final String md5sum = info.getMd5();
+            final String urlFile = info.getDownloadUrl();
+            final String timeStampString = info.getTimestamp();
+            final int timeStamp = Helper.parseDate(timeStampString);
+            final String changeLog = info.getChangeLog();
+
+            if (currentDate < timeStamp) {
+                final UpdateInfo item = new UpdateInfo(channel, filename, md5sum,
+                        urlFile, timeStampString, changeLog);
+
+                updates.add(item);
+            }
+        }
+
+        if (ACTION_CHECK_UI.equals(mAction)) {
+            BusProvider.getBus().post(new UpdateCheckDoneEvent(true, updates));
             return;
         }
+
+        final int realUpdateCount = updates.size();
+
+        final Intent finishedIntent = new Intent(ACTION_CHECK_FINISHED); // for dashclock
+        finishedIntent.putExtra(EXTRA_UPDATE_COUNT, realUpdateCount);
 
         // Store the last update check time and ensure boot check completed is true
         final Date d = new Date();
@@ -103,13 +141,6 @@ public class UpdateCheckService extends IntentService implements Constants {
                 .putLong(LAST_UPDATE_CHECK_PREF, d.getTime())
                 .putBoolean(BOOT_CHECK_COMPLETED, true)
                 .apply();
-
-        int realUpdateCount = finishedIntent.getIntExtra(EXTRA_UPDATE_COUNT, 0);
-
-        // Write to log
-        logDebug("The update check successfully completed at " + d + " and found "
-                + availableUpdates.size() + " updates ("
-                + realUpdateCount + " newer than installed)");
 
         if (realUpdateCount != 0) {
             // There are updates available
@@ -136,23 +167,22 @@ public class UpdateCheckService extends IntentService implements Constants {
             Notification.InboxStyle inbox = new Notification.InboxStyle(builder)
                     .setBigContentTitle(text);
             int added = 0;
-            final int count = availableUpdates.size();
 
-            for (final UpdateInfo ui : availableUpdates) {
+            for (final UpdateInfo ui : updates) {
                 if (added < EXPANDED_NOTIF_UPDATE_COUNT) {
                     inbox.addLine(ui.getUpdateName());
                     added++;
                 }
             }
-            if (added != count) {
+            if (added != realUpdateCount) {
                 inbox.setSummaryText(res.getQuantityString(R.plurals.not_additional_count,
-                        count - added, count - added));
+                        realUpdateCount - added, realUpdateCount - added));
             }
             builder.setStyle(inbox);
-            builder.setNumber(availableUpdates.size());
+            builder.setNumber(realUpdateCount);
 
-            if (count == 1) {
-                final UpdateInfo updateInfo = availableUpdates.get(0);
+            if (realUpdateCount == 1) {
+                final UpdateInfo updateInfo = updates.get(0);
 
                 if (!new File(UPDATE_FOLDER_FULL + File.separator
                         + updateInfo.getUpdateName() + ".zip").exists()) {
@@ -172,60 +202,6 @@ public class UpdateCheckService extends IntentService implements Constants {
         }
 
         sendBroadcast(finishedIntent);
-        BusProvider.getBus().post(new UpdateCheckDoneEvent(true, availableUpdates));
-    }
-
-    private List<UpdateInfo> getAvailableUpdatesAndFillIntent(Intent intent) throws IOException {
-        // Get the type of update we should check for
-        // SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        // int updateType = prefs.getInt(Constants.UPDATE_TYPE_PREF, 0); // TODO: choose channel
-
-        final List<UpdateInfo> updates = new ArrayList<UpdateInfo>();
-
-        // Builds: BaseUrl + Channel + DeviceId
-        final String url = ROM_URL + "/" + CHANNEL_NIGHTLY + "/"
-                + Helper.readBuildProp("ro.nameless.device");
-
-        final String jsonStr = HttpHandler.get(url);
-
-        if (jsonStr != null) {
-            try {
-                // Getting JSON Array node
-                final JSONArray mUpdateArray = new JSONArray(jsonStr);
-
-                if (mUpdateArray.length() == 0) {
-                    return null;
-                }
-
-                final int currentDate = Helper.getBuildDate();
-                for (int i = 0; i < mUpdateArray.length(); i++) {
-                    final JSONObject c = mUpdateArray.getJSONObject(i);
-
-                    //final String id = c.getString(TAG_ID);
-                    final String channel = c.getString(TAG_CHANNEL);
-                    final String filename = c.getString(TAG_FILENAME).replace(".zip", "");
-                    final String md5sum = c.getString(TAG_MD5SUM);
-                    final String urlFile = c.getString(TAG_URL);
-                    final String timeStampString = c.getString(TAG_TIMESTAMP);
-                    final int timeStamp = Helper.parseDate(timeStampString);
-                    final String changeLog = c.getString(TAG_CHANGELOG);
-
-                    if (currentDate < timeStamp) {
-                        final UpdateInfo item = new UpdateInfo(channel, filename, md5sum,
-                                urlFile, timeStampString, changeLog);
-
-                        updates.add(item);
-                    }
-                }
-            } catch (JSONException e) {
-                logDebug("Json Exception: " + e.getMessage());
-            }
-        } else {
-            logDebug("Couldn't get any data from the url");
-        }
-
-        intent.putExtra(EXTRA_UPDATE_COUNT, updates.size());
-
-        return updates;
+        BusProvider.getBus().post(new UpdateCheckDoneEvent(true, updates));
     }
 }
