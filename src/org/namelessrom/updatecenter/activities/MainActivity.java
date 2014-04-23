@@ -154,6 +154,10 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
                 main = new WelcomeFragment();
                 /*right = new MainPreferenceFragment();*/
                 break;
+            case ID_APP_LIST: // TODO
+                main = new UpdateFragment();
+                /*right = new UpdatePreferenceFragment();*/
+                break;
             case ID_ROM_UPDATE:
                 main = new UpdateFragment();
                 /*right = new UpdatePreferenceFragment();*/
@@ -204,6 +208,10 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
             //--------------------------------------------------------------------------------------
             case ID_UC:
                 mTitle = mFragmentTitle = R.string.app_name;
+                mSubFragmentTitle = -1;
+                break;
+            case ID_APP_LIST: // TODO
+                mTitle = mFragmentTitle = R.string.updates;
                 mSubFragmentTitle = -1;
                 break;
             case ID_ROM_UPDATE:
