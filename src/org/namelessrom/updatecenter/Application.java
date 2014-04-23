@@ -1,6 +1,7 @@
 package org.namelessrom.updatecenter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
@@ -13,6 +14,7 @@ import com.android.volley.toolbox.Volley;
 import org.namelessrom.updatecenter.database.DatabaseHandler;
 import org.namelessrom.updatecenter.database.DownloadItem;
 import org.namelessrom.updatecenter.net.OkHttpStack;
+import org.namelessrom.updatecenter.net.images.ImageCacheManager;
 
 import java.util.List;
 
@@ -35,6 +37,11 @@ public class Application extends android.app.Application {
 
     public static List<DownloadItem> mDownloadItems;
 
+    private static int                   DISK_IMAGECACHE_SIZE            = 1024 * 1024 * 10;
+    private static Bitmap.CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT =
+            Bitmap.CompressFormat.PNG;
+    private static int                   DISK_IMAGECACHE_QUALITY         = 100;
+
     private static RequestQueue mRequestQueue;
 
     @Override
@@ -48,6 +55,8 @@ public class Application extends android.app.Application {
 
         logDebug("Debugging enabled!");
 
+        createImageCache();
+
         mRequestQueue = Volley.newRequestQueue(sApplicationContext, new OkHttpStack());
 
         mDownloadItems = DatabaseHandler.getInstance(sApplicationContext).getAllItems(
@@ -59,6 +68,17 @@ public class Application extends android.app.Application {
         if (IS_LOG_DEBUG) {
             Log.e("UpdateCenter", msg);
         }
+    }
+
+    /**
+     * Create the image cache.
+     */
+    private void createImageCache() {
+        ImageCacheManager.getInstance().init(this,
+                this.getPackageCodePath(),
+                DISK_IMAGECACHE_SIZE,
+                DISK_IMAGECACHE_COMPRESS_FORMAT,
+                DISK_IMAGECACHE_QUALITY);
     }
 
     /**
