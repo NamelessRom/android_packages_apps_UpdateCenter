@@ -23,6 +23,7 @@ public class OkHttpStack extends HurlStack {
             throw new NullPointerException("Client must not be null.");
         }
         this.client = client;
+        URL.setURLStreamHandlerFactory(client);
     }
 
     @Override
