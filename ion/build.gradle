@@ -1,0 +1,31 @@
+apply plugin: 'android-library'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':ion:AndroidAsync')
+    compile 'com.android.support:support-v13:19.+'
+    compile 'com.google.code.gson:gson:2.2.4'
+}
+
+android {
+  sourceSets {
+      main {
+          manifest.srcFile 'AndroidManifest.xml'
+      
+          java {
+              srcDir 'src/'
+          }
+      }
+  }
+
+    compileSdkVersion 19
+    buildToolsVersion "19.0.3"
+
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 19
+    }
+}

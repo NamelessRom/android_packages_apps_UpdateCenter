@@ -1,1 +1,1 @@
-include ':'
+include ':', ':ion', ':ion:AndroidAsync'
