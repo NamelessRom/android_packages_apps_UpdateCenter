@@ -17,6 +17,8 @@ public interface Constants {
     public static final int[] MENU_ICONS = {
             R.drawable.ic_menu_home,
             -1,
+            R.drawable.ic_action_changelog,
+            -1,
             R.drawable.ic_action_update,
             -1,
             R.drawable.ic_menu_preferences
@@ -32,9 +34,10 @@ public interface Constants {
     public static final int ID_RESTORE_FROM_SUB       = -1;
     //----------------------------------------------------------------------------------------------
     public static final int ID_UC                     = 0;
-    public static final int ID_ROM_UPDATE             = 2;
+    public static final int ID_APP_LIST               = 2;
+    public static final int ID_ROM_UPDATE             = 4;
     public static final int ID_ROM_UPDATE_PREFERENCES = ID_ROM_UPDATE + 1000;
-    public static final int ID_PREFERENCES            = 4;
+    public static final int ID_PREFERENCES            = 6;
 
     //==============================================================================================
     // PATHS
