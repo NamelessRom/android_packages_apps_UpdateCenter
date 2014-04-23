@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="http://schemas.android.com/apk/res/android">
+
+    <string name="app_version_name">Versionname: %s</string>
+    <string name="app_version_code">Versioncode: %s</string>
+
+    <string name="api_version">API Version</string>
+    <string name="app_version">App Version</string>
+    <string name="version">Version: %s</string>
+    <string name="client">Client</string>
+    <string name="server">Server</string>
+    <string name="press_to_load">Press to load</string>
+
+    <string name="home">Home</string>
+
+    <string name="unknown">Unknown</string>
+
+    <string name="dialog_download">Download</string>
+
+    <string name="update_title">Update Information</string>
+    <string name="update_name">Name: %s</string>
+    <string name="update_channel">Channel: %s</string>
+    <string name="update_timestamp">Timestamp: %s</string>
+    <string name="update_info">Information: %s</string>
+    <string name="update_md5sum">MD5Sum: %s</string>
+    <string name="update_changelog">Changelog: %s</string>
+
+    <string name="general_no_updates_available">No updates available</string>
+    <string name="general_press_to_update">Press me, to check for updates.</string>
+
+    <string name="changelog_loaded">Changelog loaded!</string>
+
+    <!-- Settings strings -->
+    <string name="update_check_title">Check interval</string>
+    <string name="update_check_summary">The interval to check for updates</string>
+    <string name="check_manual">Manual</string>
+    <string name="check_on_app_start">On app start</string>
+    <string name="check_on_boot">On every boot</string>
+    <string name="check_twice_daily">Twice daily</string>
+    <string name="check_daily">Daily</string>
+    <string name="check_weekly">Weekly</string>
+    <string name="check_bi_weekly">Bi-weekly</string>
+    <string name="check_monthly">Monthly</string>
+
+    <!-- Downloads -->
+    <string name="confirm_download_cancelation_dialog_title">Cancel download</string>
+    <string name="confirm_download_cancelation_dialog_message">Cancel the current download?</string>
+    <string name="download_cancelled">Download cancelled</string>
+    <string name="download_already_running">A download is already running</string>
+    <string name="unable_to_download_file">Unable to download the update file</string>
+    <string name="not_download_notice">Do you want to download <xliff:g id="filename">%s</xliff:g>?</string>
+    <string name="not_download_success">Update downloaded successfully</string>
+    <string name="not_download_failure">Update download was unsuccessful</string>
+    <string name="not_action_install_update">Reboot and install</string>
+    <string name="not_download_install_notice">The update <xliff:g id="filename">%s</xliff:g> was successfully downloaded. When touching \'Reboot and install\', the device will restart itself to install the update.\n\nNote: A compatible Recovery is required for the installation to work automatically.</string>
+
+    <!-- Update checking -->
+    <string name="checking_for_updates">Checking for updates</string>
+    <string name="no_updates_found">No new updates found</string>
+    <string name="update_check_failed">The update check failed. Please check your internet connection and try again later.</string>
+    <string name="not_new_updates_found_ticker">New updates are available</string>
+    <string name="not_new_updates_found_title">New updates</string>
+    <string name="not_action_download">Download</string>
+    <string name="data_connection_required">A data connection is required.</string>
+
+    <string name="error">Error</string>
+    <string name="error_occured">An error occured. Please try again!</string>
+    <string name="cancel_download">Cancel download</string>
+    <string name="cancel_download_question">Do you want to cancel the download of %s?</string>
+
+    <string name="loading">Loading, please wait...</string>
+
+    <!-- Apply update strings -->
+    <string name="apply_update_dialog_title">Apply update</string>
+    <string name="apply_update_dialog_text">You are about to upgrade to <xliff:g id="filename">%s</xliff:g>.\n\nIf you press Update, the device will restart itself in recovery mode to install the update.\n\nNote: This feature requires a compatible Recovery or updates will need to be installed manually.</string>
+    <string name="apply_trying_to_get_root_access">Trying to get root access to reboot in recovery mode</string>
+    <string name="apply_unable_to_reboot_toast">Unable to reboot into recovery</string>
+
+    <string name="changelog_dialog_title">Newest Changes</string>
+    <string name="changelog_header_version">"Project: "</string>
+
+    <string name="recovery_type_title">Recovery script type</string>
+    <string name="recovery_type_summary">The type of the recovery script to generate</string>
+    <string name="recovery_type_both">Both</string>
+    <string name="recovery_type_cwm">ClockWorkMod</string>
+    <string name="recovery_type_open">OpenRecovery</string>
+
+    <string name="preferences">Preferences</string>
+    <string name="rom_center">ROM Center</string>
+    <string name="updates">Updates</string>
+    <string name="menu">Menu</string>
+    <string name="settings">Settings</string>
+
+    <string name="app_center">App Center</string>
+    <string name="get_apps">Get apps</string>
+
+</resources>
