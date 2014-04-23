@@ -24,6 +24,8 @@
         <item>@string/home</item>
         <item>@string/rom_center</item>
         <item>@string/updates</item>
+        <item>@string/rom_center</item>
+        <item>@string/updates</item>
         <item>@string/app_name</item>
         <item>@string/preferences</item>
     </string-array>
