@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.activities.MainActivity;
+import org.namelessrom.updatecenter.database.DatabaseHandler;
+import org.namelessrom.updatecenter.database.DownloadItem;
 import org.namelessrom.updatecenter.services.DownloadService;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
@@ -90,6 +92,11 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
         DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         Query query = new Query();
         query.setFilterById(id);
+
+        final DatabaseHandler db = DatabaseHandler.getInstance(context);
+        final DownloadItem item = db.getDownloadItem(String.valueOf(enqueued));
+        item.setCompleted("1");
+        db.updateItem(item, DatabaseHandler.TABLE_DOWNLOADS);
 
         Cursor c = dm.query(query);
         if (c == null) {

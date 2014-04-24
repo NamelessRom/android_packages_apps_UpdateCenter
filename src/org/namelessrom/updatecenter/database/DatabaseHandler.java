@@ -113,6 +113,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 cursor.getString(2), cursor.getString(3), cursor.getString(4));
     }
 
+    public DownloadItem getDownloadItem(final String downloadId) {
+        final SQLiteDatabase db = getReadableDatabase();
+
+        if (db == null) return null;
+
+        final Cursor cursor = db.query(TABLE_DOWNLOADS, new String[]{
+                        KEY_ID, KEY_DOWNLOADID, KEY_FILENAME, KEY_MD5, KEY_COMPLETED},
+                KEY_DOWNLOADID + "=?",
+                new String[]{downloadId}, null, null, null, null
+        );
+        if (cursor != null) { cursor.moveToFirst(); }
+        if (cursor == null) return null;
+
+        return new DownloadItem(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
+                cursor.getString(2), cursor.getString(3), cursor.getString(4));
+    }
+
     public List<DownloadItem> getAllItems(final String tableName) {
         final List<DownloadItem> itemList = new ArrayList<DownloadItem>();
         final String selectQuery = "SELECT * FROM " + tableName;
