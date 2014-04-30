@@ -102,22 +102,22 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
         }
 
         final UpdateInfo updateInfo = mUpdateInfos.get(position);
-        final String updateChannel = updateInfo.getUpdateChannelShort();
+        final String updateChannel = updateInfo.getChannelShort();
 
         // TODO: pictures?
-        viewHolder.mChannel.setText(updateInfo.getUpdateChannelShort());
+        viewHolder.mChannel.setText(updateChannel);
 
         String title, info;
         if (!updateChannel.equals("?")) {
-            title = updateInfo.getUpdateTimeStamp();
-            info = updateInfo.getUpdateName();
+            title = updateInfo.getTimestamp();
+            info = updateInfo.getName();
             viewHolder.mUpdateState = Helper.isUpdateDownloaded(info)
                     ? Constants.UPDATE_DOWNLOADED : 0;
             DownloadItem tmpDownloadItem = null;
 
             if (Application.mDownloadItems != null) {
                 for (final DownloadItem item : Application.mDownloadItems) {
-                    if (item.getMd5().equals(updateInfo.getUpdateMd5())) {
+                    if (item.getMd5().equals(updateInfo.getMd5())) {
                         if (item.getCompleted().equals("0")) {
                             tmpDownloadItem = item;
                             viewHolder.mUpdateState = Constants.UPDATE_DOWNLOADING;
@@ -177,7 +177,7 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
                     DialogFragment f = new ChangelogDialogFragment();
                     Bundle b = new Bundle();
                     b.putString(ChangelogDialogFragment.BUNDLE_URL,
-                            updateInfo.getUpdateUrl()
+                            updateInfo.getUrl()
                                     .replace("/download", ".changelog/download")
                     );
                     f.setArguments(b);
@@ -186,8 +186,8 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
                 }
             });
         } else {
-            title = updateInfo.getUpdateMd5();
-            info = updateInfo.getUpdateName();
+            title = updateInfo.getMd5();
+            info = updateInfo.getName();
             ((UpdateCard) v).setOverflow(View.GONE);
             viewHolder.mState.setVisibility(View.GONE);
         }

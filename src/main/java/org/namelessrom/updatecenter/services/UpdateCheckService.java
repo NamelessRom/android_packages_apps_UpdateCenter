@@ -17,7 +17,6 @@ import com.koushikdutta.ion.Ion;
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.activities.MainActivity;
 import org.namelessrom.updatecenter.events.UpdateCheckDoneEvent;
-import org.namelessrom.updatecenter.items.JsonUpdateInfo;
 import org.namelessrom.updatecenter.items.UpdateInfo;
 import org.namelessrom.updatecenter.receivers.DownloadReceiver;
 import org.namelessrom.updatecenter.utils.BusProvider;
@@ -73,28 +72,28 @@ public class UpdateCheckService extends Service implements Constants {
         final String url =
                 ROM_URL + "/" + CHANNEL_NIGHTLY + "/" + Helper.readBuildProp("ro.nameless.device");
 
-        Ion.with(this).load(url).as(JsonUpdateInfo[].class).setCallback(mFallBack);
+        Ion.with(this).load(url).as(UpdateInfo[].class).setCallback(mFallBack);
 
         return super.onStartCommand(intent, flags, startId);
     }
 
-    final FutureCallback<JsonUpdateInfo[]> mFallBack = new FutureCallback<JsonUpdateInfo[]>() {
+    final FutureCallback<UpdateInfo[]> mFallBack = new FutureCallback<UpdateInfo[]>() {
         @Override
-        public void onCompleted(Exception e, JsonUpdateInfo[] result) {
+        public void onCompleted(Exception e, UpdateInfo[] result) {
             if (result == null || e != null) {
                 postBus(new UpdateCheckDoneEvent(false));
                 return;
             }
 
-            final List<JsonUpdateInfo> list = Arrays.asList(result);
+            final List<UpdateInfo> list = Arrays.asList(result);
             final List<UpdateInfo> updates = new ArrayList<UpdateInfo>();
             final int currentDate = Helper.getBuildDate();
 
-            for (final JsonUpdateInfo info : list) {
+            for (final UpdateInfo info : list) {
                 final String channel = info.getChannel();
-                final String filename = info.getFilename().replace(".zip", "");
+                final String filename = info.getName().replace(".zip", "");
                 final String md5sum = info.getMd5();
-                final String urlFile = info.getDownloadUrl();
+                final String urlFile = info.getUrl();
                 final String timeStampString = info.getTimestamp();
                 final int timeStamp = Helper.parseDate(timeStampString);
 
@@ -151,7 +150,7 @@ public class UpdateCheckService extends Service implements Constants {
 
                 for (final UpdateInfo ui : updates) {
                     if (added < EXPANDED_NOTIF_UPDATE_COUNT) {
-                        inbox.addLine(ui.getUpdateName());
+                        inbox.addLine(ui.getName());
                         added++;
                     }
                 }
@@ -166,7 +165,7 @@ public class UpdateCheckService extends Service implements Constants {
                     final UpdateInfo updateInfo = updates.get(0);
 
                     if (!new File(UPDATE_FOLDER_FULL + File.separator
-                            + updateInfo.getUpdateName() + ".zip").exists()) {
+                            + updateInfo.getName() + ".zip").exists()) {
                         i = new Intent(UpdateCheckService.this, DownloadReceiver.class);
                         i.setAction(DownloadReceiver.ACTION_START_DOWNLOAD);
                         i.putExtra(DownloadReceiver.EXTRA_UPDATE_INFO, (Parcelable) updateInfo);

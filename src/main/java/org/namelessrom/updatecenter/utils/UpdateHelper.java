@@ -31,15 +31,13 @@ public class UpdateHelper {
         switch (state) {
             case Constants.UPDATE_DOWNLOADED:
                 titleId = R.string.reboot_and_install;
-                message = context.getString(R.string.download_install_notice,
-                        updateInfo.getUpdateName());
+                message = context.getString(R.string.download_install_notice, updateInfo.getName());
                 builder.setPositiveButton(R.string.reboot_and_install,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i1) {
                                 try {
-                                    Helper.triggerUpdate(context,
-                                            updateInfo.getUpdateName() + ".zip");
+                                    Helper.triggerUpdate(context, updateInfo.getName() + ".zip");
                                 } catch (Exception exc) {
                                     logDebug("Error: " + exc.getMessage());
                                 }
@@ -52,7 +50,7 @@ public class UpdateHelper {
                 if (item != null) {
                     titleId = R.string.cancel_download;
                     message = context.getString(
-                            R.string.cancel_download_question, updateInfo.getUpdateName());
+                            R.string.cancel_download_question, updateInfo.getName());
                     builder.setPositiveButton(R.string.cancel_download,
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -78,8 +76,7 @@ public class UpdateHelper {
                 break;
             default:
                 titleId = R.string.download;
-                message = context.getString(R.string.download_notice,
-                        updateInfo.getUpdateName());
+                message = context.getString(R.string.download_notice, updateInfo.getName());
                 builder.setPositiveButton(R.string.download,
                         new DialogInterface.OnClickListener() {
                             @Override
