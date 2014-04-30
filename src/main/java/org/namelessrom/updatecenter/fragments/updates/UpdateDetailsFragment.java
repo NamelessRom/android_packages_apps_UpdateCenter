@@ -137,7 +137,7 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
                 textId = R.string.cancel_download;
                 state = Constants.UPDATE_DOWNLOADING;
             } else {
-                textId = R.string.dialog_download;
+                textId = R.string.download;
                 state = 0;
             }
         }
