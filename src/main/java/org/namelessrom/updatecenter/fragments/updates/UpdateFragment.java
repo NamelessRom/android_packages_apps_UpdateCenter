@@ -40,10 +40,10 @@ import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.events.RefreshEvent;
 import org.namelessrom.updatecenter.events.SubFragmentEvent;
 import org.namelessrom.updatecenter.events.UpdateCheckDoneEvent;
+import org.namelessrom.updatecenter.items.UpdateInfo;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
 import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
-import org.namelessrom.updatecenter.items.UpdateInfo;
 import org.namelessrom.updatecenter.widgets.AttachListFragment;
 import org.namelessrom.updatecenter.widgets.adapters.UpdateListAdapter;
 
@@ -96,12 +96,20 @@ public class UpdateFragment extends AttachListFragment implements OnRefreshListe
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
 
+        final ListView listView = getListView();
+        if (listView != null) {
+            listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+            listView.setDividerHeight(4);
+            listView.setDivider(getResources().getDrawable(R.drawable.transparent));
+            listView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_INSET);
+        }
+
         final ViewGroup viewGroup = (ViewGroup) view;
         mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
 
         ActionBarPullToRefresh.from(getActivity())
                 .insertLayoutInto(viewGroup)
-                .theseChildrenArePullable(getListView(), getListView().getEmptyView())
+                .theseChildrenArePullable(listView, listView.getEmptyView())
                 .listener(this)
                 .setup(mPullToRefreshLayout);
 
@@ -187,7 +195,7 @@ public class UpdateFragment extends AttachListFragment implements OnRefreshListe
         }
 
         if (mTitles.size() == 0) {
-            mTitles.add(new UpdateInfo("-", getString(R.string.general_no_updates_available), ""));
+            mTitles.add(new UpdateInfo("-", getString(R.string.no_updates_available), ""));
         }
 
         BusProvider.getBus().post(new RefreshEvent());
@@ -225,8 +233,8 @@ public class UpdateFragment extends AttachListFragment implements OnRefreshListe
                         mTmpTitles.clear();
                         mTmpTitles.add(
                                 new UpdateInfo("-",
-                                        getString(R.string.general_no_updates_available),
-                                        "-")
+                                        getString(R.string.update_check_failed),
+                                        getString(R.string.data_connection_required))
                         );
                         getTitles();
                     }

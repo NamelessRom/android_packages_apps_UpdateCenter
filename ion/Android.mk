@@ -18,7 +18,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_STATIC_JAVA_LIBRARIES := AndroidAsyncCustom gsonCustom android-support-v13
+LOCAL_STATIC_JAVA_LIBRARIES := AndroidAsyncCustom gson android-support-v13
 
 LOCAL_MODULE := ionCustom
 LOCAL_SDK_VERSION := current

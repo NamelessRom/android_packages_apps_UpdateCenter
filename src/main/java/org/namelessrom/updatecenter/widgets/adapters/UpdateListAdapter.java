@@ -186,8 +186,8 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
                 }
             });
         } else {
-            title = updateInfo.getUpdateName();
-            info = "";
+            title = updateInfo.getUpdateMd5();
+            info = updateInfo.getUpdateName();
             ((UpdateCard) v).setOverflow(View.GONE);
             viewHolder.mState.setVisibility(View.GONE);
         }
