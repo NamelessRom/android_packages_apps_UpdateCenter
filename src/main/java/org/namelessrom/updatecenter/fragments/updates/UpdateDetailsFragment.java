@@ -103,13 +103,13 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mChannel.setText(mUpdateInfo.getUpdateChannelShort());
-        mTitle.setText(mUpdateInfo.getUpdateTimeStamp());
-        mInfo.setText(mUpdateInfo.getUpdateName());
+        mChannel.setText(mUpdateInfo.getChannelShort());
+        mTitle.setText(mUpdateInfo.getTimestamp());
+        mInfo.setText(mUpdateInfo.getName());
 
         updateButton();
 
-        mChangelog.loadFromUrl(mUpdateInfo.getUpdateUrl()
+        mChangelog.loadFromUrl(mUpdateInfo.getUrl()
                 .replace("/download", ".changelog/download"));
     }
 
@@ -118,13 +118,13 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
         final int state;
         DownloadItem tmpItem = null;
 
-        if (Helper.isUpdateDownloaded(mUpdateInfo.getUpdateName())) {
+        if (Helper.isUpdateDownloaded(mUpdateInfo.getName())) {
             textId = R.string.reboot_and_install;
             state = Constants.UPDATE_DOWNLOADED;
         } else {
             if (Application.mDownloadItems != null) {
                 for (final DownloadItem item : Application.mDownloadItems) {
-                    if (item.getMd5().equals(mUpdateInfo.getUpdateMd5())) {
+                    if (item.getMd5().equals(mUpdateInfo.getMd5())) {
                         if (item.getCompleted().equals("0")) {
                             tmpItem = item;
                             break;

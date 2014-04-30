@@ -22,9 +22,9 @@ import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.database.DatabaseHandler;
 import org.namelessrom.updatecenter.database.DownloadItem;
 import org.namelessrom.updatecenter.events.RefreshEvent;
+import org.namelessrom.updatecenter.items.UpdateInfo;
 import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
-import org.namelessrom.updatecenter.items.UpdateInfo;
 
 public class DownloadService extends IntentService implements Constants {
     private static final String TAG = DownloadService.class.getSimpleName();
@@ -37,23 +37,20 @@ public class DownloadService extends IntentService implements Constants {
         context.startService(intent);
     }
 
-    public DownloadService() {
-        super(TAG);
-    }
+    public DownloadService() { super(TAG); }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         final UpdateInfo ui = intent.getParcelableExtra(EXTRA_UPDATE_INFO);
 
         if (ui != null) {
-            final long downloadId = enqueueDownload(ui.getUpdateUrl(), ui.getUpdateName());
+            final long downloadId = enqueueDownload(ui.getUrl(), ui.getName());
 
             PreferenceManager.getDefaultSharedPreferences(this)
                     .edit().putLong(DOWNLOAD_ID, downloadId).commit();
 
             final DownloadItem item = new DownloadItem(
-                    ui.getUpdateName() + ".zip", String.valueOf(downloadId),
-                    ui.getUpdateMd5(), "0");
+                    ui.getName() + ".zip", String.valueOf(downloadId), ui.getMd5(), "0");
             DatabaseHandler.getInstance(this).insertOrUpdate(item, DatabaseHandler.TABLE_DOWNLOADS);
             org.namelessrom.updatecenter.Application.mDownloadItems =
                     DatabaseHandler.getInstance(this).getAllItems(DatabaseHandler.TABLE_DOWNLOADS);

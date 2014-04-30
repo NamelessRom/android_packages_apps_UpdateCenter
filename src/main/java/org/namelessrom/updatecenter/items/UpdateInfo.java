@@ -21,6 +21,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -37,15 +39,19 @@ public class UpdateInfo implements Parcelable, Serializable {
 
     private static final long serialVersionUID = 5499890003569313403L;
 
-    private String  mUpdateChannel;
-    private String  mUpdateChannelShort;
-    private String  mUpdateName;
-    private String  mUpdateMd5;
-    private String  mUpdateUrl;
-    private String  mUpdateTimeStamp;
+    @SerializedName("channel")
+    private String  mChannel;
+    private String  mChannelShort;
+    private int     mChannelType;
+    @SerializedName("filename")
+    private String  mName;
+    @SerializedName("md5sum")
+    private String  mMd5;
+    @SerializedName("downloadurl")
+    private String  mUrl;
+    @SerializedName("timestamp")
+    private String  mTimestamp;
     private boolean mIsDownloading;
-
-    private int mChannel = 0;
 
     private UpdateInfo(final Parcel in) { readFromParcel(in); }
 
@@ -58,80 +64,60 @@ public class UpdateInfo implements Parcelable, Serializable {
     }
 
     public UpdateInfo(String updateChannel, String updateName, String updateMd5,
-            String updateUrl) {
-        this(updateChannel, updateName, updateMd5, updateUrl, "-");
-    }
+            String updateUrl) { this(updateChannel, updateName, updateMd5, updateUrl, "-"); }
 
     public UpdateInfo(String updateChannel, String updateName, String updateMd5,
             String updateUrl, String updateTimeStamp) {
-        mUpdateChannel = updateChannel;
-        mUpdateName = updateName;
-        mUpdateMd5 = updateMd5;
-        mUpdateUrl = updateUrl;
-        mUpdateTimeStamp = updateTimeStamp;
+        mChannel = updateChannel;
+        mName = updateName;
+        mMd5 = updateMd5;
+        mUrl = updateUrl;
+        mTimestamp = updateTimeStamp;
 
-        if (mUpdateChannel.equals("NIGHTLY")) {
-            mUpdateChannelShort = "N";
-            mChannel = CHANNEL_NIGHTLY;
-        } else if (mUpdateChannel.equals("MILESTONE")) {
-            mUpdateChannelShort = "M";
-            mChannel = CHANNEL_MILESTONE;
-        } else if (mUpdateChannel.equals("RELEASECANDIDATE")) {
-            mUpdateChannelShort = "RC";
-            mChannel = CHANNEL_RC;
-        } else if (mUpdateChannel.equals("STABLE")) {
-            mUpdateChannelShort = "S";
-            mChannel = CHANNEL_STABLE;
-        } else if (mUpdateChannel.equals("---")) {
-            mUpdateChannelShort = "";
-            mChannel = CHANNEL_EMPTY;
+        if (mChannel.equals("NIGHTLY")) {
+            mChannelShort = "N";
+            mChannelType = CHANNEL_NIGHTLY;
+        } else if (mChannel.equals("MILESTONE")) {
+            mChannelShort = "M";
+            mChannelType = CHANNEL_MILESTONE;
+        } else if (mChannel.equals("RELEASECANDIDATE")) {
+            mChannelShort = "RC";
+            mChannelType = CHANNEL_RC;
+        } else if (mChannel.equals("STABLE")) {
+            mChannelShort = "S";
+            mChannelType = CHANNEL_STABLE;
+        } else if (mChannel.equals("---")) {
+            mChannelShort = "";
+            mChannelType = CHANNEL_EMPTY;
         } else {
-            mUpdateChannelShort = "?";
-            mChannel = CHANNEL_UNKNOWN;
+            mChannelShort = "?";
+            mChannelType = CHANNEL_UNKNOWN;
         }
     }
 
-    public String getUpdateChannel() {
-        return mUpdateChannel;
-    }
+    public String getChannel() { return mChannel; }
 
-    public String getUpdateChannelShort() {
-        return mUpdateChannelShort;
-    }
+    public String getChannelShort() { return mChannelShort; }
 
-    public String getUpdateName() {
-        return mUpdateName;
-    }
+    public String getName() { return mName; }
 
-    public String getUpdateMd5() {
-        return mUpdateMd5;
-    }
+    public String getMd5() { return mMd5; }
 
-    public String getUpdateUrl() {
-        return mUpdateUrl;
-    }
+    public String getUrl() { return mUrl; }
 
-    public String getUpdateTimeStamp() {
-        return mUpdateTimeStamp;
-    }
+    public String getTimestamp() { return mTimestamp; }
 
-    public boolean isDownloading() {
-        return mIsDownloading;
-    }
+    public boolean isDownloading() { return mIsDownloading; }
 
     public UpdateInfo setDownloading(boolean isDownloading) {
         mIsDownloading = isDownloading;
         return this;
     }
 
-    public int getChannel() {
-        return mChannel;
-    }
+    public int getChannelType() { return mChannelType; }
 
     @Override
-    public String toString() {
-        return "UpdateInfo: " + mUpdateName;
-    }
+    public String toString() { return "UpdateInfo: " + mName; }
 
     @Override
     public boolean equals(Object o) {
@@ -144,49 +130,44 @@ public class UpdateInfo implements Parcelable, Serializable {
         }
 
         UpdateInfo ui = (UpdateInfo) o;
-        return TextUtils.equals(mUpdateChannel, ui.mUpdateChannel)
-                && TextUtils.equals(mUpdateChannelShort, ui.mUpdateChannelShort)
-                && TextUtils.equals(mUpdateName, ui.mUpdateName)
-                && TextUtils.equals(mUpdateMd5, ui.mUpdateMd5)
-                && TextUtils.equals(mUpdateUrl, ui.mUpdateUrl)
-                && TextUtils.equals(mUpdateTimeStamp, ui.mUpdateTimeStamp)
+        return TextUtils.equals(mChannel, ui.mChannel)
+                && TextUtils.equals(mChannelShort, ui.mChannelShort)
+                && TextUtils.equals(mName, ui.mName)
+                && TextUtils.equals(mMd5, ui.mMd5)
+                && TextUtils.equals(mUrl, ui.mUrl)
+                && TextUtils.equals(mTimestamp, ui.mTimestamp)
+                && mChannelType == ui.mChannelType
                 && mIsDownloading == ui.isDownloading();
     }
 
     public static final Parcelable.Creator<UpdateInfo> CREATOR =
             new Parcelable.Creator<UpdateInfo>() {
-                public UpdateInfo createFromParcel(Parcel in) {
-                    return new UpdateInfo(in);
-                }
+                public UpdateInfo createFromParcel(Parcel in) { return new UpdateInfo(in); }
 
-                public UpdateInfo[] newArray(int size) {
-                    return new UpdateInfo[size];
-                }
+                public UpdateInfo[] newArray(int size) { return new UpdateInfo[size]; }
             };
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
+    public int describeContents() { return 0; }
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(mUpdateChannel);
-        parcel.writeString(mUpdateChannelShort);
-        parcel.writeString(mUpdateName);
-        parcel.writeString(mUpdateMd5);
-        parcel.writeString(mUpdateUrl);
-        parcel.writeString(mUpdateTimeStamp);
+        parcel.writeString(mChannel);
+        parcel.writeString(mChannelShort);
+        parcel.writeString(mName);
+        parcel.writeString(mMd5);
+        parcel.writeString(mUrl);
+        parcel.writeString(mTimestamp);
         parcel.writeString(mIsDownloading ? "1" : "0");
     }
 
     private void readFromParcel(Parcel in) {
-        mUpdateChannel = in.readString();
-        mUpdateChannelShort = in.readString();
-        mUpdateName = in.readString();
-        mUpdateMd5 = in.readString();
-        mUpdateUrl = in.readString();
-        mUpdateTimeStamp = in.readString();
+        mChannel = in.readString();
+        mChannelShort = in.readString();
+        mName = in.readString();
+        mMd5 = in.readString();
+        mUrl = in.readString();
+        mTimestamp = in.readString();
         mIsDownloading = in.readString().equals("1");
     }
 }
