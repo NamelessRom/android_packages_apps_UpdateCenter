@@ -6,15 +6,28 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+import org.acra.sender.HttpSender;
 import org.namelessrom.updatecenter.database.DatabaseHandler;
 import org.namelessrom.updatecenter.database.DownloadItem;
 import org.namelessrom.updatecenter.utils.Helper;
 
 import java.util.List;
 
-/**
- * Created by alex on 17.02.14.
- */
+@ReportsCrashes(
+        httpMethod = HttpSender.Method.PUT,
+        reportType = HttpSender.Type.JSON,
+        formKey = "",
+        formUri = "https://reports.nameless-rom.org" +
+                "/acra-namelesscenter/_design/acra-storage/_update/report",
+        formUriBasicAuthLogin = "namelessreporter",
+        formUriBasicAuthPassword = "weareopentoeveryone",
+        mode = ReportingInteractionMode.DIALOG,
+        resToastText = R.string.crash_toast_text,
+        resDialogText = R.string.crash_dialog_text,
+        resDialogOkToast = R.string.crash_dialog_ok_toast)
 public class Application extends android.app.Application {
 
     private static final String TAG = Application.class.getName();
@@ -22,7 +35,7 @@ public class Application extends android.app.Application {
     public static final Handler sHandler = new Handler();
 
     public static final boolean IS_DEBUG     = false;
-    public static boolean IS_LOG_DEBUG = true;
+    public static       boolean IS_LOG_DEBUG = true;
 
     // TODO: update every time the supported api version changes
     public static final String API_CLIENT = "2.1.2";
@@ -35,6 +48,7 @@ public class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        ACRA.init(this);
 
         sApplicationContext = this;
         packageManager = sApplicationContext.getPackageManager();

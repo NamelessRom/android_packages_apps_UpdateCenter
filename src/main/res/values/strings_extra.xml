@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ACRA -->
+    <string name="crash_toast_text">Device Control has crashed...</string>
+    <string name="crash_dialog_text">An unexpected error occurred forcing the
+        application to stop.\nPlease help us fix this by sending us error data!\n\n
+        All you have to do is click OK.</string>
+    <string name="crash_dialog_ok_toast">Thank you!</string>
     <!-- Changelog -->
     <string name="changelog_dialog_title">Newest Changes</string>
     <string name="changelog_header_version">"Project: "</string>
