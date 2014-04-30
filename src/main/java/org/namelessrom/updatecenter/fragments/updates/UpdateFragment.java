@@ -40,10 +40,10 @@ import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.events.RefreshEvent;
 import org.namelessrom.updatecenter.events.SubFragmentEvent;
 import org.namelessrom.updatecenter.events.UpdateCheckDoneEvent;
+import org.namelessrom.updatecenter.items.UpdateInfo;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
 import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
-import org.namelessrom.updatecenter.items.UpdateInfo;
 import org.namelessrom.updatecenter.widgets.AttachListFragment;
 import org.namelessrom.updatecenter.widgets.adapters.UpdateListAdapter;
 
@@ -187,7 +187,7 @@ public class UpdateFragment extends AttachListFragment implements OnRefreshListe
         }
 
         if (mTitles.size() == 0) {
-            mTitles.add(new UpdateInfo("-", getString(R.string.general_no_updates_available), ""));
+            mTitles.add(new UpdateInfo("-", getString(R.string.no_updates_available), ""));
         }
 
         BusProvider.getBus().post(new RefreshEvent());
@@ -225,8 +225,8 @@ public class UpdateFragment extends AttachListFragment implements OnRefreshListe
                         mTmpTitles.clear();
                         mTmpTitles.add(
                                 new UpdateInfo("-",
-                                        getString(R.string.general_no_updates_available),
-                                        "-")
+                                        getString(R.string.update_check_failed),
+                                        getString(R.string.data_connection_required))
                         );
                         getTitles();
                     }

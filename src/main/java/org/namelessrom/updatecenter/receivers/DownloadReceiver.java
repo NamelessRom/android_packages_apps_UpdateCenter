@@ -154,19 +154,19 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
                 .setAutoCancel(true);
 
         if (failureMessageResId >= 0) {
-            builder.setContentTitle(context.getString(R.string.not_download_failure));
+            builder.setContentTitle(context.getString(R.string.download_failure));
             builder.setContentText(context.getString(failureMessageResId));
-            builder.setTicker(context.getString(R.string.not_download_failure));
+            builder.setTicker(context.getString(R.string.download_failure));
         } else {
             final String updateUiName = updateFile.getName();
 
-            builder.setContentTitle(context.getString(R.string.not_download_success));
+            builder.setContentTitle(context.getString(R.string.download_success));
             builder.setContentText(updateUiName);
-            builder.setTicker(context.getString(R.string.not_download_success));
+            builder.setTicker(context.getString(R.string.download_success));
 
             Notification.BigTextStyle style = new Notification.BigTextStyle();
-            style.setBigContentTitle(context.getString(R.string.not_download_success));
-            style.bigText(context.getString(R.string.not_download_install_notice, updateUiName));
+            style.setBigContentTitle(context.getString(R.string.download_success));
+            style.bigText(context.getString(R.string.download_install_notice, updateUiName));
             builder.setStyle(style);
 
             Intent installIntent = new Intent(context, DownloadReceiver.class);
@@ -176,11 +176,11 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
             PendingIntent installPi = PendingIntent.getBroadcast(context, 0,
                     installIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT);
             builder.addAction(R.drawable.ic_stat_notify_install,
-                    context.getString(R.string.not_action_install_update), installPi);
+                    context.getString(R.string.reboot_and_install), installPi);
         }
 
         final NotificationManager nm =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(R.string.not_download_success, builder.build());
+        nm.notify(R.string.download_success, builder.build());
     }
 }

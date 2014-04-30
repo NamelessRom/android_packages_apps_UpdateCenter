@@ -2,10 +2,11 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- "shadow" -->
-    <!-- <item>
-        <bitmap android:src="@drawable/card_shadow" >
-        </bitmap>
-    </item> -->
+    <!--
+    <item>
+        <bitmap android:src="@drawable/card_shadow" />
+    </item>
+    -->
     <item>
         <shape
             android:dither="true"
