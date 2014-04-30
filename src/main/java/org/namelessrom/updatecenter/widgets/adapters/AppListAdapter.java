@@ -31,11 +31,11 @@ import static org.namelessrom.updatecenter.Application.logDebug;
 
 public class AppListAdapter extends BaseAdapter implements Constants {
 
+    private final Context       mContext;
     private final List<AppData> mData;
     private int mCount   = 0;
     private int mCounter = 0;
 
-    private Context mContext;
     private boolean isLoading;
     private boolean isFirstTime = true;
 

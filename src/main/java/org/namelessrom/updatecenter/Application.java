@@ -21,7 +21,7 @@ public class Application extends android.app.Application {
 
     public static final Handler sHandler = new Handler();
 
-    public static boolean IS_DEBUG     = false;
+    public static final boolean IS_DEBUG     = false;
     public static boolean IS_LOG_DEBUG = true;
 
     // TODO: update every time the supported api version changes

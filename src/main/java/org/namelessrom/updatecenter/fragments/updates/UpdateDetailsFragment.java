@@ -119,7 +119,7 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
         DownloadItem tmpItem = null;
 
         if (Helper.isUpdateDownloaded(mUpdateInfo.getUpdateName())) {
-            textId = R.string.not_action_install_update;
+            textId = R.string.reboot_and_install;
             state = Constants.UPDATE_DOWNLOADED;
         } else {
             if (Application.mDownloadItems != null) {
@@ -137,7 +137,7 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
                 textId = R.string.cancel_download;
                 state = Constants.UPDATE_DOWNLOADING;
             } else {
-                textId = R.string.dialog_download;
+                textId = R.string.download;
                 state = 0;
             }
         }

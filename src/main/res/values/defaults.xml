@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Pull Refresh -->
+    <dimen name="ptr_progress_bar_stroke_width">3dp</dimen>
+    <!-- Smooth Progress -->
     <color name="spb_default_color">#33b5e5</color>
     <dimen name="spb_default_stroke_separator_length">4dp</dimen>
     <dimen name="spb_default_stroke_width">4dp</dimen>

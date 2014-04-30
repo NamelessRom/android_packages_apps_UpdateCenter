@@ -220,8 +220,8 @@ public class Helper implements Constants {
     public static void cancelNotification(Context context) {
         final NotificationManager nm =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.cancel(R.string.not_new_updates_found_title);
-        nm.cancel(R.string.not_download_success);
+        nm.cancel(R.string.new_updates_found_title);
+        nm.cancel(R.string.download_success);
     }
 
     public static boolean isOnline(Context context) {
