@@ -30,10 +30,10 @@ public class UpdateHelper {
         String message;
         switch (state) {
             case Constants.UPDATE_DOWNLOADED:
-                titleId = R.string.not_action_install_update;
-                message = context.getString(R.string.not_download_install_notice,
+                titleId = R.string.reboot_and_install;
+                message = context.getString(R.string.download_install_notice,
                         updateInfo.getUpdateName());
-                builder.setPositiveButton(R.string.not_action_install_update,
+                builder.setPositiveButton(R.string.reboot_and_install,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i1) {
@@ -77,10 +77,10 @@ public class UpdateHelper {
                 }
                 break;
             default:
-                titleId = R.string.not_action_download;
-                message = context.getString(R.string.not_download_notice,
+                titleId = R.string.download;
+                message = context.getString(R.string.download_notice,
                         updateInfo.getUpdateName());
-                builder.setPositiveButton(R.string.not_action_download,
+                builder.setPositiveButton(R.string.download,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i1) {

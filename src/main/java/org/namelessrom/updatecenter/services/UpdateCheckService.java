@@ -139,8 +139,8 @@ public class UpdateCheckService extends Service implements Constants {
                 Notification.Builder builder = new Notification.Builder(UpdateCheckService.this)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setWhen(System.currentTimeMillis())
-                        .setTicker(res.getString(R.string.not_new_updates_found_ticker))
-                        .setContentTitle(res.getString(R.string.not_new_updates_found_title))
+                        .setTicker(res.getString(R.string.new_updates_found_ticker))
+                        .setContentTitle(res.getString(R.string.new_updates_found_title))
                         .setContentText(text)
                         .setContentIntent(contentIntent)
                         .setAutoCancel(true);
@@ -174,14 +174,14 @@ public class UpdateCheckService extends Service implements Constants {
                                 UpdateCheckService.this, 0, i,
                                 PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT);
                         builder.addAction(R.drawable.ic_stat_notify_download,
-                                res.getString(R.string.not_action_download), pendingIntent);
+                                res.getString(R.string.download), pendingIntent);
                     }
                 }
 
                 // Trigger the notification
                 NotificationManager nm =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                nm.notify(R.string.not_new_updates_found_title, builder.build());
+                nm.notify(R.string.new_updates_found_title, builder.build());
             }
 
             sendBroadcast(finishedIntent);

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Changelog -->
+    <item type="id" name="chg_headerVersion" />
+    <item type="id" name="chg_rowheader" />
+    <item type="id" name="chg_textbullet" />
+    <item type="id" name="chg_text" />
+    <!-- Pull Refresh -->
+    <item type="id" name="ptr_content" />
+    <item type="id" name="ptr_text" />
+    <item type="id" name="ptr_progress" />
+    <!-- Sliding Menu -->
+    <item name="selected_view" type="id" />
+    <item name="slidingmenumain" type="id" />
+</resources>
