@@ -4,7 +4,7 @@
     <string name="changelog_dialog_title">Newest Changes</string>
     <string name="changelog_header_version">"Project: "</string>
     <!-- Pull Refresh -->
-    <string name="pull_to_refresh_pull_label">Pull to refresh…</string>
-    <string name="pull_to_refresh_release_label">Release to refresh…</string>
-    <string name="pull_to_refresh_refreshing_label">Loading…</string>
+    <string name="pull_to_refresh_pull_label">Pull to refresh&#8230;</string>
+    <string name="pull_to_refresh_release_label">Release to refresh&#8230;</string>
+    <string name="pull_to_refresh_refreshing_label">Loading&#8230;</string>
 </resources>
