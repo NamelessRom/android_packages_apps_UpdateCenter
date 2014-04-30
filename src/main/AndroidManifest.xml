@@ -39,6 +39,12 @@
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:hardwareAccelerated="true">
         <activity
+            android:name="org.acra.CrashReportDialog"
+            android:theme="@android:style/Theme.Holo.Dialog"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true" />
+        <activity
             android:name="org.namelessrom.updatecenter.activities.DummyLauncher"
             android:enabled="true"
             android:launchMode="singleTask">
