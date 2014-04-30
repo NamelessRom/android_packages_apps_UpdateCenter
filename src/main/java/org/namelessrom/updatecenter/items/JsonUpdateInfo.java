@@ -8,31 +8,27 @@ import com.google.gson.annotations.SerializedName;
 public class JsonUpdateInfo {
 
     @SerializedName("channel")
-    private String mChannel;
+    private final String mChannel;
 
     @SerializedName("filename")
-    private String mFilename;
+    private final String mFilename;
 
     @SerializedName("md5sum")
-    private String mMd5;
+    private final String mMd5;
 
     @SerializedName("downloadurl")
-    private String mDownloadUrl;
+    private final String mDownloadUrl;
 
     @SerializedName("timestamp")
-    private String mTimestamp;
-
-    @SerializedName("changelog")
-    private String mChangeLog;
+    private final String mTimestamp;
 
     public JsonUpdateInfo(final String channel, final String filename, final String md5,
-            final String downloadUrl, final String timestamp, final String changelog) {
+            final String downloadUrl, final String timestamp) {
         this.mChannel = channel;
         this.mFilename = filename;
         this.mMd5 = md5;
         this.mDownloadUrl = downloadUrl;
         this.mTimestamp = timestamp;
-        this.mChangeLog = changelog;
     }
 
     public String getChannel() { return mChannel; }
@@ -44,6 +40,4 @@ public class JsonUpdateInfo {
     public String getDownloadUrl() { return mDownloadUrl; }
 
     public String getTimestamp() { return mTimestamp; }
-
-    public String getChangeLog() { return mChangeLog; }
 }

@@ -2,7 +2,7 @@ package org.namelessrom.updatecenter.events;
 
 public class SectionAttachedEvent {
 
-    private int mId;
+    private final int mId;
 
     public SectionAttachedEvent(final int id) { mId = id; }
 

@@ -7,8 +7,8 @@ import java.util.List;
 
 public class UpdateCheckDoneEvent {
 
-    private boolean          mIsSuccess;
-    private List<UpdateInfo> mUpdates;
+    private final boolean          mIsSuccess;
+    private final List<UpdateInfo> mUpdates;
 
 
     public UpdateCheckDoneEvent(final boolean success) {

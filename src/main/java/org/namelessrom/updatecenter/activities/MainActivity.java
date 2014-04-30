@@ -40,7 +40,7 @@ import org.namelessrom.updatecenter.events.SubFragmentEvent;
 import org.namelessrom.updatecenter.fragments.WelcomeFragment;
 import org.namelessrom.updatecenter.fragments.apps.AppListFragment;
 import org.namelessrom.updatecenter.fragments.preferences.MainPreferenceFragment;
-import org.namelessrom.updatecenter.fragments.updates.UpdateFragment;
+import org.namelessrom.updatecenter.fragments.updates.UpdateListFragment;
 import org.namelessrom.updatecenter.fragments.updates.UpdatePreferenceFragment;
 import org.namelessrom.updatecenter.services.AutoUpdater;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
@@ -171,7 +171,7 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
                 /*right = new UpdatePreferenceFragment();*/
                 break;
             case ID_UPDATE:
-                main = new UpdateFragment();
+                main = new UpdateListFragment();
                 /*right = new UpdatePreferenceFragment();*/
                 break;
             case ID_PREFERENCES:

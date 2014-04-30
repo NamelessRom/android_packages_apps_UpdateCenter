@@ -3,10 +3,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/update_install"
-        android:title="@string/not_action_install_update" />
+        android:title="@string/reboot_and_install" />
     <item
         android:id="@+id/update_download"
-        android:title="@string/dialog_download" />
+        android:title="@string/download" />
     <item
         android:id="@+id/update_download_cancel"
         android:title="@string/cancel_download" />
