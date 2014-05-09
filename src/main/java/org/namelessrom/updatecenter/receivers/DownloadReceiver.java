@@ -71,8 +71,7 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
                 Helper.triggerUpdate(context, fileName);
             } catch (IOException e) {
                 logDebug("Unable to reboot into recovery mode: " + e.getMessage());
-                Toast.makeText(context, R.string.apply_unable_to_reboot_toast,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.unable_to_reboot_toast, Toast.LENGTH_SHORT).show();
                 Helper.cancelNotification(context);
             }
         }

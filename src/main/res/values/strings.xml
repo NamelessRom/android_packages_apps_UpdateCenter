@@ -66,5 +66,6 @@
     <string name="download_failure">Update download was unsuccessful</string>
     <string name="reboot_and_install">Reboot and install</string>
     <string name="download_install_notice">The update <xliff:g id="filename">%s</xliff:g> was successfully downloaded. When touching \'Reboot and install\', the device will restart itself to install the update.\n\nNote: A compatible Recovery is required for the installation to work automatically.</string>
+    <string name="unable_to_reboot_toast">Unable to reboot into recovery</string>
 
 </resources>
