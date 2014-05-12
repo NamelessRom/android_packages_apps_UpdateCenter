@@ -59,7 +59,7 @@ android {
 }
 
 dependencies {
-    compile project(':ion');
+    compile 'com.koushikdutta.ion:ion:1.2.5'
     compile 'com.android:changelibs:1.0.0'
     compile 'ch.acra:acra:4.+'
 }
