@@ -5,7 +5,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE_TAGS := optional
 LOCAL_AAPT_INCLUDE_ALL_RESOURCES := true
 
-LOCAL_STATIC_JAVA_LIBRARIES := android-support-v13 changeloglib gson ionCustom acra
+LOCAL_STATIC_JAVA_LIBRARIES := android-support-v13 changeloglib gson ion acra
 
 LOCAL_SRC_FILES := \
     $(call all-java-files-under, java)
