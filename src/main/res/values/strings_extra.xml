@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- ACRA -->
-    <string name="crash_toast_text">Device Control has crashed...</string>
+    <string name="crash_toast_text">Update Center has crashed...</string>
     <string name="crash_dialog_text">An unexpected error occurred forcing the
         application to stop.\nPlease help us fix this by sending us error data!\n\n
         All you have to do is click OK.</string>
@@ -9,6 +9,9 @@
     <!-- Changelog -->
     <string name="changelog_dialog_title">Newest Changes</string>
     <string name="changelog_header_version">"Project: "</string>
+    <!-- DashClock extension strings -->
+    <string name="extension_label">NamelessRom Updates</string>
+    <string name="extension_description">Displays number of new rom updates available.</string>
     <!-- Pull Refresh -->
     <string name="pull_to_refresh_pull_label">Pull to refresh&#8230;</string>
     <string name="pull_to_refresh_release_label">Release to refresh&#8230;</string>

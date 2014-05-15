@@ -19,6 +19,7 @@ import org.namelessrom.updatecenter.activities.MainActivity;
 import org.namelessrom.updatecenter.events.UpdateCheckDoneEvent;
 import org.namelessrom.updatecenter.items.UpdateInfo;
 import org.namelessrom.updatecenter.receivers.DownloadReceiver;
+import org.namelessrom.updatecenter.services.dashclock.RomUpdateDashclockExtension;
 import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
@@ -86,7 +87,7 @@ public class UpdateCheckService extends Service implements Constants {
             }
 
             final List<UpdateInfo> list = Arrays.asList(result);
-            final List<UpdateInfo> updates = new ArrayList<UpdateInfo>();
+            final ArrayList<UpdateInfo> updates = new ArrayList<UpdateInfo>();
             final int currentDate = Helper.getBuildDate();
 
             for (final UpdateInfo info : list) {
@@ -127,7 +128,7 @@ public class UpdateCheckService extends Service implements Constants {
                 // The notification should launch the main app
                 Intent i = new Intent(UpdateCheckService.this, MainActivity.class);
                 // TODO: give extra to launch in updates
-                PendingIntent contentIntent = PendingIntent.getActivity(
+                final PendingIntent contentIntent = PendingIntent.getActivity(
                         UpdateCheckService.this, 0, i, PendingIntent.FLAG_ONE_SHOT);
 
                 final Resources res = getResources();
@@ -181,6 +182,12 @@ public class UpdateCheckService extends Service implements Constants {
                 NotificationManager nm =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 nm.notify(R.string.new_updates_found_title, builder.build());
+
+                final Intent updateIntent =
+                        new Intent(RomUpdateDashclockExtension.ACTION_DATA_UPDATE);
+                updateIntent.putParcelableArrayListExtra(RomUpdateDashclockExtension.EXTRA_UPDATES,
+                        updates);
+                sendBroadcast(updateIntent);
             }
 
             sendBroadcast(finishedIntent);

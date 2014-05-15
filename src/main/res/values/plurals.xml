@@ -19,11 +19,11 @@
         <item quantity="other">+ <xliff:g id="count">%d</xliff:g> more</item>
     </plurals>
     <plurals name="extension_status">
-        <item quantity="one"><xliff:g id="count">%d</xliff:g> update</item>
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> updates</item>
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> rom update</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> rom updates</item>
     </plurals>
     <plurals name="extension_expandedTitle">
-        <item quantity="one"><xliff:g id="count">%d</xliff:g> CyanogenMod update</item>
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> CyanogenMod updates</item>
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> NamelessRom update</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> NamelessRom updates</item>
     </plurals>
 </resources>

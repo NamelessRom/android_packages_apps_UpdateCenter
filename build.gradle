@@ -20,7 +20,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 319
-    buildToolsVersion '19.0.3'
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 19
@@ -48,6 +48,13 @@ android {
             proguardFile 'src/main/proguard.flags'
             zipAlign true
         }
+
+        debug {
+            runProguard false
+            signingConfig signingConfigs.release
+            proguardFile 'src/main/proguard.flags'
+            zipAlign false
+        }
     }
 
     lintOptions {
@@ -59,7 +66,9 @@ android {
 }
 
 dependencies {
+    compile 'com.android.support:support-v13:19.+'
     compile 'com.koushikdutta.ion:ion:1.2.5'
     compile 'com.android:changelibs:1.0.0'
     compile 'ch.acra:acra:4.+'
+    compile 'com.google.android.apps.dashclock:dashclock-api:+'
 }
