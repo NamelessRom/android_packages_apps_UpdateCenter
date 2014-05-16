@@ -73,12 +73,12 @@ public class UpdateCheckService extends Service implements Constants {
         final String url =
                 ROM_URL + "/" + CHANNEL_NIGHTLY + "/" + Helper.readBuildProp("ro.nameless.device");
 
-        Ion.with(this).load(url).as(UpdateInfo[].class).setCallback(mFallBack);
+        Ion.with(this).load(url).as(UpdateInfo[].class).setCallback(mCallBack);
 
         return super.onStartCommand(intent, flags, startId);
     }
 
-    final FutureCallback<UpdateInfo[]> mFallBack = new FutureCallback<UpdateInfo[]>() {
+    final FutureCallback<UpdateInfo[]> mCallBack = new FutureCallback<UpdateInfo[]>() {
         @Override
         public void onCompleted(Exception e, UpdateInfo[] result) {
             if (result == null || e != null) {
@@ -105,6 +105,12 @@ public class UpdateCheckService extends Service implements Constants {
                     updates.add(item);
                 }
             }
+
+            final Intent updateIntent =
+                    new Intent(RomUpdateDashclockExtension.ACTION_DATA_UPDATE);
+            updateIntent.putParcelableArrayListExtra(RomUpdateDashclockExtension.EXTRA_UPDATES,
+                    updates);
+            sendBroadcast(updateIntent);
 
             if (ACTION_CHECK_UI.equals(mAction)) {
                 postBus(new UpdateCheckDoneEvent(true, updates));
@@ -182,12 +188,6 @@ public class UpdateCheckService extends Service implements Constants {
                 NotificationManager nm =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 nm.notify(R.string.new_updates_found_title, builder.build());
-
-                final Intent updateIntent =
-                        new Intent(RomUpdateDashclockExtension.ACTION_DATA_UPDATE);
-                updateIntent.putParcelableArrayListExtra(RomUpdateDashclockExtension.EXTRA_UPDATES,
-                        updates);
-                sendBroadcast(updateIntent);
             }
 
             sendBroadcast(finishedIntent);
