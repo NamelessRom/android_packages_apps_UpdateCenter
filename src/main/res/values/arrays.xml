@@ -22,8 +22,8 @@
     <!-- Menu -->
     <string-array name="menu_entries">
         <item>@string/home</item>
-        <!--item>@string/app_center</item-->
-        <!--item>@string/get_apps</item-->
+        <item>@string/app_center</item>
+        <item>@string/get_apps</item>
         <item>@string/rom_center</item>
         <item>@string/updates</item>
         <item>@string/app_name</item>
