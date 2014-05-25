@@ -13,6 +13,7 @@ import android.app.DownloadManager;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -52,7 +53,7 @@ public class DownloadService extends IntentService implements Constants {
             final DownloadItem item = new DownloadItem(
                     ui.getName() + ".zip", String.valueOf(downloadId), ui.getMd5(), "0");
             DatabaseHandler.getInstance(this).insertOrUpdate(item, DatabaseHandler.TABLE_DOWNLOADS);
-            org.namelessrom.updatecenter.Application.mDownloadItems =
+            Application.mDownloadItems =
                     DatabaseHandler.getInstance(this).getAllItems(DatabaseHandler.TABLE_DOWNLOADS);
 
             Application.sHandler.post(new Runnable() {
@@ -71,11 +72,12 @@ public class DownloadService extends IntentService implements Constants {
         request.setTitle(getString(R.string.app_name));
         request.setDescription(updateName);
         request.setDestinationInExternalPublicDir(UPDATE_FOLDER, updateName + ".zip");
-        request.setAllowedOverRoaming(false);
         request.setVisibleInDownloadsUi(false);
 
-        // TODO: this could/should be made configurable
-        request.setAllowedOverMetered(true);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        request.setAllowedOverMetered(prefs.getBoolean(Constants.PREF_UPDATE_METERED, true));
+        request.setAllowedOverRoaming(prefs.getBoolean(Constants.PREF_UPDATE_ROAMING, false));
 
         return dm.enqueue(request);
     }

@@ -42,6 +42,11 @@
     <string name="nightly">Nightly</string>
     <string name="weekly">Weekly</string>
 
+    <string name="update_metered_title">Allow metered connection</string>
+    <string name="update_metered_summary">Set whether this download may proceed over a metered connection</string>
+    <string name="update_roaming_title">Allow roaming</string>
+    <string name="update_roaming_summary">Set whether this download may proceed over roaming</string>
+
     <!-- Update checking -->
     <string name="update_check_failed">The update check failed. Please check your internet connection and try again later.</string>
     <string name="new_updates_found_ticker">New updates are available</string>

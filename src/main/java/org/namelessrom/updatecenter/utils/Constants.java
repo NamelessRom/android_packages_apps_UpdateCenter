@@ -124,4 +124,7 @@ public interface Constants {
     public static final int    UPDATE_FREQ_WEEKLY          = 604800;
     public static final int    UPDATE_FREQ_BI_WEEKLY       = 1209600;
     public static final int    UPDATE_FREQ_MONTHLY         = 2419200;
+    //----------------------------------------------------------------------------------------------
+    public static final String PREF_UPDATE_METERED         = "pref_update_metered";
+    public static final String PREF_UPDATE_ROAMING         = "pref_update_roaming";
 }
