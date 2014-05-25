@@ -7,6 +7,8 @@ import android.widget.LinearLayout;
 
 import org.namelessrom.updatecenter.R;
 
+import static butterknife.ButterKnife.findById;
+
 public abstract class BaseCard extends LinearLayout {
 
     protected boolean mHasOverflow;
@@ -28,7 +30,7 @@ public abstract class BaseCard extends LinearLayout {
 
         assert view != null;
 
-        ((FrameLayout) view.findViewById(R.id.cardContent)).addView(getCardContent(context));
+        ((FrameLayout) findById(view, R.id.cardContent)).addView(getCardContent(context));
 
         view.requestLayout();
         return view;

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static butterknife.ButterKnife.findById;
 import static org.namelessrom.updatecenter.Application.logDebug;
 
 public class AppListAdapter extends BaseAdapter implements Constants {
@@ -63,30 +64,29 @@ public class AppListAdapter extends BaseAdapter implements Constants {
         private TextView  mTitle;
         private TextView  mDev;
         private ImageView mIcon;
+
+        public ViewHolder(final View v) {
+            mTitle = findById(v, R.id.title);
+            mDev = findById(v, R.id.developer);
+            mIcon = findById(v, R.id.appIcon);
+        }
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-        View v = convertView;
-        ViewHolder viewHolder;
+    public View getView(final int position, View convertView, final ViewGroup parent) {
+        final ViewHolder viewHolder;
 
         if (shouldLoadMoreData(mData, position)) {
             loadMoreData();
         }
 
         final AppData appData = mData.get(position);
-        if (v == null) {
-            v = new AppCard(mContext);
-
-            viewHolder = new ViewHolder();
-            viewHolder.mTitle = (TextView) v.findViewById(R.id.title);
-            viewHolder.mDev = (TextView) v.findViewById(R.id.developer);
-            viewHolder.mIcon = (ImageView) v.findViewById(R.id.appIcon);
-
-            v.setTag(viewHolder);
+        if (convertView == null) {
+            convertView = new AppCard(mContext);
+            viewHolder = new ViewHolder(convertView);
+            convertView.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) v.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
         viewHolder.mTitle.setText(appData.getTitle());
@@ -99,7 +99,7 @@ public class AppListAdapter extends BaseAdapter implements Constants {
                 .error(R.drawable.ic_warning)
                 .load(String.format(APP_IMAGE_URL, appData.getAppId()));
 
-        ((AppCard) v).setOnCardClickListener(new View.OnClickListener() {
+        ((AppCard) convertView).setOnCardClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Fragment f = new AppDetailsFragment();
@@ -110,23 +110,17 @@ public class AppListAdapter extends BaseAdapter implements Constants {
             }
         });
 
-        return v;
+        return convertView;
     }
 
     @Override
-    public long getItemId(int i) {
-        return 0;
-    }
+    public long getItemId(final int i) { return 0; }
 
     @Override
-    public int getCount() {
-        return mData.size();
-    }
+    public int getCount() { return mData.size(); }
 
     @Override
-    public Object getItem(int i) {
-        return mData.get(i);
-    }
+    public Object getItem(final int i) { return mData.get(i); }
 
     private boolean shouldLoadMoreData(List<AppData> data, int position) {
         boolean scrollRangeReached = (position > (data.size() - 4));
@@ -139,8 +133,8 @@ public class AppListAdapter extends BaseAdapter implements Constants {
                 String.valueOf(mCounter * 10)); //-------------0, 10, 20, 30, ...
         logDebug("loadMoreData: " + url);
         mCounter++;
-        Ion.with(mContext).load(url).as(AppData[].class)
-                .setCallback(new FutureCallback<AppData[]>() {
+        Ion.with(mContext).load(url).as(AppData[].class).setCallback(
+                new FutureCallback<AppData[]>() {
                     @Override
                     public void onCompleted(Exception e, AppData[] result) {
                         if (result != null) {
@@ -157,6 +151,7 @@ public class AppListAdapter extends BaseAdapter implements Constants {
                         }
                         isLoading = false;
                     }
-                });
+                }
+        );
     }
 }

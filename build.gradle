@@ -58,10 +58,7 @@ android {
     }
 
     lintOptions {
-        disable 'HardcodedDebugMode'
-        disable 'ValidFragment'
-        disable 'MissingTranslation'
-        disable 'ExtraTranslation'
+        disable 'HardcodedDebugMode', 'ValidFragment', 'MissingTranslation', 'ExtraTranslation'
     }
 }
 
@@ -71,4 +68,5 @@ dependencies {
     compile 'com.android:changelibs:1.0.0'
     compile 'ch.acra:acra:4.+'
     compile 'com.google.android.apps.dashclock:dashclock-api:+'
+    compile 'com.jakewharton:butterknife:5.0.1'
 }
