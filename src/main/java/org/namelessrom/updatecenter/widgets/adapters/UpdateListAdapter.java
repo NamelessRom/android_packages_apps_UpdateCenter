@@ -45,6 +45,8 @@ import org.namelessrom.updatecenter.widgets.cards.UpdateCard;
 
 import java.util.List;
 
+import static butterknife.ButterKnife.findById;
+
 /**
  * Created by alex on 06.01.14.
  */
@@ -62,43 +64,38 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
     public int getCount() { return mUpdateInfos.size(); }
 
     @Override
-    public Object getItem(int i) { return mUpdateInfos.get(i); }
+    public Object getItem(final int i) { return mUpdateInfos.get(i); }
 
     @Override
-    public long getItemId(int i) { return 0; }
+    public long getItemId(final int i) { return 0; }
 
     private static class ViewHolder {
         private TextView mTitle;
         private TextView mInfo;
         private TextView mChannel;
         private TextView mState;
+        private View     mOverflow;
+        private int      mUpdateState;
 
-        private View mOverflow;
-
-        private int mUpdateState;
+        public ViewHolder(final View v) {
+            mTitle = findById(v, R.id.updateTitle);
+            mInfo = findById(v, R.id.updateInfo);
+            mChannel = findById(v, R.id.updateChannel);
+            mState = findById(v, R.id.updateState);
+            mOverflow = ((UpdateCard) v).getOverflow();
+        }
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-
-        final View v;
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         final ViewHolder viewHolder;
 
         if (convertView == null) {
-            v = new UpdateCard(mContext);
-
-            viewHolder = new ViewHolder();
-            viewHolder.mTitle = (TextView) v.findViewById(R.id.updateTitle);
-            viewHolder.mInfo = (TextView) v.findViewById(R.id.updateInfo);
-            viewHolder.mChannel = (TextView) v.findViewById(R.id.updateChannel);
-            viewHolder.mState = (TextView) v.findViewById(R.id.updateState);
-
-            viewHolder.mOverflow = ((UpdateCard) v).getOverflow();
-
-            v.setTag(viewHolder);
+            convertView = new UpdateCard(mContext);
+            viewHolder = new ViewHolder(convertView);
+            convertView.setTag(viewHolder);
         } else {
-            v = convertView;
-            viewHolder = (ViewHolder) v.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
         final UpdateInfo updateInfo = mUpdateInfos.get(position);
@@ -135,7 +132,7 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
                     showPopup(viewHolder, updateInfo, downloadItem);
                 }
             });
-            ((UpdateCard) v).setOverflow(View.VISIBLE);
+            ((UpdateCard) convertView).setOverflow(View.VISIBLE);
 
             int textId;
             switch (viewHolder.mUpdateState) {
@@ -160,7 +157,7 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
                 viewHolder.mState.setVisibility(View.GONE);
             }
 
-            ((UpdateCard) v).setOnCardClickListener(new View.OnClickListener() {
+            ((UpdateCard) convertView).setOnCardClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     final Fragment f = new UpdateDetailsFragment();
@@ -171,7 +168,7 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
                 }
             });
 
-            ((UpdateCard) v).setOnCardLongClickListener(new View.OnLongClickListener() {
+            ((UpdateCard) convertView).setOnCardLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(final View view) {
                     DialogFragment f = new ChangelogDialogFragment();
@@ -188,7 +185,7 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
         } else {
             title = updateInfo.getMd5();
             info = updateInfo.getName();
-            ((UpdateCard) v).setOverflow(View.GONE);
+            ((UpdateCard) convertView).setOverflow(View.GONE);
             viewHolder.mState.setVisibility(View.GONE);
         }
         viewHolder.mTitle.setText(title);
@@ -202,7 +199,7 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
             viewHolder.mInfo.setVisibility(View.GONE);
         }
 
-        return v;
+        return convertView;
     }
 
     private void showPopup(final ViewHolder viewHolder, final UpdateInfo updateInfo,

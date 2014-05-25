@@ -30,6 +30,8 @@ import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.utils.UpdateHelper;
 import org.namelessrom.updatecenter.widgets.AttachFragment;
 
+import static butterknife.ButterKnife.findById;
+
 /**
  * Created by alex on 28.04.14.
  */
@@ -86,15 +88,15 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
 
         final View v = inflater.inflate(R.layout.fragment_update_details, container, false);
 
-        mChannel = (TextView) v.findViewById(R.id.updateChannel);
-        mTitle = (TextView) v.findViewById(R.id.updateTitle);
-        mInfo = (TextView) v.findViewById(R.id.updateInfo);
-        mAction = (Button) v.findViewById(R.id.updateAction);
+        mChannel = findById(v, R.id.updateChannel);
+        mTitle = findById(v, R.id.updateTitle);
+        mInfo = findById(v, R.id.updateInfo);
+        mAction = findById(v, R.id.updateAction);
 
-        mProgressBar = (ProgressBar) v.findViewById(R.id.appProgressBar);
+        mProgressBar = findById(v, R.id.appProgressBar);
         mProgressBar.setVisibility(View.INVISIBLE);
 
-        mChangelog = (ChangeLogListView) v.findViewById(R.id.updateChangelog);
+        mChangelog = findById(v, R.id.updateChangelog);
 
         return v;
     }

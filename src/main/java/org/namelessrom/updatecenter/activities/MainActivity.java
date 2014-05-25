@@ -49,6 +49,8 @@ import org.namelessrom.updatecenter.utils.Constants;
 import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.widgets.adapters.MenuListArrayAdapter;
 
+import static butterknife.ButterKnife.findById;
+
 public class MainActivity extends Activity implements Constants, AdapterView.OnItemClickListener,
         SlidingMenu.OnOpenedListener, SlidingMenu.OnClosedListener {
 
@@ -67,7 +69,7 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         Helper.createDirectories();
 
         final View v = getLayoutInflater().inflate(R.layout.menu_list, null, false);
-        final ListView mMenuList = (ListView) v.findViewById(R.id.navbarlist);
+        final ListView mMenuList = findById(v, R.id.navbarlist);
 
         mSlidingMenu = new SlidingMenu(this);
         // mSlidingMenu.setBackground(getResources().getDrawable(R.drawable.bg_menu_dark));

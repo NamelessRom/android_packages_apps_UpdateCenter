@@ -6,6 +6,8 @@ import android.view.View;
 
 import org.namelessrom.updatecenter.R;
 
+import static butterknife.ButterKnife.findById;
+
 /**
  * Created by alex on 29.04.14.
  */
@@ -21,8 +23,8 @@ public class AppCard extends BaseCard {
 
         assert v != null;
 
-        mContainer = v.findViewById(R.id.cardContainer);
-        mOverflow = v.findViewById(R.id.overflow);
+        mContainer = findById(v, R.id.cardContainer);
+        mOverflow = findById(v, R.id.overflow);
 
         setOverflow(mHasOverflow ? View.VISIBLE : View.GONE);
 

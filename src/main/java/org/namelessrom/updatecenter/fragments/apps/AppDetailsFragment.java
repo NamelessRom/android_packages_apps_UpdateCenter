@@ -33,6 +33,7 @@ import org.namelessrom.updatecenter.widgets.AttachFragment;
 
 import java.io.File;
 
+import static butterknife.ButterKnife.findById;
 import static org.namelessrom.updatecenter.Application.logDebug;
 
 /**
@@ -75,16 +76,16 @@ public class AppDetailsFragment extends AttachFragment implements Constants {
 
         final View v = inflater.inflate(R.layout.fragment_app_details, container, false);
 
-        mAppIcon = (ImageView) v.findViewById(R.id.appIcon);
-        mAppName = (TextView) v.findViewById(R.id.appName);
-        mAppDeveloper = (TextView) v.findViewById(R.id.appDeveloper);
-        mActionInstall = (Button) v.findViewById(R.id.action_install);
-        mActionInstalled = (Button) v.findViewById(R.id.action_installed);
+        mAppIcon = findById(v, R.id.appIcon);
+        mAppName = findById(v, R.id.appName);
+        mAppDeveloper = findById(v, R.id.appDeveloper);
+        mActionInstall = findById(v, R.id.action_install);
+        mActionInstalled = findById(v, R.id.action_installed);
 
-        mProgressBar = (ProgressBar) v.findViewById(R.id.appProgressBar);
+        mProgressBar = findById(v, R.id.appProgressBar);
         mProgressBar.setVisibility(View.INVISIBLE);
 
-        mAppDescription = (TextView) v.findViewById(R.id.appDescription);
+        mAppDescription = findById(v, R.id.appDescription);
 
         return v;
     }
