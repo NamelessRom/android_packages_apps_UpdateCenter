@@ -81,7 +81,9 @@ public interface Constants {
     public static final String UC_APK          = URL + "/uc.apk";
     public static final String UC_APK_VERSION  = URL + "/uc.apk.version";
     //----------------------------------------------------------------------------------------------
+    public static final String CHANNEL_ALL     = "";
     public static final String CHANNEL_NIGHTLY = "NIGHTLY";
+    public static final String CHANNEL_WEEKLY  = "WEEKLY";
 
     //==============================================================================================
     // JSON NODE NAMES
@@ -98,6 +100,11 @@ public interface Constants {
     //==============================================================================================
     // PREFERENCES
     //==============================================================================================
+    public static final String PREF_UPDATE_CHANNEL         = "pref_update_channel";
+    public static final int    UPDATE_CHANNEL_ALL          = 0;
+    public static final int    UPDATE_CHANNEL_NIGHTLY      = 1;
+    public static final int    UPDATE_CHANNEL_WEEKLY       = 2;
+    //----------------------------------------------------------------------------------------------
     public static final String UPDATE_CHECK_PREF           = "pref_update_check_interval";
     public static final String UPDATE_TYPE_PREF            = "pref_update_types";
     public static final String LAST_UPDATE_CHECK_PREF      = "pref_last_update_check";

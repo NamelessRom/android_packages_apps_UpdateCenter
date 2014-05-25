@@ -26,8 +26,7 @@
     <string name="download">Download</string>
 
     <!-- Settings strings -->
-    <string name="update_check_title">Check interval</string>
-    <string name="update_check_summary">The interval to check for updates</string>
+    <string name="update_check_title">Update check interval</string>
     <string name="check_manual">Manual</string>
     <string name="check_on_app_start">On app start</string>
     <string name="check_on_boot">On every boot</string>
@@ -36,6 +35,12 @@
     <string name="check_weekly">Weekly</string>
     <string name="check_bi_weekly">Bi-weekly</string>
     <string name="check_monthly">Monthly</string>
+
+    <string name="channel_title">Update channel</string>
+
+    <string name="all">All</string>
+    <string name="nightly">Nightly</string>
+    <string name="weekly">Weekly</string>
 
     <!-- Update checking -->
     <string name="update_check_failed">The update check failed. Please check your internet connection and try again later.</string>
@@ -50,7 +55,6 @@
     <string name="cancel_download_question">Do you want to cancel the download of %s?</string>
 
     <string name="recovery_type_title">Recovery script type</string>
-    <string name="recovery_type_summary">The type of the recovery script to generate</string>
     <string name="recovery_type_both">Both</string>
     <string name="recovery_type_cwm">ClockWorkMod</string>
     <string name="recovery_type_open">OpenRecovery</string>
