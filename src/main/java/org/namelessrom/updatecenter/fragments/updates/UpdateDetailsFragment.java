@@ -103,8 +103,9 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        String tmp = mUpdateInfo.getTimestamp();
         mChannel.setText(mUpdateInfo.getChannelShort());
-        mTitle.setText(mUpdateInfo.getTimestamp());
+        mTitle.setText(!tmp.equals("-") ? tmp : "");
         mInfo.setText(mUpdateInfo.getName());
 
         updateButton();

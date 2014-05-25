@@ -33,9 +33,10 @@ public class UpdateInfo implements Parcelable, Serializable {
     public static final int CHANNEL_UNKNOWN   = -2;
     public static final int CHANNEL_EMPTY     = -1;
     public static final int CHANNEL_NIGHTLY   = 1;
-    public static final int CHANNEL_MILESTONE = 2;
-    public static final int CHANNEL_RC        = 3;
-    public static final int CHANNEL_STABLE    = 4;
+    public static final int CHANNEL_WEEKLY    = 2;
+    public static final int CHANNEL_MILESTONE = 3;
+    public static final int CHANNEL_RC        = 4;
+    public static final int CHANNEL_STABLE    = 5;
 
     private static final long serialVersionUID = 5499890003569313403L;
 
@@ -77,6 +78,9 @@ public class UpdateInfo implements Parcelable, Serializable {
         if (mChannel.equals("NIGHTLY")) {
             mChannelShort = "N";
             mChannelType = CHANNEL_NIGHTLY;
+        } else if (mChannel.equals("WEEKLY")) {
+            mChannelShort = "W";
+            mChannelType = CHANNEL_WEEKLY;
         } else if (mChannel.equals("MILESTONE")) {
             mChannelShort = "M";
             mChannelType = CHANNEL_MILESTONE;
@@ -89,6 +93,9 @@ public class UpdateInfo implements Parcelable, Serializable {
         } else if (mChannel.equals("---")) {
             mChannelShort = "";
             mChannelType = CHANNEL_EMPTY;
+        } else if (!mChannel.isEmpty()) {
+            mChannelShort = mChannel.substring(0, 1);
+            mChannelType = CHANNEL_UNKNOWN;
         } else {
             mChannelShort = "?";
             mChannelType = CHANNEL_UNKNOWN;

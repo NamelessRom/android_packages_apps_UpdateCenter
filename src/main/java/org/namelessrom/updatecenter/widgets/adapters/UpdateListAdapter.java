@@ -108,7 +108,7 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
         viewHolder.mChannel.setText(updateChannel);
 
         String title, info;
-        if (!updateChannel.equals("?")) {
+        if (!updateChannel.equals("?") && !updateChannel.equals("-")) {
             title = updateInfo.getTimestamp();
             info = updateInfo.getName();
             viewHolder.mUpdateState = Helper.isUpdateDownloaded(info)
