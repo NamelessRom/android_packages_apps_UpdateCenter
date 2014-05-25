@@ -53,6 +53,18 @@
         <item>2419200</item>
     </string-array>
 
+    <string-array name="update_channel_entries" translatable="false">
+        <item>@string/all</item>
+        <item>@string/nightly</item>
+        <item>@string/weekly</item>
+    </string-array>
+
+    <string-array name="update_channel_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string-array name="recovery_type_entries" translatable="false">
         <item>@string/recovery_type_both</item>
         <item>@string/recovery_type_cwm</item>

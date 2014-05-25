@@ -18,11 +18,19 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
+        android:key="pref_update_channel"
+        android:persistent="false"
+        android:dialogTitle="@string/channel_title"
+        android:title="@string/channel_title"
+        android:entries="@array/update_channel_entries"
+        android:entryValues="@array/update_channel_values"
+        android:defaultValue="1" />
+
+    <ListPreference
         android:key="pref_update_check_interval"
         android:persistent="false"
         android:dialogTitle="@string/update_check_title"
         android:title="@string/update_check_title"
-        android:summary="@string/update_check_summary"
         android:entries="@array/update_check_entries"
         android:entryValues="@array/update_check_values"
         android:defaultValue="604800" />
@@ -32,7 +40,6 @@
         android:persistent="false"
         android:dialogTitle="@string/recovery_type_title"
         android:title="@string/recovery_type_title"
-        android:summary="@string/recovery_type_summary"
         android:entries="@array/recovery_type_entries"
         android:entryValues="@array/recovery_type_values"
         android:defaultValue="0" />

@@ -30,6 +30,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static org.namelessrom.updatecenter.Application.logDebug;
+
 public class UpdateCheckService extends Service implements Constants {
 
     // request actions
@@ -50,9 +52,7 @@ public class UpdateCheckService extends Service implements Constants {
     private String mAction;
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    public IBinder onBind(Intent intent) { return null; }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -70,12 +70,39 @@ public class UpdateCheckService extends Service implements Constants {
             return START_NOT_STICKY;
         }
 
-        final String url =
-                ROM_URL + "/" + CHANNEL_NIGHTLY + "/" + Helper.readBuildProp("ro.nameless.device");
-
-        Ion.with(this).load(url).as(UpdateInfo[].class).setCallback(mCallBack);
+        Ion.with(this).load(getUpdateUrl()).as(UpdateInfo[].class).setCallback(mCallBack);
 
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private String getUpdateUrl() {
+        String url = "";
+        String query = "";
+        final int updateChannel = PreferenceManager.getDefaultSharedPreferences(this)
+                .getInt(PREF_UPDATE_CHANNEL, UPDATE_CHANNEL_ALL);
+        switch (updateChannel) {
+            case UPDATE_CHANNEL_ALL:
+                url = CHANNEL_ALL;
+                break;
+            case UPDATE_CHANNEL_NIGHTLY:
+                url = CHANNEL_NIGHTLY;
+                break;
+            case UPDATE_CHANNEL_WEEKLY:
+                url = CHANNEL_WEEKLY;
+                query = "?display=full";
+                break;
+        }
+
+        if (!url.isEmpty()) {
+            url = ROM_URL + "/" + url;
+        } else {
+            url = ROM_URL;
+        }
+
+        url += '/' + Helper.readBuildProp("ro.nameless.device") + query;
+        logDebug("getUpdateUrl():" + url);
+
+        return url;
     }
 
     final FutureCallback<UpdateInfo[]> mCallBack = new FutureCallback<UpdateInfo[]>() {
