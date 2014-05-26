@@ -49,13 +49,13 @@
         android:persistent="true"
         android:title="@string/update_metered_title"
         android:summary="@string/update_metered_summary"
-        android:defaultValue="true" />
+        android:defaultValue="false" />
 
     <CheckBoxPreference
         android:key="pref_update_roaming"
         android:persistent="true"
         android:title="@string/update_roaming_title"
         android:summary="@string/update_roaming_summary"
-        android:defaultValue="true" />
+        android:defaultValue="false" />
 
 </PreferenceScreen>
