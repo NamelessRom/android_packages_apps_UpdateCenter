@@ -44,12 +44,16 @@ import org.namelessrom.updatecenter.items.UpdateInfo;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
 import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
+import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.widgets.AttachListFragment;
 import org.namelessrom.updatecenter.widgets.adapters.UpdateListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.keyboardsurfer.android.widget.crouton.Configuration;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
@@ -82,6 +86,8 @@ public class UpdateListFragment extends AttachListFragment implements OnRefreshL
             }
         } catch (Exception ignored) { /* Not registered, nothing to do */ }
 
+        Crouton.cancelAllCroutons();
+
         BusProvider.getBus().unregister(this);
     }
 
@@ -112,6 +118,14 @@ public class UpdateListFragment extends AttachListFragment implements OnRefreshL
                 .theseChildrenArePullable(listView, listView.getEmptyView())
                 .listener(this)
                 .setup(mPullToRefreshLayout);
+
+        if (Helper.isMetered(getActivity())) {
+            Crouton.makeText(getActivity(), R.string.metered_notice,
+                    new Style.Builder().setBackgroundColorValue(Style.holoBlueLight).build()
+            ).setConfiguration(
+                    new Configuration.Builder().setDuration(Configuration.DURATION_LONG).build()
+            ).show();
+        }
 
         checkForUpdates();
     }
@@ -159,7 +173,6 @@ public class UpdateListFragment extends AttachListFragment implements OnRefreshL
                 final Activity activity = getActivity();
                 if (activity != null) {
                     final UpdateListAdapter adapter = new UpdateListAdapter(activity, mTitles);
-
                     setListAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 }
@@ -237,10 +250,16 @@ public class UpdateListFragment extends AttachListFragment implements OnRefreshL
                                         getString(R.string.data_connection_required))
                         );
                         getTitles();
+                        Crouton.makeText(getActivity(), R.string.data_connection_required,
+                                new Style.Builder().setBackgroundColorValue(Style.holoRedLight)
+                                        .build()
+                        ).setConfiguration(
+                                new Configuration.Builder().setDuration(Configuration.DURATION_LONG)
+                                        .build()
+                        ).show();
                     }
                 }
             });
         }
     }
-
 }
