@@ -5,7 +5,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE_TAGS := optional
 LOCAL_AAPT_INCLUDE_ALL_RESOURCES := true
 
-LOCAL_STATIC_JAVA_LIBRARIES := acra android-support-v13 butterknife changeloglib \
+LOCAL_STATIC_JAVA_LIBRARIES := acra android-support-v13 butterknife changeloglib crouton \
     dashclockapi gson ion
 
 LOCAL_SRC_FILES := \

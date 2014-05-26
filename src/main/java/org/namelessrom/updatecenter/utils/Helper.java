@@ -231,6 +231,12 @@ public class Helper implements Constants {
         return netInfo != null && netInfo.isConnected();
     }
 
+    public static boolean isMetered(Context context) {
+        final ConnectivityManager cm = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.isActiveNetworkMetered();
+    }
+
     private static String getStorageMountpoint(Context context) {
         StorageManager sm = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
         StorageVolume[] volumes = sm.getVolumeList();
