@@ -29,6 +29,18 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="prefs_general"
+        android:title="@string/general">
+
+        <CheckBoxPreference
+            android:key="show_launcher"
+            android:title="@string/show_launcher"
+            android:summary="@string/show_launcher_summary"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="api"
         android:title="@string/api_version">
 

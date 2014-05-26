@@ -22,7 +22,7 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.view.View;
 
-import org.namelessrom.updatecenter.activities.MainActivity;
+import org.namelessrom.updatecenter.MainActivity;
 import org.namelessrom.updatecenter.events.SectionAttachedEvent;
 import org.namelessrom.updatecenter.utils.BusProvider;
 

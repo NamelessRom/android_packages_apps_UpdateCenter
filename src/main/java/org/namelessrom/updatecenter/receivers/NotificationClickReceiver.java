@@ -13,7 +13,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import org.namelessrom.updatecenter.activities.MainActivity;
+import org.namelessrom.updatecenter.MainActivity;
 
 public class NotificationClickReceiver extends BroadcastReceiver {
     @Override

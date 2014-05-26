@@ -24,7 +24,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import org.namelessrom.updatecenter.R;
-import org.namelessrom.updatecenter.activities.MainActivity;
+import org.namelessrom.updatecenter.MainActivity;
 import org.namelessrom.updatecenter.database.DatabaseHandler;
 import org.namelessrom.updatecenter.database.DownloadItem;
 import org.namelessrom.updatecenter.items.UpdateInfo;

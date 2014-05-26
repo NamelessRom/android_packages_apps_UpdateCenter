@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.namelessrom.updatecenter.activities;
+package org.namelessrom.updatecenter;
 
 import android.app.Activity;
 import android.content.Intent;

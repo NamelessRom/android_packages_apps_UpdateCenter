@@ -8,7 +8,7 @@ import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 
 import org.namelessrom.updatecenter.R;
-import org.namelessrom.updatecenter.activities.MainActivity;
+import org.namelessrom.updatecenter.MainActivity;
 import org.namelessrom.updatecenter.items.UpdateInfo;
 
 import java.util.ArrayList;

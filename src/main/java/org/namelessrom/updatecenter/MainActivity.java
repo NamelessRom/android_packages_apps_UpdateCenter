@@ -15,7 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses
  */
 
-package org.namelessrom.updatecenter.activities;
+package org.namelessrom.updatecenter;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -34,7 +34,6 @@ import android.widget.ListView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.squareup.otto.Subscribe;
 
-import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.events.SectionAttachedEvent;
 import org.namelessrom.updatecenter.events.SubFragmentEvent;
 import org.namelessrom.updatecenter.fragments.WelcomeFragment;

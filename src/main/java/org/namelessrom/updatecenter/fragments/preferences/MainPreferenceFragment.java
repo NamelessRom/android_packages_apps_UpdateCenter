@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 
 import com.koushikdutta.async.future.FutureCallback;
@@ -15,11 +17,14 @@ import org.json.JSONObject;
 import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.utils.Constants;
+import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.widgets.AttachPreferenceFragment;
 
-public class MainPreferenceFragment extends AttachPreferenceFragment implements Constants {
+public class MainPreferenceFragment extends AttachPreferenceFragment implements Constants,
+        Preference.OnPreferenceChangeListener {
 
-    private Preference mApiServer;
+    private Preference         mApiServer;
+    private CheckBoxPreference mShowLauncher;
 
     @Override
     public void onAttach(Activity activity) { super.onAttach(activity, Constants.ID_PREFERENCES); }
@@ -57,6 +62,32 @@ public class MainPreferenceFragment extends AttachPreferenceFragment implements 
             mApiServer.setEnabled(false);
             getApiVersion();
         }
+
+        PreferenceCategory category = (PreferenceCategory) findPreference("prefs_general");
+        if (category != null) {
+            mShowLauncher = (CheckBoxPreference) findPreference("show_launcher");
+            if (mShowLauncher != null) {
+                if (Helper.isNameless()) {
+                    mShowLauncher.setOnPreferenceChangeListener(this);
+                } else {
+                    category.removePreference(mShowLauncher);
+                }
+            }
+
+            if (category.getPreferenceCount() == 0) {
+                getPreferenceScreen().removePreference(category);
+            }
+        }
+    }
+
+    @Override
+    public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+        if (mShowLauncher == preference) {
+            Helper.toggleLauncherIcon((Boolean) newValue);
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -89,5 +120,4 @@ public class MainPreferenceFragment extends AttachPreferenceFragment implements 
             }
         });
     }
-
 }

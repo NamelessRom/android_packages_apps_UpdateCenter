@@ -77,6 +77,9 @@
     <string name="download_install_notice">The update <xliff:g id="filename">%s</xliff:g> was successfully downloaded. When touching \'Reboot and install\', the device will restart itself to install the update.\n\nNote: A compatible Recovery is required for the installation to work automatically.</string>
     <string name="unable_to_reboot_toast">Unable to reboot into recovery</string>
 
+    <string name="general">General</string>
+    <string name="show_launcher">Show launcher icon</string>
+    <string name="show_launcher_summary">Hides/unhides the launcher icon</string>
     <string name="metered_notice">Warning! You are on a metered network! Additional costs may be incurred!</string>
 
 </resources>

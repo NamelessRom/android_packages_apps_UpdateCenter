@@ -1,9 +1,12 @@
 package org.namelessrom.updatecenter.utils;
 
+import android.content.ComponentName;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageInstallObserver;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+
+import org.namelessrom.updatecenter.Application;
 
 import java.util.List;
 
@@ -35,6 +38,29 @@ public class AppHelper {
     public static void installPackage(final PackageManager pm,
             final IPackageInstallObserver observer, final Uri uri, final int flags) {
         pm.installPackage(uri, observer, flags, "org.namelessrom.updatecenter");
+    }
+
+    public static void disableComponent(final String packageName, final String componentName) {
+        toggleComponent(packageName, componentName, true);
+    }
+
+    public static void enableComponent(final String packageName, final String componentName) {
+        toggleComponent(packageName, componentName, false);
+    }
+
+    private static void toggleComponent(final String packageName, final String componentName,
+            boolean disable) {
+        final ComponentName component = new ComponentName(packageName,
+                packageName + componentName);
+        final PackageManager pm = Application.packageManager;
+        if (pm != null) {
+            pm.setComponentEnabledSetting(component,
+                    (disable
+                            ? PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                            : PackageManager.COMPONENT_ENABLED_STATE_ENABLED),
+                    PackageManager.DONT_KILL_APP
+            );
+        }
     }
 
 }

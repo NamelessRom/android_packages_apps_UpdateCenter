@@ -23,6 +23,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
@@ -35,6 +37,7 @@ import android.os.storage.StorageVolume;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.services.AutoUpdater;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
@@ -74,9 +77,9 @@ public class Helper implements Constants {
         return sHelper;
     }
 
-    public static boolean isNamelessDebug() {
-        return existsInBuildProp("ro.nameless.debug=1");
-    }
+    public static boolean isNameless() { return existsInBuildProp("ro.nameless.version"); }
+
+    public static boolean isNamelessDebug() { return existsInBuildProp("ro.nameless.debug=1"); }
 
     public static boolean existsInBuildProp(final String filter) {
         final File f = new File("/system/build.prop");
@@ -405,6 +408,36 @@ public class Helper implements Constants {
 
     public static boolean isUpdateDownloaded(final String fileName) {
         return new File(UPDATE_FOLDER_FULL + File.separator + fileName + ".zip").exists();
+    }
+
+    public static void toggleLauncherIcon(final boolean showLauncher) {
+        try {
+            if (Application.packageManager == null) { return; }
+            if (isNameless()) {
+                final Resources res = Application.packageManager
+                        .getResourcesForApplication("com.android.settings");
+                if (res != null
+                        && res.getIdentifier("device_control_settings", "string",
+                        "com.android.settings") > 0
+                        && !showLauncher) {
+                    logDebug("Implemented into system and showLauncher is not set!");
+                    AppHelper.disableComponent(Application.sApplicationContext.getPackageName(),
+                            ".DummyLauncher");
+                } else {
+                    logDebug("Implemented into system and showLauncher is set!");
+                    AppHelper.enableComponent(Application.sApplicationContext.getPackageName(),
+                            ".DummyLauncher");
+                }
+            } else {
+                logDebug("Not implemented into system!");
+                AppHelper.enableComponent(Application.sApplicationContext.getPackageName(),
+                        ".DummyLauncher");
+            }
+        } catch (PackageManager.NameNotFoundException exc) {
+            logDebug("You dont have settings? That's weird.");
+            AppHelper.enableComponent(Application.sApplicationContext.getPackageName(),
+                    ".DummyLauncher");
+        }
     }
 
 }
