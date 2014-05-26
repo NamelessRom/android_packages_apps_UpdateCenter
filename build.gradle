@@ -69,4 +69,5 @@ dependencies {
     compile 'ch.acra:acra:4.+'
     compile 'com.google.android.apps.dashclock:dashclock-api:+'
     compile 'com.jakewharton:butterknife:5.0.1'
+    compile 'de.keyboardsurfer.android.widget:crouton:1.8.4'
 }
