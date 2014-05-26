@@ -53,6 +53,8 @@ import static butterknife.ButterKnife.findById;
 public class MainActivity extends Activity implements Constants, AdapterView.OnItemClickListener,
         SlidingMenu.OnOpenedListener, SlidingMenu.OnClosedListener {
 
+    private static final String ACTION_UPDATES = "org.namelessrom.updatecenter.UPDATES";
+
     public static SlidingMenu mSlidingMenu;
 
     private int mTitle            = R.string.app_name;
@@ -98,10 +100,8 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         mSlidingMenu.setOnOpenedListener(this);
 
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
-        final Fragment main = new WelcomeFragment();
-        /*final Fragment right = new MainPreferenceFragment();*/
+        final Fragment main = processIntent(getIntent());
         ft.replace(R.id.container, main);
-        /*ft.replace(R.id.menu_frame, right);*/
         ft.commit();
 
         if (prefs.getInt(UPDATE_CHECK_PREF, UPDATE_FREQ_WEEKLY) == UPDATE_FREQ_AT_APP_START) {
@@ -113,6 +113,19 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         if (Helper.isNamelessDebug()) {
             startService(new Intent(MainActivity.this, AutoUpdater.class));
         }
+    }
+
+    private Fragment processIntent(final Intent intent) {
+        if (intent == null || intent.getAction() == null) return new WelcomeFragment();
+
+        final String action = intent.getAction();
+        if (action.isEmpty()) return new WelcomeFragment();
+
+        if (ACTION_UPDATES.equals(action)) {
+            return new UpdateListFragment();
+        }
+
+        return new WelcomeFragment();
     }
 
     @Override

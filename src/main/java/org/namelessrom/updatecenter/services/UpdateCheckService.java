@@ -159,8 +159,7 @@ public class UpdateCheckService extends Service implements Constants {
             if (realUpdateCount != 0) {
                 // There are updates available
                 // The notification should launch the main app
-                Intent i = new Intent(UpdateCheckService.this, MainActivity.class);
-                // TODO: give extra to launch in updates
+                Intent i = new Intent("org.namelessrom.updatecenter.UPDATES");
                 final PendingIntent contentIntent = PendingIntent.getActivity(
                         UpdateCheckService.this, 0, i, PendingIntent.FLAG_ONE_SHOT);
 

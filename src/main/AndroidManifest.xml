@@ -65,6 +65,7 @@
             <intent-filter>
                 <action android:name="org.namelessrom.updatecenter.MainActivity" />
                 <action android:name="org.namelessrom.updatecenter.activities.MainActivity" />
+                <action android:name="org.namelessrom.updatecenter.UPDATES" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
