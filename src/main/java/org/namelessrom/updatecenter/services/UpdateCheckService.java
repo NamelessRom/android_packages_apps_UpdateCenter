@@ -15,7 +15,6 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import org.namelessrom.updatecenter.R;
-import org.namelessrom.updatecenter.MainActivity;
 import org.namelessrom.updatecenter.events.UpdateCheckDoneEvent;
 import org.namelessrom.updatecenter.items.UpdateInfo;
 import org.namelessrom.updatecenter.receivers.DownloadReceiver;

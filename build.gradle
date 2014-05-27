@@ -63,11 +63,11 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v13:19.+'
-    compile 'com.koushikdutta.ion:ion:1.2.5'
-    compile 'com.android:changelibs:1.0.0'
     compile 'ch.acra:acra:4.+'
+    compile 'com.android:changelibs:1.0.0'
+    compile 'com.android.support:support-v13:19.+'
     compile 'com.google.android.apps.dashclock:dashclock-api:+'
-    compile 'com.jakewharton:butterknife:5.0.1'
+    compile 'com.jakewharton:butterknife:5.+'
+    compile 'com.koushikdutta.ion:ion:1.2.+'
     compile 'de.keyboardsurfer.android.widget:crouton:1.8.4'
 }
