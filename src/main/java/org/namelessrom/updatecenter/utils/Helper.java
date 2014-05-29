@@ -305,16 +305,20 @@ public class Helper implements Constants {
     }
 
     public static void runShellCommands(final String... cmds) throws IOException {
-        java.lang.Process p = Runtime.getRuntime().exec("sh");
-        DataOutputStream os = new DataOutputStream(p.getOutputStream());
-        for (final String s : cmds) {
-            writeString(os, s);
+        final java.lang.Process p = Runtime.getRuntime().exec("sh");
+        final DataOutputStream os = new DataOutputStream(p.getOutputStream());
+        try {
+            for (final String s : cmds) {
+                writeString(os, s);
+            }
+            writeString(os, "exit\n");
+        } finally {
+            os.flush();
+            os.close();
         }
-        writeString(os, "exit\n");
-        os.flush();
     }
 
-    private static void writeString(OutputStream os, String s) throws IOException {
+    private static void writeString(final OutputStream os, final String s) throws IOException {
         os.write((s + "\n").getBytes("UTF-8"));
     }
 
@@ -324,7 +328,7 @@ public class Helper implements Constants {
         String filename;
 
         if (files != null) {
-            for (File f : files) {
+            for (final File f : files) {
                 if (f.getName().toLowerCase(Locale.ENGLISH).endsWith(".zip")) {
                     filename = f.getAbsolutePath();
                     if (filename.startsWith(UPDATE_FOLDER_FULL)) {
@@ -383,21 +387,23 @@ public class Helper implements Constants {
                 ? ("/" + UserHandle.myUserId())
                 : "";
 
-        final String rootPath =
-                getStorageMountpoint(context) + userPath + "/" + UPDATE_FOLDER + "/";
-        final String flashFilename = rootPath + updateFileName;
+        final String root = getStorageMountpoint(context) + userPath + "/" + UPDATE_FOLDER + "/";
+        final String flashFilename = root + updateFileName;
 
         final List<String> extras = getFlashAfterUpdateZIPs();
 
-        final int flashType = PreferenceManager.getDefaultSharedPreferences(context)
+        runShellCommands("mkdir -p /cache/recovery/;\n");
+
+        final int flashType = PreferenceManager
+                .getDefaultSharedPreferences(context)
                 .getInt(PREF_RECOVERY_TYPE, RECOVERY_TYPE_BOTH);
-        if (RECOVERY_TYPE_BOTH == flashType) {
-            createCwmScript(rootPath, flashFilename, extras);
-            createOpenRecoveryScript(rootPath, flashFilename, extras);
-        } else if (RECOVERY_TYPE_CWM == flashType) {
-            createCwmScript(rootPath, flashFilename, extras);
+        if (RECOVERY_TYPE_CWM == flashType) {
+            createCwmScript(root, flashFilename, extras);
         } else if (RECOVERY_TYPE_OPEN == flashType) {
-            createOpenRecoveryScript(rootPath, flashFilename, extras);
+            createOpenRecoveryScript(root, flashFilename, extras);
+        } else {
+            createCwmScript(root, flashFilename, extras);
+            createOpenRecoveryScript(root, flashFilename, extras);
         }
 
         // Trigger the reboot
