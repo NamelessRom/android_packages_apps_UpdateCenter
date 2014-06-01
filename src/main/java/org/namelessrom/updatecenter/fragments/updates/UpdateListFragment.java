@@ -23,6 +23,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
@@ -120,9 +121,10 @@ public class UpdateListFragment extends AttachListFragment implements OnRefreshL
                 .listener(this)
                 .setup(mPullToRefreshLayout);
 
-        if (PreferenceManager
-                .getDefaultSharedPreferences(Application.sApplicationContext)
-                .getBoolean(Constants.PREF_UPDATE_METERED, true)
+        final SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(Application.sApplicationContext);
+        if (prefs.getBoolean(Constants.PREF_UPDATE_METERED, true)
+                && !prefs.getBoolean(Constants.PREF_UPDATE_METERED_SKIP_WARNING, false)
                 && Helper.isMetered(Application.sApplicationContext)) {
             Crouton.makeText(getActivity(), R.string.metered_notice,
                     new Style.Builder().setBackgroundColorValue(Style.holoBlueLight).build()

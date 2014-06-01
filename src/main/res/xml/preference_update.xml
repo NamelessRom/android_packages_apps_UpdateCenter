@@ -17,45 +17,60 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListPreference
-        android:key="pref_update_channel"
-        android:persistent="false"
-        android:dialogTitle="@string/channel_title"
-        android:title="@string/channel_title"
-        android:entries="@array/update_channel_entries"
-        android:entryValues="@array/update_channel_values"
-        android:defaultValue="1" />
+    <PreferenceCategory android:title="@string/general">
 
-    <ListPreference
-        android:key="pref_update_check_interval"
-        android:persistent="false"
-        android:dialogTitle="@string/update_check_title"
-        android:title="@string/update_check_title"
-        android:entries="@array/update_check_entries"
-        android:entryValues="@array/update_check_values"
-        android:defaultValue="604800" />
+        <ListPreference
+            android:key="pref_update_channel"
+            android:persistent="false"
+            android:dialogTitle="@string/channel_title"
+            android:title="@string/channel_title"
+            android:entries="@array/update_channel_entries"
+            android:entryValues="@array/update_channel_values"
+            android:defaultValue="1" />
 
-    <ListPreference
-        android:key="pref_recovery_type"
-        android:persistent="false"
-        android:dialogTitle="@string/recovery_type_title"
-        android:title="@string/recovery_type_title"
-        android:entries="@array/recovery_type_entries"
-        android:entryValues="@array/recovery_type_values"
-        android:defaultValue="0" />
+        <ListPreference
+            android:key="pref_update_check_interval"
+            android:persistent="false"
+            android:dialogTitle="@string/update_check_title"
+            android:title="@string/update_check_title"
+            android:entries="@array/update_check_entries"
+            android:entryValues="@array/update_check_values"
+            android:defaultValue="604800" />
 
-    <CheckBoxPreference
-        android:key="pref_update_metered"
-        android:persistent="true"
-        android:title="@string/update_metered_title"
-        android:summary="@string/update_metered_summary"
-        android:defaultValue="true" />
+        <ListPreference
+            android:key="pref_recovery_type"
+            android:persistent="false"
+            android:dialogTitle="@string/recovery_type_title"
+            android:title="@string/recovery_type_title"
+            android:entries="@array/recovery_type_entries"
+            android:entryValues="@array/recovery_type_values"
+            android:defaultValue="0" />
 
-    <CheckBoxPreference
-        android:key="pref_update_roaming"
-        android:persistent="true"
-        android:title="@string/update_roaming_title"
-        android:summary="@string/update_roaming_summary"
-        android:defaultValue="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/download">
+
+        <CheckBoxPreference
+            android:key="pref_update_metered"
+            android:persistent="true"
+            android:title="@string/update_metered_title"
+            android:summary="@string/update_metered_summary"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference
+            android:key="pref_update_metered_skip_warn"
+            android:persistent="true"
+            android:title="@string/update_metered_skip_warn_title"
+            android:defaultValue="false"
+            android:dependency="pref_update_metered" />
+
+        <CheckBoxPreference
+            android:key="pref_update_roaming"
+            android:persistent="true"
+            android:title="@string/update_roaming_title"
+            android:summary="@string/update_roaming_summary"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

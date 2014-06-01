@@ -100,31 +100,32 @@ public interface Constants {
     //==============================================================================================
     // PREFERENCES
     //==============================================================================================
-    public static final String PREF_UPDATE_CHANNEL         = "pref_update_channel";
-    public static final int    UPDATE_CHANNEL_ALL          = 0;
-    public static final int    UPDATE_CHANNEL_NIGHTLY      = 1;
-    public static final int    UPDATE_CHANNEL_WEEKLY       = 2;
+    public static final String PREF_UPDATE_CHANNEL              = "pref_update_channel";
+    public static final int    UPDATE_CHANNEL_ALL               = 0;
+    public static final int    UPDATE_CHANNEL_NIGHTLY           = 1;
+    public static final int    UPDATE_CHANNEL_WEEKLY            = 2;
     //----------------------------------------------------------------------------------------------
-    public static final String UPDATE_CHECK_PREF           = "pref_update_check_interval";
-    public static final String UPDATE_TYPE_PREF            = "pref_update_types";
-    public static final String LAST_UPDATE_CHECK_PREF      = "pref_last_update_check";
-    public static final String LAST_AUTO_UPDATE_CHECK_PREF = "pref_last_auto_update_check";
+    public static final String UPDATE_CHECK_PREF                = "pref_update_check_interval";
+    public static final String UPDATE_TYPE_PREF                 = "pref_update_types";
+    public static final String LAST_UPDATE_CHECK_PREF           = "pref_last_update_check";
+    public static final String LAST_AUTO_UPDATE_CHECK_PREF      = "pref_last_auto_update_check";
     //----------------------------------------------------------------------------------------------
-    public static final String PREF_RECOVERY_TYPE          = "pref_recovery_type";
-    public static final int    RECOVERY_TYPE_BOTH          = 0;
-    public static final int    RECOVERY_TYPE_CWM           = 1;
-    public static final int    RECOVERY_TYPE_OPEN          = 2;
+    public static final String PREF_RECOVERY_TYPE               = "pref_recovery_type";
+    public static final int    RECOVERY_TYPE_BOTH               = 0;
+    public static final int    RECOVERY_TYPE_CWM                = 1;
+    public static final int    RECOVERY_TYPE_OPEN               = 2;
     //----------------------------------------------------------------------------------------------
-    public static final String BOOT_CHECK_COMPLETED        = "boot_check_completed";
-    public static final int    UPDATE_FREQ_NONE            = -1;
-    public static final int    UPDATE_FREQ_AT_APP_START    = -2;
-    public static final int    UPDATE_FREQ_AT_BOOT         = -3;
-    public static final int    UPDATE_FREQ_TWICE_DAILY     = 43200;
-    public static final int    UPDATE_FREQ_DAILY           = 86400;
-    public static final int    UPDATE_FREQ_WEEKLY          = 604800;
-    public static final int    UPDATE_FREQ_BI_WEEKLY       = 1209600;
-    public static final int    UPDATE_FREQ_MONTHLY         = 2419200;
+    public static final String BOOT_CHECK_COMPLETED             = "boot_check_completed";
+    public static final int    UPDATE_FREQ_NONE                 = -1;
+    public static final int    UPDATE_FREQ_AT_APP_START         = -2;
+    public static final int    UPDATE_FREQ_AT_BOOT              = -3;
+    public static final int    UPDATE_FREQ_TWICE_DAILY          = 43200;
+    public static final int    UPDATE_FREQ_DAILY                = 86400;
+    public static final int    UPDATE_FREQ_WEEKLY               = 604800;
+    public static final int    UPDATE_FREQ_BI_WEEKLY            = 1209600;
+    public static final int    UPDATE_FREQ_MONTHLY              = 2419200;
     //----------------------------------------------------------------------------------------------
-    public static final String PREF_UPDATE_METERED         = "pref_update_metered";
-    public static final String PREF_UPDATE_ROAMING         = "pref_update_roaming";
+    public static final String PREF_UPDATE_METERED              = "pref_update_metered";
+    public static final String PREF_UPDATE_METERED_SKIP_WARNING = "pref_update_metered_skip_warn";
+    public static final String PREF_UPDATE_ROAMING              = "pref_update_roaming";
 }
