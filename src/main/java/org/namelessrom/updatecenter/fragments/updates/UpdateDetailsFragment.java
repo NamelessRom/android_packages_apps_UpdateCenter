@@ -11,8 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.changelibs.view.ChangeLogListView;
@@ -20,6 +19,7 @@ import com.squareup.otto.Subscribe;
 
 import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.database.DatabaseHandler;
 import org.namelessrom.updatecenter.database.DownloadItem;
 import org.namelessrom.updatecenter.events.RefreshEvent;
 import org.namelessrom.updatecenter.events.SectionAttachedEvent;
@@ -31,6 +31,7 @@ import org.namelessrom.updatecenter.utils.UpdateHelper;
 import org.namelessrom.updatecenter.widgets.AttachFragment;
 
 import static butterknife.ButterKnife.findById;
+import static org.namelessrom.updatecenter.Application.logDebug;
 
 /**
  * Created by alex on 28.04.14.
@@ -41,12 +42,11 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
 
     private UpdateInfo mUpdateInfo;
 
-    private TextView mChannel;
-    private TextView mTitle;
-    private TextView mInfo;
-    private Button   mAction;
-
-    private ProgressBar mProgressBar;
+    private TextView    mChannel;
+    private TextView    mTitle;
+    private TextView    mInfo;
+    private ImageButton mAction;
+    private ImageButton mExtra;
 
     private ChangeLogListView mChangelog;
 
@@ -84,6 +84,7 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
         setHasOptionsMenu(true);
 
         final Bundle arguments = getArguments();
+        assert (arguments != null);
         mUpdateInfo = (UpdateInfo) arguments.getSerializable(ARG_UPDATE_INFO);
 
         final View v = inflater.inflate(R.layout.fragment_update_details, container, false);
@@ -92,9 +93,7 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
         mTitle = findById(v, R.id.updateTitle);
         mInfo = findById(v, R.id.updateInfo);
         mAction = findById(v, R.id.updateAction);
-
-        mProgressBar = findById(v, R.id.appProgressBar);
-        mProgressBar.setVisibility(View.INVISIBLE);
+        mExtra = findById(v, R.id.updateExtra);
 
         mChangelog = findById(v, R.id.updateChangelog);
 
@@ -112,48 +111,81 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
 
         updateButton();
 
-        mChangelog.loadFromUrl(mUpdateInfo.getUrl()
-                .replace("/download", ".changelog/download"));
+        mChangelog.loadFromUrl(mUpdateInfo.getUrl().replace("/download", ".changelog/download"));
     }
 
     private void updateButton() {
-        final int textId;
+        final boolean isDownloading;
+        final int imageId;
         final int state;
+        boolean downloaded = false;
         DownloadItem tmpItem = null;
 
-        if (Helper.isUpdateDownloaded(mUpdateInfo.getName())) {
-            textId = R.string.reboot_and_install;
-            state = Constants.UPDATE_DOWNLOADED;
-        } else {
-            if (Application.mDownloadItems != null) {
-                for (final DownloadItem item : Application.mDownloadItems) {
-                    if (item.getMd5().equals(mUpdateInfo.getMd5())) {
-                        if (item.getCompleted().equals("0")) {
-                            tmpItem = item;
-                            break;
-                        }
+        if (Application.mDownloadItems != null) {
+            for (final DownloadItem item : Application.mDownloadItems) {
+                if (item.getMd5().equals(mUpdateInfo.getMd5())) {
+                    if (item.getCompleted().equals("0")) {
+                        tmpItem = item;
+                        downloaded = false;
+                        break;
+                    } else if (item.getCompleted().equals("1")) {
+                        tmpItem = item;
+                        downloaded = true;
+                        break;
                     }
                 }
             }
+        }
 
-            if (tmpItem != null) {
-                textId = R.string.cancel_download;
-                state = Constants.UPDATE_DOWNLOADING;
+        if (tmpItem != null) {
+            if (downloaded && Helper.isUpdateDownloaded(mUpdateInfo.getName())) {
+                isDownloading = false;
+                imageId = R.drawable.ic_action_install;
+                state = Constants.UPDATE_DOWNLOADED;
             } else {
-                textId = R.string.download;
-                state = 0;
+                isDownloading = true;
+                imageId = R.drawable.ic_action_cancel;
+                state = Constants.UPDATE_DOWNLOADING;
             }
+        } else {
+            isDownloading = false;
+            imageId = R.drawable.ic_action_download;
+            state = 0;
         }
 
         final DownloadItem downloadItem = tmpItem;
-        mAction.setText(textId);
+        mAction.setImageResource(imageId);
         mAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UpdateHelper.getDialog(getActivity(), state, mUpdateInfo,
-                        downloadItem).show();
+                UpdateHelper.getDialog(getActivity(), state, mUpdateInfo, downloadItem).show();
             }
         });
+
+        if (false /* TODO rewrite to add pause/resume support */ && isDownloading) {
+            mExtra.setImageResource(downloadItem.isPaused()
+                    ? R.drawable.ic_action_resume : R.drawable.ic_action_pause);
+            mExtra.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View view) {
+                    final long downloadId = Long.parseLong(downloadItem.getDownloadId());
+                    logDebug("downloadItem.getDownloadId(): " + String.valueOf(downloadId));
+                    if (downloadItem.isPaused()) {
+                        // TODO
+                    } else {
+                        // TODO
+                    }
+                    downloadItem.setPaused(!downloadItem.isPaused());
+
+                    Application.getDb().updateItem(downloadItem, DatabaseHandler.TABLE_DOWNLOADS);
+                    Application.mDownloadItems = Application.getDb()
+                            .getAllItems(DatabaseHandler.TABLE_DOWNLOADS);
+                    BusProvider.getBus().post(new RefreshEvent());
+                }
+            });
+            mExtra.setVisibility(View.VISIBLE);
+        } else {
+            mExtra.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Subscribe

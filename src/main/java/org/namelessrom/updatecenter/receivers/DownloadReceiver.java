@@ -18,13 +18,12 @@ import android.app.StatusBarManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import org.namelessrom.updatecenter.R;
+import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.MainActivity;
+import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.database.DatabaseHandler;
 import org.namelessrom.updatecenter.database.DownloadItem;
 import org.namelessrom.updatecenter.items.UpdateInfo;
@@ -51,16 +50,17 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
     public static final String EXTRA_FILENAME        = "filename";
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
+        if (intent == null) return;
         final String action = intent.getAction();
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (action == null || action.isEmpty()) return;
 
         if (ACTION_START_DOWNLOAD.equals(action)) {
             final UpdateInfo ui = intent.getParcelableExtra(EXTRA_UPDATE_INFO);
             handleStartDownload(context, ui);
         } else if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
-            long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            handleDownloadComplete(context, prefs, id);
+            final long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            handleDownloadComplete(context, id);
         } else if (ACTION_INSTALL_UPDATE.equals(action)) {
             final StatusBarManager sb = (StatusBarManager)
                     context.getSystemService(Context.STATUS_BAR_SERVICE);
@@ -77,29 +77,25 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
         }
     }
 
-    private void handleStartDownload(Context context, UpdateInfo ui) {
+    private void handleStartDownload(final Context context, final UpdateInfo ui) {
         DownloadService.start(context, ui);
     }
 
-    private void handleDownloadComplete(Context context, SharedPreferences prefs, long id) {
-        final long enqueued = prefs.getLong(DOWNLOAD_ID, -1);
+    private void handleDownloadComplete(Context context, long id) {
+        if (id < 0) return;
 
-        if (enqueued < 0 || id < 0 || id != enqueued) {
-            return;
-        }
-
-        DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        final DownloadManager dm = Application.getDownloadManager();
         Query query = new Query();
         query.setFilterById(id);
 
         final DatabaseHandler db = DatabaseHandler.getInstance(context);
-        final DownloadItem item = db.getDownloadItem(String.valueOf(enqueued));
+        final DownloadItem item = db.getDownloadItem(String.valueOf(id));
         if (item != null) {
             item.setCompleted("1");
             db.updateItem(item, DatabaseHandler.TABLE_DOWNLOADS);
         }
 
-        Cursor c = dm.query(query);
+        final Cursor c = dm.query(query);
         if (c == null) {
             return;
         }
@@ -132,14 +128,8 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
         } else if (status == DownloadManager.STATUS_FAILED) {
             // The download failed, reset
             dm.remove(id);
-
             failureMessageResId = R.string.unable_to_download_file;
         }
-
-        // Clear the shared prefs
-        prefs.edit()
-                .remove(Constants.DOWNLOAD_ID)
-                .apply();
 
         c.close();
 
@@ -157,6 +147,8 @@ public class DownloadReceiver extends BroadcastReceiver implements Constants {
             builder.setContentText(context.getString(failureMessageResId));
             builder.setTicker(context.getString(R.string.download_failure));
         } else {
+            if (updateFile == null) return;
+
             final String updateUiName = updateFile.getName();
 
             builder.setContentTitle(context.getString(R.string.download_success));
