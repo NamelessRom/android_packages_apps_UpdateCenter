@@ -14,7 +14,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String TAG = DatabaseHandler.class.getName();
 
-    private static final int    DATABASE_VERSION = 1;
+    private static final int    DATABASE_VERSION = 2;
     private static final String DATABASE_NAME    = "UpdateCenter.db";
 
     private static final String KEY_ID         = "id";
@@ -22,12 +22,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_FILENAME   = "filename";
     private static final String KEY_MD5        = "md5";
     private static final String KEY_COMPLETED  = "completed";
+    private static final String KEY_PAUSED     = "paused";
 
     public static final String TABLE_DOWNLOADS = "downloads";
 
     private static final String CREATE_DOWNLOADS_TABLE = "CREATE TABLE " + TABLE_DOWNLOADS + '('
             + KEY_ID + " INTEGER PRIMARY KEY," + KEY_DOWNLOADID + " TEXT," + KEY_FILENAME + " TEXT,"
-            + KEY_MD5 + " TEXT," + KEY_COMPLETED + " TEXT)";
+            + KEY_MD5 + " TEXT," + KEY_COMPLETED + " TEXT," + KEY_PAUSED + " TEXT)";
     private static final String DROP_DOWNLOADS_TABLE   = "DROP TABLE IF EXISTS " + TABLE_DOWNLOADS;
 
     private static DatabaseHandler sDatabaseHandler = null;
@@ -60,6 +61,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             db.execSQL(CREATE_DOWNLOADS_TABLE);
             currentVersion = 1;
         }
+
+        if (currentVersion < 2) {
+            db.execSQL("ALTER TABLE " + TABLE_DOWNLOADS + " ADD COLUMN " + KEY_PAUSED + " TEXT");
+            currentVersion = 2;
+        }
     }
 
     @Override
@@ -90,6 +96,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_FILENAME, item.getFileName());
         values.put(KEY_MD5, item.getMd5());
         values.put(KEY_COMPLETED, item.getCompleted());
+        values.put(KEY_PAUSED, (item.isPaused() ? "1" : "0"));
 
         db.insert(tableName, null, values);
         db.close();
@@ -102,14 +109,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (db == null) return null;
 
         final Cursor cursor = db.query(tableName, new String[]{
-                        KEY_ID, KEY_DOWNLOADID, KEY_FILENAME, KEY_MD5, KEY_COMPLETED},
+                        KEY_ID, KEY_DOWNLOADID, KEY_FILENAME, KEY_MD5, KEY_COMPLETED, KEY_PAUSED},
                 KEY_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null
         );
         if (cursor == null || !cursor.moveToFirst()) { return null; }
 
+        final String paused = cursor.getString(5);
         final DownloadItem item = new DownloadItem(Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+                cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4),
+                paused != null && paused.equals("1"));
 
         cursor.close();
         db.close();
@@ -122,14 +131,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (db == null) return null;
 
         final Cursor cursor = db.query(TABLE_DOWNLOADS, new String[]{
-                        KEY_ID, KEY_DOWNLOADID, KEY_FILENAME, KEY_MD5, KEY_COMPLETED},
+                        KEY_ID, KEY_DOWNLOADID, KEY_FILENAME, KEY_MD5, KEY_COMPLETED, KEY_PAUSED},
                 KEY_DOWNLOADID + "=?",
                 new String[]{downloadId}, null, null, null, null
         );
         if (cursor == null || !cursor.moveToFirst()) { return null; }
 
+        final String paused = cursor.getString(5);
         final DownloadItem item = new DownloadItem(Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+                cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4),
+                paused != null && paused.equals("1"));
 
         cursor.close();
         db.close();
@@ -155,6 +166,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setFileName(cursor.getString(2));
                 item.setMd5(cursor.getString(3));
                 item.setCompleted(cursor.getString(4));
+                final String paused = cursor.getString(5);
+                item.setPaused(paused != null && paused.equals("1"));
                 itemList.add(item);
             } while (cursor.moveToNext());
         }
@@ -179,6 +192,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_FILENAME, item.getFileName());
         values.put(KEY_MD5, item.getMd5());
         values.put(KEY_COMPLETED, item.getCompleted());
+        values.put(KEY_PAUSED, (item.isPaused() ? "1" : "0"));
 
         final int id = db.update(tableName, values, KEY_ID + " = ?",
                 new String[]{String.valueOf(item.getId())});

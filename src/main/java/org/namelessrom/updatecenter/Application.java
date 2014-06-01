@@ -1,33 +1,18 @@
 package org.namelessrom.updatecenter;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 
-import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-import org.acra.sender.HttpSender;
 import org.namelessrom.updatecenter.database.DatabaseHandler;
 import org.namelessrom.updatecenter.database.DownloadItem;
 import org.namelessrom.updatecenter.utils.Helper;
 
 import java.util.List;
 
-@ReportsCrashes(
-        httpMethod = HttpSender.Method.PUT,
-        reportType = HttpSender.Type.JSON,
-        formKey = "",
-        formUri = "https://reports.nameless-rom.org" +
-                "/acra-namelesscenter/_design/acra-storage/_update/report",
-        formUriBasicAuthLogin = "namelessreporter",
-        formUriBasicAuthPassword = "weareopentoeveryone",
-        mode = ReportingInteractionMode.DIALOG,
-        resToastText = R.string.crash_toast_text,
-        resDialogText = R.string.crash_dialog_text,
-        resDialogOkToast = R.string.crash_dialog_ok_toast)
 public class Application extends android.app.Application {
 
     private static final String TAG = Application.class.getName();
@@ -48,7 +33,6 @@ public class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        ACRA.init(this);
 
         sApplicationContext = this;
         packageManager = sApplicationContext.getPackageManager();
@@ -68,13 +52,15 @@ public class Application extends android.app.Application {
 
         logDebug(TAG, "Debugging enabled!");
 
-        mDownloadItems = DatabaseHandler.getInstance(sApplicationContext).getAllItems(
-                DatabaseHandler.TABLE_DOWNLOADS);
+        mDownloadItems = DatabaseHandler.getInstance(sApplicationContext)
+                .getAllItems(DatabaseHandler.TABLE_DOWNLOADS);
     }
 
-    public static void logDebug(String msg) {
-        logDebug("UpdateCenter", msg);
+    public static DownloadManager getDownloadManager() {
+        return (DownloadManager) sApplicationContext.getSystemService(Context.DOWNLOAD_SERVICE);
     }
+
+    public static void logDebug(final String msg) { logDebug("UpdateCenter", msg); }
 
     public static void logDebug(final String tag, final String msg) {
         if (IS_LOG_DEBUG) {
@@ -82,4 +68,7 @@ public class Application extends android.app.Application {
         }
     }
 
+    public static DatabaseHandler getDb() {
+        return DatabaseHandler.getInstance(Application.sApplicationContext);
+    }
 }
