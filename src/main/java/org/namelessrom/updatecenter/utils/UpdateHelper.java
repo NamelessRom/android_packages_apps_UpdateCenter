@@ -1,7 +1,6 @@
 package org.namelessrom.updatecenter.utils;
 
 import android.app.AlertDialog;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,8 +25,8 @@ public class UpdateHelper {
             final UpdateInfo updateInfo, final DownloadItem item) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        int titleId;
-        String message;
+        final int titleId;
+        final String message;
         switch (state) {
             case Constants.UPDATE_DOWNLOADED:
                 titleId = R.string.reboot_and_install;
@@ -55,15 +54,13 @@ public class UpdateHelper {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    final DownloadManager downloadManager = (DownloadManager)
-                                            context.getSystemService(Context.DOWNLOAD_SERVICE);
-                                    downloadManager.remove(Long.parseLong(item.getDownloadId()));
+                                    Application.getDownloadManager()
+                                            .remove(Long.parseLong(item.getDownloadId()));
 
-                                    final DatabaseHandler db =
-                                            DatabaseHandler.getInstance(context);
-                                    db.deleteItem(item, DatabaseHandler.TABLE_DOWNLOADS);
-                                    Application.mDownloadItems =
-                                            db.getAllItems(DatabaseHandler.TABLE_DOWNLOADS);
+                                    Application.getDb().deleteItem(item,
+                                            DatabaseHandler.TABLE_DOWNLOADS);
+                                    Application.mDownloadItems = Application.getDb()
+                                            .getAllItems(DatabaseHandler.TABLE_DOWNLOADS);
                                     BusProvider.getBus().post(new RefreshEvent());
                                     dialogInterface.dismiss();
                                 }
