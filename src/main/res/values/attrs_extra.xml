@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Changelog -->
+    <declare-styleable name="ChangeLogListView">
+        <attr name="rowLayoutId" format="reference" />
+        <attr name="rowHeaderLayoutId" format="reference" />
+        <attr name="changeLogFileResourceId" format="reference" />
+        <attr name="changeLogFileResourceUrl" format="string" />
+    </declare-styleable>
     <!-- Pull Refresh -->
     <declare-styleable name="PullToRefreshView">
         <attr name="ptrViewDelegateClass" format="reference|string" />

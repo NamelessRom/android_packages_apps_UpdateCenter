@@ -2,7 +2,6 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'libs' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.10.+'
@@ -12,7 +11,6 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
-        maven { url 'libs' }
     }
 }
 
@@ -63,8 +61,6 @@ android {
 }
 
 dependencies {
-    compile 'ch.acra:acra:4.+'
-    compile 'com.android:changelibs:1.0.0'
     compile 'com.android.support:support-v13:19.+'
     compile 'com.google.android.apps.dashclock:dashclock-api:+'
     compile 'com.jakewharton:butterknife:5.+'
