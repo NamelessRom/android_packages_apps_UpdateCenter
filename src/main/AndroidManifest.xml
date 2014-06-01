@@ -12,6 +12,12 @@
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.DELETE_PACKAGES" />
+    <!-- Download Manager -->
+    <uses-permission android:name="android.permission.ACCESS_ALL_DOWNLOADS" />
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER_ADVANCED" />
+    <uses-permission android:name="android.permission.MODIFY_NETWORK_ACCOUNTING" />
+    <uses-permission android:name="android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS" />
     <!-- Reboot and Boot up -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REBOOT" />
@@ -38,12 +44,6 @@
         android:theme="@style/AppTheme"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:hardwareAccelerated="true">
-        <activity
-            android:name="org.acra.CrashReportDialog"
-            android:theme="@android:style/Theme.Holo.Dialog"
-            android:launchMode="singleInstance"
-            android:excludeFromRecents="true"
-            android:finishOnTaskLaunch="true" />
         <activity
             android:name=".DummyLauncher"
             android:enabled="true"

@@ -2,30 +2,33 @@ package org.namelessrom.updatecenter.database;
 
 public class DownloadItem {
 
-    private int    _id;
-    private String _downloadId;
-    private String _fileName;
-    private String _md5;
-    private String _completed;
+    private int     _id;
+    private String  _downloadId;
+    private String  _fileName;
+    private String  _md5;
+    private String  _completed;
+    private boolean _is_paused;
 
     public DownloadItem() { }
 
     public DownloadItem(final String fileName, final String downloadId, final String md5,
             final String completed) {
-        this._id = -1;
-        this._downloadId = downloadId;
-        this._fileName = fileName;
-        this._md5 = md5;
-        this._completed = completed;
+        this(-1, fileName, downloadId, md5, completed, false);
     }
 
     public DownloadItem(final int id, final String fileName, final String downloadId,
             final String md5, final String completed) {
+        this(id, fileName, downloadId, md5, completed, false);
+    }
+
+    public DownloadItem(final int id, final String fileName, final String downloadId,
+            final String md5, final String completed, final boolean isPaused) {
         this._id = id;
         this._downloadId = downloadId;
         this._fileName = fileName;
         this._md5 = md5;
         this._completed = completed;
+        this._is_paused = isPaused;
     }
 
     public int getId() {
@@ -68,4 +71,11 @@ public class DownloadItem {
         this._completed = completed;
     }
 
+    public boolean isPaused() {
+        return _is_paused;
+    }
+
+    public void setPaused(final boolean _is_paused) {
+        this._is_paused = _is_paused;
+    }
 }
