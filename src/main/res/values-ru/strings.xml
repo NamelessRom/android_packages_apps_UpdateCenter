@@ -20,16 +20,23 @@
   <string name="unknown">Неизвестно</string>
   <string name="dismiss">Скрыть</string>
   <string name="download">Скачать</string>
-  <string name="update_check_title">Период проверки</string>
-  <string name="update_check_summary">Период проверки обновлений</string>
+  <string name="update_check_title">Период проверки обновлений</string>
   <string name="check_manual">Вручную</string>
   <string name="check_on_app_start">При запуске приложения</string>
-  <string name="check_on_boot">При каждом включении</string>
+  <string name="check_on_boot">При каждой загрузке</string>
   <string name="check_twice_daily">Дважды в день</string>
   <string name="check_daily">Ежедневно</string>
   <string name="check_weekly">Еженедельно</string>
   <string name="check_bi_weekly">Каждые две недели</string>
   <string name="check_monthly">Ежемесячно</string>
+  <string name="channel_title">Канал обновлений</string>
+  <string name="all">Все</string>
+  <string name="nightly">Nightly</string>
+  <string name="weekly">Weekly</string>
+  <string name="update_metered_title">Разрешить через лимитированные подключения</string>
+  <string name="update_metered_summary">Установить, можно ли скачивать через лимитированные подключения</string>
+  <string name="update_roaming_title">Разрешить роуминг</string>
+  <string name="update_roaming_summary">Установить, можно ли скачивать через роуминг</string>
   <string name="update_check_failed">Не удалось проверить обновления. Пожалуйста, проверьте соединение с Интернетом и попробуйте снова.</string>
   <string name="new_updates_found_ticker">Доступны новые обновления</string>
   <string name="new_updates_found_title">Новые обновления</string>
@@ -40,7 +47,6 @@
   <string name="cancel_download">Отменить скачивание</string>
   <string name="cancel_download_question">Вы хотите отменить скачивание %s?</string>
   <string name="recovery_type_title">Тип скрипта восстановления</string>
-  <string name="recovery_type_summary">Тип скрипта восстановления, который необходимо создавать</string>
   <string name="recovery_type_both">Оба</string>
   <string name="recovery_type_cwm">ClockWorkMod</string>
   <string name="recovery_type_open">OpenRecovery</string>
@@ -53,4 +59,9 @@
   <string name="download_failure">Скачать обновление не удалось</string>
   <string name="reboot_and_install">Перезагрузить и установить</string>
   <string name="download_install_notice">Обновление <xliff:g id="filename">%s</xliff:g> было успешно скачано. Когда вы нажмёте \'Перезагрузить и установить\', устройство перезагрузится, чтобы установить обновление.\n\nЗаметьте, для автоматической установки требуется совместимый модуль восстановления.</string>
+  <string name="unable_to_reboot_toast">Невозможно перезагрузиться в режим восстановления</string>
+  <string name="general">Общие</string>
+  <string name="show_launcher">Показать значок запуска</string>
+  <string name="show_launcher_summary">Скрывает/показывает значок запуска</string>
+  <string name="metered_notice">Внимание! Вы в лимитированной сети! Могут быть дополнительные расходы!</string>
 </resources>

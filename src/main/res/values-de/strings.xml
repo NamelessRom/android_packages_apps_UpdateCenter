@@ -11,7 +11,7 @@
   <string name="press_to_load">Drücke zum Laden</string>
   <string name="home">Startseite</string>
   <string name="preferences">Einstellungen</string>
-  <string name="rom_center">ROM-Center</string>
+  <string name="rom_center">ROM Center</string>
   <string name="updates">Updates</string>
   <string name="menu">Menü</string>
   <string name="settings">Einstellungen</string>
@@ -20,8 +20,7 @@
   <string name="unknown">Unbekannt</string>
   <string name="dismiss">Schließen</string>
   <string name="download">Download</string>
-  <string name="update_check_title">Prüfintervall</string>
-  <string name="update_check_summary">Das Intervall um nach Updates suchen</string>
+  <string name="update_check_title">Aktualisierungs-Prüfintervall</string>
   <string name="check_manual">Manuell</string>
   <string name="check_on_app_start">Wenn die App startet</string>
   <string name="check_on_boot">Bei jedem Start</string>
@@ -30,6 +29,14 @@
   <string name="check_weekly">Wöchentlich</string>
   <string name="check_bi_weekly">Zweiwöchentlich</string>
   <string name="check_monthly">Monatlich</string>
+  <string name="channel_title">Update-Channel</string>
+  <string name="all">Alle</string>
+  <string name="nightly">Nightly</string>
+  <string name="weekly">Weekly</string>
+  <string name="update_metered_title">Mobilfunknetzwerke zulassen</string>
+  <string name="update_metered_summary">Festlegen, ob Aktualisierungen über die mobile Datenverbindung erlaubt sind</string>
+  <string name="update_roaming_title">Roaming zulassen</string>
+  <string name="update_roaming_summary">Festlegen, ob Aktualisierungen über Roaming-Verbindungen erlaubt sind</string>
   <string name="update_check_failed">Die Suche nach Updates ist fehlgeschlagen. Bitte überprüfen Sie die Internetverbindung und versuchen es später erneut.</string>
   <string name="new_updates_found_ticker">Neue Updates sind verfügbar</string>
   <string name="new_updates_found_title">Neue Updates</string>
@@ -40,7 +47,6 @@
   <string name="cancel_download">Download abbrechen</string>
   <string name="cancel_download_question">Möchten Sie den Download von %s abbrechen?</string>
   <string name="recovery_type_title">Recovery-Typ</string>
-  <string name="recovery_type_summary">Der Typ der Recovery, zum Generieren des Skriptes</string>
   <string name="recovery_type_both">Beide</string>
   <string name="recovery_type_cwm">ClockWorkMod</string>
   <string name="recovery_type_open">OpenRecovery</string>
@@ -53,4 +59,9 @@
   <string name="download_failure">Update-Download fehlgeschlagen</string>
   <string name="reboot_and_install">Neu starten und Installieren</string>
   <string name="download_install_notice">Das Update <xliff:g id="filename">%s</xliff:g> wurde erfolgreich heruntergeladen. Beim Berühren von \"Neu starten und Installieren\" wird das Gerät neu gestartet, um das Update zu installieren.\n\nHinweis: Für die Installation wird ein kompatibles Recovery-System benötigt.</string>
+  <string name="unable_to_reboot_toast">Neustart in den Recovery-Modus nicht möglich</string>
+  <string name="general">Allgemein</string>
+  <string name="show_launcher">Zeige Icon in App-Übersicht</string>
+  <string name="show_launcher_summary">Zeigt/versteckt das Icon</string>
+  <string name="metered_notice">Warnung! Mobile Datenverbindung wurde erkannt! Zusätzliche Kosten können anfallen!</string>
 </resources>
