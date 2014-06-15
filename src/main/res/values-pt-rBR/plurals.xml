@@ -8,4 +8,21 @@
      The text of the license can be found in the LICENSE file
      or at https://www.gnu.org/licenses/gpl-2.0.txt
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <plurals name="not_new_updates_found_body">
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> atualizações disponíveis para baixar</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> actualizações disponíveis para descarregar</item>
+  </plurals>
+  <plurals name="not_additional_count">
+    <item quantity="one">+ <xliff:g id="count">%d</xliff:g> mais</item>
+    <item quantity="other">+ <xliff:g id="count">%d</xliff:g> mais</item>
+  </plurals>
+  <plurals name="extension_status">
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> atualizações da rom</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> actualizações da rom</item>
+  </plurals>
+  <plurals name="extension_expandedTitle">
+    <item quantity="one"><xliff:g id="count"> %d </xliff:g> Atualizações NamelessRom</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> NamelessRom Actualizações</item>
+  </plurals>
+</resources>
