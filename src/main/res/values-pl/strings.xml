@@ -33,9 +33,9 @@
   <string name="all">Wszystkie</string>
   <string name="nightly">Nocne</string>
   <string name="weekly">Tygodniowe</string>
-  <string name="update_metered_title">Zezwól na połączenie do sieci komórkowej</string>
+  <string name="update_metered_title">Połączenie w sieci komórkowej</string>
   <string name="update_metered_summary">Czy chcesz pobrać ten plik za pomocą sieci komórkowej?</string>
-  <string name="update_roaming_title">Zezwól na połączenie w roamingu</string>
+  <string name="update_roaming_title">Połączenie w roamingu</string>
   <string name="update_roaming_summary">Czy chcesz pobrać ten plik za pomocą sieci komórkowej w roamingu?</string>
   <string name="update_check_failed">Nie udało się wyszukać aktualizacji. Proszę sprawdzić połączenie internetowe i spróbować ponownie.</string>
   <string name="new_updates_found_ticker">Nowe aktualizacje są dostępne</string>
