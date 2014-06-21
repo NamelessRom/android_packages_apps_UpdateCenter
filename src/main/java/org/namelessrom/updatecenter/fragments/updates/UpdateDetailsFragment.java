@@ -7,14 +7,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.android.changelibs.view.ChangeLogListView;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.squareup.otto.Subscribe;
 
 import org.namelessrom.updatecenter.Application;
@@ -26,9 +29,12 @@ import org.namelessrom.updatecenter.events.SectionAttachedEvent;
 import org.namelessrom.updatecenter.items.UpdateInfo;
 import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
+import org.namelessrom.updatecenter.utils.FileUtils;
 import org.namelessrom.updatecenter.utils.Helper;
 import org.namelessrom.updatecenter.utils.UpdateHelper;
 import org.namelessrom.updatecenter.widgets.AttachFragment;
+
+import java.io.File;
 
 import static butterknife.ButterKnife.findById;
 import static org.namelessrom.updatecenter.Application.logDebug;
@@ -48,7 +54,7 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
     private ImageButton mAction;
     private ImageButton mExtra;
 
-    private ChangeLogListView mChangelog;
+    private WebView mChangelog;
 
     @Override
     public void onAttach(Activity activity) {
@@ -96,6 +102,7 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
         mExtra = findById(v, R.id.updateExtra);
 
         mChangelog = findById(v, R.id.updateChangelog);
+        mChangelog.getSettings().setJavaScriptEnabled(true);
 
         return v;
     }
@@ -111,7 +118,46 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
 
         updateButton();
 
-        mChangelog.loadFromUrl(mUpdateInfo.getUrl().replace("/download", ".changelog/download"));
+        final File changelog = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
+                + '/' + getResources().getString(R.string.changelog_cache_path)
+                + '/' + mUpdateInfo.getName() + ".changelog");
+        boolean success = false;
+        if (changelog.exists()) {
+            try {
+                loadData(FileUtils.readFromFile(changelog));
+                success = true;
+            } catch (Exception exc) {
+                logDebug(exc.getMessage());
+                success = false;
+            }
+        }
+        if (!success) {
+            Ion.with(this)
+                    .load(mUpdateInfo.getUrl().replace("/download", ".changelog/download"))
+                    .asString().setCallback(new FutureCallback<String>() {
+                @Override public void onCompleted(final Exception e, String result) {
+                    if (e != null) {
+                        loadData(e.getLocalizedMessage());
+                        return;
+                    }
+                    result = result.replace("/css/bootstrap.min.css",
+                            "file:///android_asset/css/bootstrap.min.css")
+                            .replace("/js/jquery.min.js", "file:///android_asset/js/jquery.min.js")
+                            .replace("/js/main.js", "file:///android_asset/js/main.js");
+                    try {
+                        FileUtils.writeToFile(changelog, result);
+                    } catch (Exception exc) { logDebug(exc.getMessage()); }
+                    loadData(result);
+                }
+            });
+        }
+    }
+
+    private void loadData(final String data) {
+        if (mChangelog != null && data != null) {
+            mChangelog
+                    .loadDataWithBaseURL("file:///android_asset/", data, "text/html", "UTF-8", "");
+        }
     }
 
     private void updateButton() {

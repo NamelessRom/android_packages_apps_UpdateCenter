@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Changelog -->
-    <string name="changelog_dialog_title">Newest Changes</string>
-    <string name="changelog_header_version">"Project: "</string>
     <!-- DashClock extension strings -->
     <string name="extension_label">NamelessRom Updates</string>
     <string name="extension_description">Displays number of new rom updates available.</string>

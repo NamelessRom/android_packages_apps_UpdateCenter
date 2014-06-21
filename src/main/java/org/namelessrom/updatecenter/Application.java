@@ -23,7 +23,7 @@ public class Application extends android.app.Application {
     public static       boolean IS_LOG_DEBUG = true;
 
     // TODO: update every time the supported api version changes
-    public static final String API_CLIENT = "2.1.2";
+    public static final String API_CLIENT = "2.1.3";
 
     public static Context         sApplicationContext;
     public static PackageManager  packageManager;
@@ -71,7 +71,5 @@ public class Application extends android.app.Application {
         return DatabaseHandler.getInstance(Application.sApplicationContext);
     }
 
-    public static DownloadManager getDownloadManager() {
-        return downloadManager;
-    }
+    public static DownloadManager getDownloadManager() { return downloadManager; }
 }

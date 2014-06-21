@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:chg="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -79,14 +78,11 @@
 
     </LinearLayout>
 
-    <view
-        class="com.android.changelibs.view.ChangeLogListView"
+    <WebView
         android:id="@+id/updateChangelog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        chg:rowHeaderLayoutId="@layout/dialog_changelog_header_layout"
-        chg:rowLayoutId="@layout/dialog_changelog_row_layout"
         android:layout_marginTop="5dp" />
 
 </LinearLayout>

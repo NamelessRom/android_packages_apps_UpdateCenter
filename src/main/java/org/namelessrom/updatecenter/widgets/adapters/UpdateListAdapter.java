@@ -19,7 +19,6 @@ package org.namelessrom.updatecenter.widgets.adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.Menu;
@@ -34,7 +33,6 @@ import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.database.DownloadItem;
 import org.namelessrom.updatecenter.events.SubFragmentEvent;
-import org.namelessrom.updatecenter.fragments.dialogs.ChangelogDialogFragment;
 import org.namelessrom.updatecenter.fragments.updates.UpdateDetailsFragment;
 import org.namelessrom.updatecenter.items.UpdateInfo;
 import org.namelessrom.updatecenter.utils.BusProvider;
@@ -165,21 +163,6 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
                     bundle.putSerializable(UpdateDetailsFragment.ARG_UPDATE_INFO, updateInfo);
                     f.setArguments(bundle);
                     BusProvider.getBus().post(new SubFragmentEvent(ID_UPDATE_DETAILS, f));
-                }
-            });
-
-            ((UpdateCard) convertView).setOnCardLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(final View view) {
-                    DialogFragment f = new ChangelogDialogFragment();
-                    Bundle b = new Bundle();
-                    b.putString(ChangelogDialogFragment.BUNDLE_URL,
-                            updateInfo.getUrl()
-                                    .replace("/download", ".changelog/download")
-                    );
-                    f.setArguments(b);
-                    f.show(mContext.getFragmentManager(), "changelogdialog");
-                    return true;
                 }
             });
         } else {

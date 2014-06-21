@@ -56,7 +56,7 @@
     <string name="no_updates_available">No updates available</string>
 
     <string name="error">Error</string>
-    <string name="error_occured">An error occured. Please try again!</string>
+    <string name="error_occured">An error occurred. Please try again!</string>
     <string name="cancel_download">Cancel download</string>
     <string name="cancel_download_question">Do you want to cancel the download of %s?</string>
 
