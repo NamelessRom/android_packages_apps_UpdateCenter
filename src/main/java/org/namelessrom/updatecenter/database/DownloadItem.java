@@ -11,17 +11,17 @@ public class DownloadItem {
 
     public DownloadItem() { }
 
-    public DownloadItem(final String fileName, final String downloadId, final String md5,
+    public DownloadItem(final String downloadId, final String fileName, final String md5,
             final String completed) {
-        this(-1, fileName, downloadId, md5, completed, false);
+        this(-1, downloadId, fileName, md5, completed, false);
     }
 
-    public DownloadItem(final int id, final String fileName, final String downloadId,
+    public DownloadItem(final int id, final String downloadId, final String fileName,
             final String md5, final String completed) {
-        this(id, fileName, downloadId, md5, completed, false);
+        this(id, downloadId, fileName, md5, completed, false);
     }
 
-    public DownloadItem(final int id, final String fileName, final String downloadId,
+    public DownloadItem(final int id, final String downloadId, final String fileName,
             final String md5, final String completed, final boolean isPaused) {
         this._id = id;
         this._downloadId = downloadId;

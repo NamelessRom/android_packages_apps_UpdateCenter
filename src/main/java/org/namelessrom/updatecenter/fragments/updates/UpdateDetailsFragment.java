@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.koushikdutta.async.future.FutureCallback;
@@ -54,7 +55,8 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
     private ImageButton mAction;
     private ImageButton mExtra;
 
-    private WebView mChangelog;
+    private ProgressBar mChangelogLoading;
+    private WebView     mChangelog;
 
     @Override
     public void onAttach(Activity activity) {
@@ -101,6 +103,7 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
         mAction = findById(v, R.id.updateAction);
         mExtra = findById(v, R.id.updateExtra);
 
+        mChangelogLoading = findById(v, R.id.updateChangelogLoading);
         mChangelog = findById(v, R.id.updateChangelog);
         mChangelog.getSettings().setJavaScriptEnabled(true);
 
@@ -157,6 +160,7 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
         if (mChangelog != null && data != null) {
             mChangelog
                     .loadDataWithBaseURL("file:///android_asset/", data, "text/html", "UTF-8", "");
+            mChangelogLoading.setVisibility(View.INVISIBLE);
         }
     }
 

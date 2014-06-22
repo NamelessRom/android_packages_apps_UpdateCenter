@@ -19,7 +19,6 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 
 import org.namelessrom.updatecenter.Application;
-import org.namelessrom.updatecenter.R;
 import org.namelessrom.updatecenter.database.DatabaseHandler;
 import org.namelessrom.updatecenter.database.DownloadItem;
 import org.namelessrom.updatecenter.events.RefreshEvent;
@@ -50,7 +49,7 @@ public class DownloadService extends IntentService implements Constants {
             final long downloadId = enqueueDownload(ui.getUrl(), ui.getName());
             logDebug("downloadId: " + String.valueOf(downloadId));
             final DownloadItem item = new DownloadItem(
-                    ui.getName() + ".zip", String.valueOf(downloadId), ui.getMd5(), "0");
+                    String.valueOf(downloadId), ui.getName() + ".zip", ui.getMd5(), "0");
             Application.getDb().insertOrUpdate(item, DatabaseHandler.TABLE_DOWNLOADS);
             Application.mDownloadItems =
                     Application.getDb().getAllItems(DatabaseHandler.TABLE_DOWNLOADS);

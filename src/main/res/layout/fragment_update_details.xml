@@ -78,11 +78,23 @@
 
     </LinearLayout>
 
-    <WebView
-        android:id="@+id/updateChangelog"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp" />
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/updateChangelog"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+        <ProgressBar
+            android:id="@+id/updateChangelogLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="visible" />
+
+    </RelativeLayout>
 
 </LinearLayout>
