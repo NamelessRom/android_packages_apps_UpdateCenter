@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -121,8 +120,7 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
 
         updateButton();
 
-        final File changelog = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-                + '/' + getResources().getString(R.string.changelog_cache_path)
+        final File changelog = new File(Application.getFilesDirectory() + "/changelogs"
                 + '/' + mUpdateInfo.getName() + ".changelog");
         boolean success = false;
         if (changelog.exists()) {

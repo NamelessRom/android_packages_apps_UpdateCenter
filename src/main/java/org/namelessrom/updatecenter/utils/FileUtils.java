@@ -13,7 +13,10 @@ public class FileUtils {
 
     public static void writeToFile(final File file, final String content) throws Exception {
         if (file == null) throw new Exception("File is null!");
-        if (file.exists()) file.delete();
+        if (file.exists()) {
+            file.delete();
+        }
+        file.getParentFile().mkdirs();
 
         FileWriter fw = null;
         BufferedWriter bw = null;

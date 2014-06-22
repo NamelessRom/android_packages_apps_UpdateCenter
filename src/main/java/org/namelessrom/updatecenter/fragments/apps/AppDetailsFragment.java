@@ -180,7 +180,7 @@ public class AppDetailsFragment extends AttachFragment implements Constants {
     }
 
     private void launchAppInstall(final String pkgName) {
-        final File f = new File(Application.sApplicationContext.getCacheDir(),
+        final File f = new File(Application.applicationContext.getCacheDir(),
                 pkgName + ".apk");
         if (f.exists()) {
             logDebug("Deleted " + f.getName() + ": " + String.valueOf(f.delete()));

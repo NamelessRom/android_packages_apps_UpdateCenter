@@ -11,6 +11,7 @@ import org.namelessrom.updatecenter.database.DatabaseHandler;
 import org.namelessrom.updatecenter.database.DownloadItem;
 import org.namelessrom.updatecenter.utils.Helper;
 
+import java.io.File;
 import java.util.List;
 
 public class Application extends android.app.Application {
@@ -25,7 +26,7 @@ public class Application extends android.app.Application {
     // TODO: update every time the supported api version changes
     public static final String API_CLIENT = "2.1.3";
 
-    public static Context         sApplicationContext;
+    public static Context         applicationContext;
     public static PackageManager  packageManager;
     public static DownloadManager downloadManager;
 
@@ -35,8 +36,8 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
 
-        sApplicationContext = this;
-        packageManager = sApplicationContext.getPackageManager();
+        applicationContext = this;
+        packageManager = applicationContext.getPackageManager();
 
         downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 
@@ -55,7 +56,7 @@ public class Application extends android.app.Application {
 
         logDebug(TAG, "Debugging enabled!");
 
-        mDownloadItems = DatabaseHandler.getInstance(sApplicationContext)
+        mDownloadItems = DatabaseHandler.getInstance(applicationContext)
                 .getAllItems(DatabaseHandler.TABLE_DOWNLOADS);
     }
 
@@ -68,8 +69,19 @@ public class Application extends android.app.Application {
     }
 
     public static DatabaseHandler getDb() {
-        return DatabaseHandler.getInstance(Application.sApplicationContext);
+        return DatabaseHandler.getInstance(Application.applicationContext);
     }
 
     public static DownloadManager getDownloadManager() { return downloadManager; }
+
+    public static File getFiles() { return Application.applicationContext.getFilesDir(); }
+
+    public static String getFilesDirectory() {
+        final File tmp = getFiles();
+        if (tmp != null && tmp.exists()) {
+            return tmp.getPath();
+        } else {
+            return "/data/data/" + Application.applicationContext.getPackageName();
+        }
+    }
 }

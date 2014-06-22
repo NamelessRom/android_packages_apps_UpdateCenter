@@ -59,7 +59,7 @@ public class UpdatePreferenceFragment extends AttachPreferenceFragment implement
 
         setHasOptionsMenu(true);
 
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(Application.sApplicationContext);
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(Application.applicationContext);
         int tmp;
 
         mUpdateChannel = (ListPreference) findPreference(Constants.PREF_UPDATE_CHANNEL);

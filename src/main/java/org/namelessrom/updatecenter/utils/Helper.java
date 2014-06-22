@@ -427,21 +427,21 @@ public class Helper implements Constants {
                         "com.android.settings") > 0
                         && !showLauncher) {
                     logDebug("Implemented into system and showLauncher is not set!");
-                    AppHelper.disableComponent(Application.sApplicationContext.getPackageName(),
+                    AppHelper.disableComponent(Application.applicationContext.getPackageName(),
                             ".DummyLauncher");
                 } else {
                     logDebug("Implemented into system and showLauncher is set!");
-                    AppHelper.enableComponent(Application.sApplicationContext.getPackageName(),
+                    AppHelper.enableComponent(Application.applicationContext.getPackageName(),
                             ".DummyLauncher");
                 }
             } else {
                 logDebug("Not implemented into system!");
-                AppHelper.enableComponent(Application.sApplicationContext.getPackageName(),
+                AppHelper.enableComponent(Application.applicationContext.getPackageName(),
                         ".DummyLauncher");
             }
         } catch (PackageManager.NameNotFoundException exc) {
             logDebug("You dont have settings? That's weird.");
-            AppHelper.enableComponent(Application.sApplicationContext.getPackageName(),
+            AppHelper.enableComponent(Application.applicationContext.getPackageName(),
                     ".DummyLauncher");
         }
     }

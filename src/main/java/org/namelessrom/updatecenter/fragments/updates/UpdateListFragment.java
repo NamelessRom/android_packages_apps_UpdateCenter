@@ -122,10 +122,10 @@ public class UpdateListFragment extends AttachListFragment implements OnRefreshL
                 .setup(mPullToRefreshLayout);
 
         final SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(Application.sApplicationContext);
+                .getDefaultSharedPreferences(Application.applicationContext);
         if (prefs.getBoolean(Constants.PREF_UPDATE_METERED, true)
                 && !prefs.getBoolean(Constants.PREF_UPDATE_METERED_SKIP_WARNING, false)
-                && Helper.isMetered(Application.sApplicationContext)) {
+                && Helper.isMetered(Application.applicationContext)) {
             Crouton.makeText(getActivity(), R.string.metered_notice,
                     new Style.Builder().setBackgroundColorValue(Style.holoBlueLight).build()
             ).setConfiguration(
