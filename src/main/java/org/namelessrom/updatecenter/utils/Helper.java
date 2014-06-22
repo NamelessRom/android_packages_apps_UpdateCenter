@@ -412,8 +412,17 @@ public class Helper implements Constants {
         powerManager.reboot("recovery");
     }
 
-    public static boolean isUpdateDownloaded(final String fileName) {
-        return new File(UPDATE_FOLDER_FULL + File.separator + fileName + ".zip").exists();
+    public static String getUpdateFile(final String filename) {
+        return (UPDATE_FOLDER_FULL + File.separator + filename + ".zip");
+    }
+
+    public static boolean isUpdateDownloaded(final String filename) {
+        return new File(getUpdateFile(filename)).exists();
+    }
+
+    public static boolean deleteUpdate(final String filename) {
+        final File update = new File(getUpdateFile(filename));
+        return (update.exists() && update.delete());
     }
 
     public static void toggleLauncherIcon(final boolean showLauncher) {

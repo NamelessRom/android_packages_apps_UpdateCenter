@@ -105,4 +105,26 @@ public class UpdateHelper {
         return builder.create();
     }
 
+    public static AlertDialog getDeleteDialog(final Context context, final DownloadItem item) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setTitle(R.string.delete_update);
+        builder.setMessage(context.getString(R.string.delete_update_message, item.getFileName()));
+        builder.setNegativeButton(android.R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }
+        );
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialogInterface, int i) {
+                Helper.deleteUpdate(item.getFileName());
+                BusProvider.getBus().post(new RefreshEvent());
+            }
+        });
+
+        return builder.create();
+    }
+
 }

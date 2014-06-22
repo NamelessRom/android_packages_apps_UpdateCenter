@@ -83,4 +83,6 @@
     <string name="show_launcher_summary">Hides/unhides the launcher icon</string>
     <string name="metered_notice">Warning! You are on a metered network! Additional costs may be incurred!</string>
 
+    <string name="delete_update">Delete update</string>
+    <string name="delete_update_message">Do you really want to delete %s?</string>
 </resources>

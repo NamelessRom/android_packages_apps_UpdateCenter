@@ -231,6 +231,14 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
                 }
             });
             mExtra.setVisibility(View.VISIBLE);
+        } else if (Constants.UPDATE_DOWNLOADED == state) {
+            mExtra.setImageResource(R.drawable.ic_action_delete);
+            mExtra.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View view) {
+                    UpdateHelper.getDeleteDialog(getActivity(), downloadItem).show();
+                }
+            });
+            mExtra.setVisibility(View.VISIBLE);
         } else {
             mExtra.setVisibility(View.INVISIBLE);
         }
