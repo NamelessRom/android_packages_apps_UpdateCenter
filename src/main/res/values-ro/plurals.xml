@@ -8,4 +8,25 @@
      The text of the license can be found in the LICENSE file
      or at https://www.gnu.org/licenses/gpl-2.0.txt
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <plurals name="not_new_updates_found_body">
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> actualizare disponibilă pentru descărcare</item>
+    <item quantity="few"><xliff:g id="count">%d</xliff:g> actualizări disponibile pentru descărcare</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> actualizări disponibile pentru descărcare</item>
+  </plurals>
+  <plurals name="not_additional_count">
+    <item quantity="one">+ <xliff:g id="count">%d</xliff:g> mai mult</item>
+    <item quantity="few">+ <xliff:g id="count">%d</xliff:g> mai mult</item>
+    <item quantity="other">+ <xliff:g id="count">%d</xliff:g> mai mult</item>
+  </plurals>
+  <plurals name="extension_status">
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> actualizare</item>
+    <item quantity="few"><xliff:g id="count">%d</xliff:g> actualizări</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> actualizări</item>
+  </plurals>
+  <plurals name="extension_expandedTitle">
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> Actualizare NamelessRom</item>
+    <item quantity="few"><xliff:g id="count">%d</xliff:g> Actualizări NamelessRom</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> Actualizări NamelessRom</item>
+  </plurals>
+</resources>

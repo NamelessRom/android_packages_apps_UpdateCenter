@@ -8,4 +8,25 @@
      The text of the license can be found in the LICENSE file
      or at https://www.gnu.org/licenses/gpl-2.0.txt
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <plurals name="not_new_updates_found_body">
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> dostupná aktualizace ke stažení</item>
+    <item quantity="few"><xliff:g id="count">%d</xliff:g> dostupné aktualizace ke stažení</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> dostupných aktualizací ke stažení</item>
+  </plurals>
+  <plurals name="not_additional_count">
+    <item quantity="one">+ <xliff:g id="count">%d</xliff:g> další</item>
+    <item quantity="few">+ <xliff:g id="count">%d</xliff:g> další</item>
+    <item quantity="other">+ <xliff:g id="count">%d</xliff:g> dalších</item>
+  </plurals>
+  <plurals name="extension_status">
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> aktualizace rom</item>
+    <item quantity="few"><xliff:g id="count">%d</xliff:g> aktualizace rom</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> aktualizací rom</item>
+  </plurals>
+  <plurals name="extension_expandedTitle">
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> aktualizace NamelessRom</item>
+    <item quantity="few"><xliff:g id="count">%d</xliff:g> aktualizace NamelessRom</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> aktualizací NamelessRom</item>
+  </plurals>
+</resources>
