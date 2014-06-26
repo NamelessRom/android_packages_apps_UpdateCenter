@@ -20,7 +20,7 @@
   <string name="unknown">Inconnu</string>
   <string name="dismiss">Ignorer</string>
   <string name="download">Télécharger</string>
-  <string name="update_check_title">Intervalle entre des vérifications de mise à jour</string>
+  <string name="update_check_title">Intervalle entre les vérifications de mise à jour</string>
   <string name="check_manual">Manuel</string>
   <string name="check_on_app_start">Au démarrage de l\'application</string>
   <string name="check_on_boot">A chaque démarrage</string>
@@ -29,16 +29,16 @@
   <string name="check_weekly">Hebdomadaire</string>
   <string name="check_bi_weekly">Deux fois par semaine</string>
   <string name="check_monthly">Mensuelle</string>
-  <string name="channel_title">Lit d\'actualisation</string>
+  <string name="channel_title">Source de mises à jour</string>
   <string name="all">Tous</string>
   <string name="nightly">Nightly</string>
   <string name="weekly">Weekly</string>
-  <string name="update_metered_title">Permettre la connexion de milieux</string>
-  <string name="update_metered_summary">Indiquer si ce téléchargement puisse procéder d\'une connexion de milieux</string>
-  <string name="update_roaming_title">Permettre l\'usage de l\'itinerancia de données</string>
-  <string name="update_roaming_summary">Indiquer si ce téléchargement puisse procéder de l\'itinerancia de données</string>
+  <string name="update_metered_title">Autoriser la connexion limitée</string>
+  <string name="update_metered_summary">Définir si ce téléchargement peut avoir lieu via une connexion limitée</string>
+  <string name="update_roaming_title">Autoriser l\'itinérance</string>
+  <string name="update_roaming_summary">Indiquer si ce téléchargement peut avoir lieu via l\'itinérance</string>
   <string name="update_check_failed">La vérification de mise à jour a échoué. Veuillez vérifier votre connexion internet et réessayez plus tard.</string>
-  <string name="new_updates_found_ticker">Nouvelles mises à jour sont disponibles</string>
+  <string name="new_updates_found_ticker">De nouvelles mises à jour sont disponibles</string>
   <string name="new_updates_found_title">Nouvelles mises à jour</string>
   <string name="data_connection_required">Une connexion internet est nécessaire.</string>
   <string name="no_updates_available">Aucune mise à jour disponible</string>
@@ -61,7 +61,7 @@
   <string name="download_install_notice">La mise à jour <xliff:g id="filename">%s</xliff:g> a été correctement téléchargée. En cliquant sur \'Redémarrer et installer\', l\'appareil redémarrera seul afin d\'installer la mise à jour.\n\nNote: Un recovery compatible est requis pour que l\'installation fonctionne automatiquement.</string>
   <string name="unable_to_reboot_toast">Impossible de redémarrer en mode recovery</string>
   <string name="general">Général</string>
-  <string name="show_launcher">Montrer icône en le Launcher</string>
-  <string name="show_launcher_summary">Dérober/montrer l\'icône en le launcher</string>
-  <string name="metered_notice">¡DANGER! ¡Il est en train d\'user un réseau d\'itinerancia! ¡Il peut commettre des dépenses additionnelles avec l\'opérateur!</string>
+  <string name="show_launcher">Afficher l\'icône du lanceur</string>
+  <string name="show_launcher_summary">Masque/affiche l\'icône du lanceur</string>
+  <string name="metered_notice">Attention! Vous êtes sur un réseau limité! Des coûts additionnels peuvent se produire!</string>
 </resources>

@@ -22,7 +22,7 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> mises à jour de rom</item>
   </plurals>
   <plurals name="extension_expandedTitle">
-    <item quantity="one"><xliff:g id="count">%d</xliff:g> NamelessRom mettre à jour</item>
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> Mise à jour NamelessRom</item>
     <item quantity="other"><xliff:g id="count">%d</xliff:g> NamelessRom mises à jour</item>
   </plurals>
 </resources>
