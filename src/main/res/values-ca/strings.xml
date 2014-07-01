@@ -35,6 +35,7 @@
   <string name="weekly">Weekly</string>
   <string name="update_metered_title">Permetre la connexió de mitjans</string>
   <string name="update_metered_summary">Indicar si aquesta descàrrega pugui procedir d\'una connexió de mitjans</string>
+  <string name="update_metered_skip_warn_title">Ometre mesures d\'advertiment</string>
   <string name="update_roaming_title">Permetre l\'ús de la itinerància de dades</string>
   <string name="update_roaming_summary">Indicar si aquesta descàrrega pugui procedir de la itinerància de dades</string>
   <string name="update_check_failed">Ha fallat la comprovació d\'actualització. Si us plau, verifica la connexió a Internet i torna-ho novament.</string>
@@ -64,4 +65,6 @@
   <string name="show_launcher">Mostrar icona en el Launcher</string>
   <string name="show_launcher_summary">Ocultar/mostrar la icona en el launcher</string>
   <string name="metered_notice">¡PERILL! ¡Està usant una xarxa d\'itinerància! ¡Pot incórrer en despeses addicionals amb l\'operador!</string>
+  <string name="delete_update">Eliminar l\'actualització</string>
+  <string name="delete_update_message">¿Realment vols esborrar %s?</string>
 </resources>
