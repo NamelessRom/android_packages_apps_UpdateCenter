@@ -35,6 +35,7 @@
   <string name="weekly">Weekly</string>
   <string name="update_metered_title">Povolit v mobilních sítích</string>
   <string name="update_metered_summary">Nastavte pokud chcete aktualizovat přes data mobilní sítě. Mohou být účtovány poplatky za přenos dat.</string>
+  <string name="update_metered_skip_warn_title">Přeskočit varování při užítí dat mobilní sítě</string>
   <string name="update_roaming_title">Povolit při roamingu</string>
   <string name="update_roaming_summary">Nastavte pokud chcete aktualizovat přes roamingová data. Mohou být účtovány poplatky za přenos dat.</string>
   <string name="update_check_failed">Kontrola aktualizací se nezdařila. Prosím zkontrolujte své připojení k internetu a pokus opakujte později.</string>
@@ -64,4 +65,6 @@
   <string name="show_launcher">Zobrazit ikonu launcheru</string>
   <string name="show_launcher_summary">Skryje/Odkryje ikonu launcheru</string>
   <string name="metered_notice">Varování! Nacházíte se na mobilní síti! Mohou být účtovány poplatky za přenos dat!</string>
+  <string name="delete_update">Odstranit aktualizaci</string>
+  <string name="delete_update_message">Opravdu chcete odstranit %s?</string>
 </resources>

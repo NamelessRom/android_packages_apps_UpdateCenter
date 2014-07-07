@@ -35,6 +35,7 @@
   <string name="weekly">Settimanale</string>
   <string name="update_metered_title">Consenti connessione a consumo</string>
   <string name="update_metered_summary">Impostare se questo download può procedere su una connessione a consumo</string>
+  <string name="update_metered_skip_warn_title">Ignorare l\'avviso di connessione a consumo</string>
   <string name="update_roaming_title">Consenti roaming</string>
   <string name="update_roaming_summary">Impostare se questo download può procedere in roaming</string>
   <string name="update_check_failed">Controllo degli aggiornamenti non riuscito. Controlla la connessione a internet e riprova più tardi.</string>
@@ -64,4 +65,6 @@
   <string name="show_launcher">Visualizza l\'icona del launcher</string>
   <string name="show_launcher_summary">Nasconde/mostra l\'icona del launcher</string>
   <string name="metered_notice">Attenzione! Siete su una rete a consumo! Possono essere sostenuti costi aggiuntivi!</string>
+  <string name="delete_update">Elimina aggiornamento</string>
+  <string name="delete_update_message">Vuoi davvero eliminare %s?</string>
 </resources>

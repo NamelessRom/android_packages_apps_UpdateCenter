@@ -61,7 +61,5 @@
   <string name="download_install_notice">Actualizarea <xliff:g id="filename">%s</xliff:g> s-a descărcat cu succes. Când atingeți \'Repornire și instalare\', dispozitivul se va reporni pentru a instala actualizarea.\n\nNotă: Aveți nevoie de un Recovery compatibil pentru ca instalarea să se facă în mod automat.</string>
   <string name="unable_to_reboot_toast">Imposibil de a reporni în recuperare</string>
   <string name="general">General</string>
-  <string name="show_launcher">Afişa pictograma lansator</string>
-  <string name="show_launcher_summary">Ascunde/arata iconiţa in lansator</string>
   <string name="metered_notice">PERICOL! Sunteți folosind o rețea de roaming! S-ar putea suporta cheltuielile suplimentare cu!</string>
 </resources>

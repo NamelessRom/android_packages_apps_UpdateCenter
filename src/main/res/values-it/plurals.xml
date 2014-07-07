@@ -11,7 +11,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <plurals name="not_new_updates_found_body">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> aggiornamento disponibile per il download</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> aggiornamenti disponibili come download</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> aggiornamenti disponibili per il download</item>
   </plurals>
   <plurals name="not_additional_count">
     <item quantity="one">+ <xliff:g id="count">%d</xliff:g> in più</item>
