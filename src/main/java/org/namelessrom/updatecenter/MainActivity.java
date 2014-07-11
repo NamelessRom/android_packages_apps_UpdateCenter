@@ -22,9 +22,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,7 +63,6 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Helper.createDirectories();
 
         final View v = getLayoutInflater().inflate(R.layout.menu_list, null, false);
@@ -103,7 +100,8 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         ft.replace(R.id.container, main);
         ft.commit();
 
-        if (prefs.getInt(UPDATE_CHECK_PREF, UPDATE_FREQ_WEEKLY) == UPDATE_FREQ_AT_APP_START) {
+        if (Application.getPrefs()
+                .getInt(UPDATE_CHECK_PREF, UPDATE_FREQ_WEEKLY) == UPDATE_FREQ_AT_APP_START) {
             final Intent i = new Intent(this, UpdateCheckService.class);
             i.setAction(UpdateCheckService.ACTION_CHECK);
             this.startService(i);
@@ -193,7 +191,6 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         ft.replace(R.id.container, main);
         /*ft.replace(R.id.menu_frame, right);*/
 
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.commit();
     }
 
@@ -311,11 +308,12 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
         if (main == null /*|| right == null*/) return;
 
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.animator.slide_in_right, R.animator.slide_out_right,
+                R.animator.slide_in_left, R.animator.slide_out_left);
 
         ft.replace(R.id.container, main);
         /*ft.replace(R.id.menu_frame, right);*/
         ft.addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
         ft.commit();
     }

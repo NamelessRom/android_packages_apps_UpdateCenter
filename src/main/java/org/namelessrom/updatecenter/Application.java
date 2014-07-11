@@ -2,9 +2,11 @@ package org.namelessrom.updatecenter;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.namelessrom.updatecenter.database.DatabaseHandler;
@@ -70,6 +72,10 @@ public class Application extends android.app.Application {
 
     public static DatabaseHandler getDb() {
         return DatabaseHandler.getInstance(Application.applicationContext);
+    }
+
+    public static SharedPreferences getPrefs() {
+        return PreferenceManager.getDefaultSharedPreferences(Application.applicationContext);
     }
 
     public static DownloadManager getDownloadManager() { return downloadManager; }
