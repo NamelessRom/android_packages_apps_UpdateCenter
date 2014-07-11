@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.11.+'
+        classpath 'com.android.tools.build:gradle:0.12.+'
     }
 }
 
@@ -14,11 +14,11 @@ allprojects {
     }
 }
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 319
-    buildToolsVersion '19.1.0'
+    buildToolsVersion '20.0.0'
 
     defaultConfig {
         minSdkVersion 19
@@ -64,6 +64,6 @@ dependencies {
     compile 'com.android.support:support-v13:19.+'
     compile 'com.google.android.apps.dashclock:dashclock-api:+'
     compile 'com.jakewharton:butterknife:5.+'
-    compile 'com.koushikdutta.ion:ion:1.2.+'
-    compile 'de.keyboardsurfer.android.widget:crouton:1.8.4'
+    compile 'com.koushikdutta.ion:ion:1.2.7'
+    compile 'de.keyboardsurfer.android.widget:crouton:1.+'
 }
