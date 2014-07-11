@@ -58,22 +58,22 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
     private WebView     mChangelog;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity, ID_UPDATE_DETAILS);
-        activity.registerReceiver(receiver,
+    public void onAttach(final Activity activity) { super.onAttach(activity, ID_UPDATE_DETAILS); }
+
+    @Override public void onResume() {
+        super.onResume();
+
+        Application.applicationContext.registerReceiver(receiver,
                 new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         BusProvider.getBus().register(this);
+        onRefreshEvent(new RefreshEvent());
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
+    @Override public void onPause() {
+        super.onPause();
         try {
-            final Activity activity = getActivity();
-            if (activity != null) {
-                activity.unregisterReceiver(receiver);
-            }
+            Application.applicationContext.unregisterReceiver(receiver);
         } catch (Exception ignored) { /* Not registered, nothing to do */ }
 
         BusProvider.getBus().unregister(this);
