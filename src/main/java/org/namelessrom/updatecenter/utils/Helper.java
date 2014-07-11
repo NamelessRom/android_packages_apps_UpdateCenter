@@ -433,10 +433,8 @@ public class Helper implements Constants {
             if (isNameless()) {
                 final Resources res = Application.packageManager
                         .getResourcesForApplication("com.android.settings");
-                if (res != null
-                        && res.getIdentifier("device_control_settings", "string",
-                        "com.android.settings") > 0
-                        && !showLauncher) {
+                if (!showLauncher && res != null && res.getIdentifier(
+                        "update_center", "string", "com.android.settings") > 0) {
                     logDebug("Implemented into system and showLauncher is not set!");
                     AppHelper.disableComponent(Application.applicationContext.getPackageName(),
                             ".DummyLauncher");
