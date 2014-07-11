@@ -41,7 +41,6 @@ import org.namelessrom.updatecenter.fragments.apps.AppListFragment;
 import org.namelessrom.updatecenter.fragments.preferences.MainPreferenceFragment;
 import org.namelessrom.updatecenter.fragments.updates.UpdateListFragment;
 import org.namelessrom.updatecenter.fragments.updates.UpdatePreferenceFragment;
-import org.namelessrom.updatecenter.services.AutoUpdater;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
 import org.namelessrom.updatecenter.utils.BusProvider;
 import org.namelessrom.updatecenter.utils.Constants;
@@ -108,10 +107,6 @@ public class MainActivity extends Activity implements Constants, AdapterView.OnI
             final Intent i = new Intent(this, UpdateCheckService.class);
             i.setAction(UpdateCheckService.ACTION_CHECK);
             this.startService(i);
-        }
-
-        if (Helper.isNamelessDebug()) {
-            startService(new Intent(MainActivity.this, AutoUpdater.class));
         }
     }
 

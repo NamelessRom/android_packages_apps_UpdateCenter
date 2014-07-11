@@ -39,7 +39,6 @@ import android.util.Log;
 
 import org.namelessrom.updatecenter.Application;
 import org.namelessrom.updatecenter.R;
-import org.namelessrom.updatecenter.services.AutoUpdater;
 import org.namelessrom.updatecenter.services.UpdateCheckService;
 
 import java.io.BufferedReader;
@@ -269,27 +268,6 @@ public class Helper implements Constants {
 
         // Get the intent ready
         Intent i = new Intent(context, UpdateCheckService.class);
-        i.setAction(UpdateCheckService.ACTION_CHECK);
-        PendingIntent pi =
-                PendingIntent.getService(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Clear any old alarms and schedule the new alarm
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        am.cancel(pi);
-
-        if (updateFrequency != Constants.UPDATE_FREQ_NONE) {
-            am.setRepeating(AlarmManager.RTC_WAKEUP, lastCheck + updateFrequency, updateFrequency,
-                    pi);
-        }
-    }
-
-    public static void scheduleAutoUpdate(Context context, int updateFrequency) {
-        // Load the required settings from preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        long lastCheck = prefs.getLong(Constants.LAST_AUTO_UPDATE_CHECK_PREF, 0);
-
-        // Get the intent ready
-        Intent i = new Intent(context, AutoUpdater.class);
         i.setAction(UpdateCheckService.ACTION_CHECK);
         PendingIntent pi =
                 PendingIntent.getService(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
