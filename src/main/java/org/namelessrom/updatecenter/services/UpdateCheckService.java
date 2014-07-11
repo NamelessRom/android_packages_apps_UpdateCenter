@@ -124,7 +124,8 @@ public class UpdateCheckService extends Service implements Constants {
                 final String timeStampString = info.getTimestamp();
                 final int timeStamp = Helper.parseDate(timeStampString);
 
-                if (currentDate < timeStamp) {
+                if (currentDate <= timeStamp ||
+                        Helper.isUpdateDownloaded(filename)) {
                     final UpdateInfo item = new UpdateInfo(channel, filename, md5sum,
                             urlFile, timeStampString);
 
@@ -143,7 +144,11 @@ public class UpdateCheckService extends Service implements Constants {
                 return;
             }
 
-            final int realUpdateCount = updates.size();
+            int realUpdateCount = 0;
+            for (final UpdateInfo ui : updates) {
+                if (Helper.parseDate(ui.getTimestamp()) > Helper.getBuildDate())
+                    realUpdateCount++;
+            }
 
             final Intent finishedIntent = new Intent(ACTION_CHECK_FINISHED); // for dashclock
             finishedIntent.putExtra(EXTRA_UPDATE_COUNT, realUpdateCount);
@@ -182,8 +187,10 @@ public class UpdateCheckService extends Service implements Constants {
 
                 for (final UpdateInfo ui : updates) {
                     if (added < EXPANDED_NOTIF_UPDATE_COUNT) {
-                        inbox.addLine(ui.getName());
-                        added++;
+                        if (Helper.parseDate(ui.getTimestamp()) > Helper.getBuildDate()) {
+                            inbox.addLine(ui.getName());
+                            added++;
+                        }
                     }
                 }
                 if (added != realUpdateCount) {

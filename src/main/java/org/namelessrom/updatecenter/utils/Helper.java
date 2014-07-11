@@ -392,7 +392,6 @@ public class Helper implements Constants {
 
     public static String getUpdateFile(String filename) {
         filename = (UPDATE_FOLDER_FULL + File.separator + filename + ".zip");
-        logDebug(filename);
         return filename;
     }
 

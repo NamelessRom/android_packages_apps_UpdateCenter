@@ -197,8 +197,15 @@ public class UpdateDetailsFragment extends AttachFragment implements Constants {
             }
         } else {
             isDownloading = false;
-            imageId = R.drawable.ic_action_download;
-            state = 0;
+            if (Helper.isUpdateDownloaded(mUpdateInfo.getName())) {
+                imageId = R.drawable.ic_action_install;
+                state = Constants.UPDATE_DOWNLOADED;
+                tmpItem = new DownloadItem();
+                tmpItem.setFileName(mUpdateInfo.getName());
+            } else {
+                imageId = R.drawable.ic_action_download;
+                state = 0;
+            }
         }
 
         final DownloadItem downloadItem = tmpItem;

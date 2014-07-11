@@ -123,6 +123,10 @@ public class UpdateListAdapter extends BaseAdapter implements Constants {
                 }
             }
 
+            if (Helper.parseDate(updateInfo.getTimestamp()) == Helper.getBuildDate()) {
+                viewHolder.mUpdateState = Constants.UPDATE_INSTALLED;
+            }
+
             final DownloadItem downloadItem = tmpDownloadItem;
             viewHolder.mOverflow.setOnClickListener(new View.OnClickListener() {
                 @Override
