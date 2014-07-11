@@ -26,9 +26,19 @@
         android:text="@string/welcome_text"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:gravity="center"
-        android:layout_centerInParent="true"
         android:fontFamily="sans-serif-light"
         android:textStyle="bold"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/ic_arrow_right"
+        android:layout_marginLeft="10dp" />
 
 </RelativeLayout>
