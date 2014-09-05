@@ -1,13 +1,6 @@
 UpdateCenter
 =============
 
-Work In Progress!
+OUTDATED!
 
----
-
-Third party libraries:
-
-* [ActionBar-PullToRefresh by castorflex] (https://github.com/castorflex/ActionBar-PullToRefresh)
-* [SmoothProgressBar by castorflex] (https://github.com/castorflex/SmoothProgressBar)
-* [SlidingMenu by jfeinstein10] (https://github.com/jfeinstein10/slidingmenu)
-* android-support-v4
+We now use https://github.com/NamelessRom/android_packages_apps_NamelessCenter
